@@ -1,0 +1,40 @@
+name: Rust
+
+# Deliberately minimal: single OS, no HDF5 install, no matrix, no fixture
+# smoke test. None of that is relevant until a crate with a real hdf5
+# dependency exists (see Machine_Config_Library's rust.yml for what this
+# grows into at that point).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run tests
+        run: cargo test --workspace
+
+      - name: Run clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      # Verification only, not a distribution step — catches packaging-manifest
+      # problems (file inclusion rules, metadata) early, the same way
+      # `cargo publish` would, without actually publishing anywhere.
+      - name: Verify cargo package (packaging sanity check, not published)
+        run: cargo package --workspace
