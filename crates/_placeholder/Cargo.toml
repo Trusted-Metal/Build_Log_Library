@@ -1,0 +1,6 @@
+[package]
+name = "_placeholder"
+version = "0.0.0"
+edition = "2021"
+publish = false
+description = "Temporary stub so CI has a real crate to build/test/package against. Delete once the Model crate exists."

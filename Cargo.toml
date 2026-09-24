@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = ["crates/_placeholder"]
+
+# _placeholder is a stub (see crates/_placeholder) so CI has something real
+# to build/test/package against before the Model crate exists. Delete it
+# and add the real crate(s) here once Model lands.

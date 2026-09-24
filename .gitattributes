@@ -1,0 +1,6 @@
+# Shell scripts (git hooks especially) must stay LF regardless of platform
+# autocrlf settings — a CRLF-mangled hook can fail silently or behave
+# differently across OSes. MCF hit this same class of problem; fixing it
+# here from the start rather than as a later cleanup commit.
+.husky/* text eol=lf
+*.sh text eol=lf
