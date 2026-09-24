@@ -1,0 +1,6 @@
+[package]
+name = "model"
+version = "0.0.0"
+edition = "2021"
+publish = false
+description = "Plain Rust types mirroring the Build Log HDF5 schema, derived from a reference fixture. Pre-peer-review; shapes may still change."
