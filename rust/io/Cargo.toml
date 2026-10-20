@@ -2,16 +2,18 @@
 name = "build-log-io"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish = false
-description = "The IO layer of the Build Log Library: HDF5 files to and from the Model. Skeleton: the HDF5 binding arrives with IP-01 phase 1D and the adapters with IP-04 and after."
+description = "The IO layer of the Build Log Library: HDF5 files to and from the Model. The HDF5 binding is here; the adapters arrive with IP-04 and after."
 
 [features]
-# Compile libhdf5 from source instead of using the system library. The binding and its `static` feature arrive in phase 1D;
-# until then this feature only exists so the facade can forward to it.
-static-hdf5 = []
+# Compile libhdf5 from source and link it in, instead of using the library installed on the machine (the local default on a machine without HDF5).
+# It needs CMake and a C compiler, takes a few minutes the first time, and leaves its result in `target/`. `zlib` is there because tauri's files are gzip-compressed.
+static-hdf5 = ["hdf5/static", "hdf5/zlib"]
 
 [dependencies]
 build-log-model = { workspace = true }
+hdf5 = { workspace = true }
 
 [dev-dependencies]
 build-log-testkit = { workspace = true }

@@ -2,6 +2,7 @@
 name = "build-log-testkit"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish = false
 description = "Test support for the Build Log Library: where the committed miniatures and the large local fixtures are, and how a test skips when they are not there. Dev-only."
 

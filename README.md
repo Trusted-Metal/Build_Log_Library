@@ -19,14 +19,22 @@ A versioned library for the per-build records of laser powder bed fusion (LPBF) 
 
 ## Build and test
 
+The IO layer links the HDF5 library (libhdf5), so building needs one. **Minimum supported Rust version (measured): 1.85.1**, the oldest compiler that builds and tests the workspace. It is set in every crate, and a test checks it against what the dependencies declare.
+
+**On a machine without libhdf5**, compile it from source with the `static-hdf5` feature. It needs CMake and a C compiler (on Windows, the Visual Studio C++ tools). The first build takes about three minutes and leaves libhdf5 in `target/`, so later builds are fast:
+
 ```text
-cargo build --workspace
-cargo test --workspace
-cargo clippy --workspace --all-targets -- -D warnings
+cargo build --workspace --features build-log/static-hdf5
+cargo test --workspace --features build-log/static-hdf5
+cargo clippy --workspace --all-targets --features build-log/static-hdf5 -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The IO layer does not link HDF5 yet. When it does, building it needs the HDF5 library on the machine, or `--features static-hdf5` to compile it from source; this README will say how.
+**With libhdf5 installed**, drop the `--features` flag. CI does this (apt on Linux, vcpkg on Windows); the exact setup is written down with the CI workflow.
+
+**On Windows, keep the path short.** CMake fails to detect the compiler when a path passes 260 characters, and this build's own folders add about 125 to the path of `target/`. Keep the checkout path under about 130 characters, or set `CARGO_TARGET_DIR` to a short folder.
+
+The from-source build compiles the libhdf5 that the binding bundles (2.x at the time of writing), not the 1.x versions some consumers run; the CI legs test those.
 
 ## Conventions
 

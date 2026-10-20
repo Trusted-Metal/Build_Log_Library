@@ -46,4 +46,6 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
+**On a machine without libhdf5**, add `--features build-log/static-hdf5` to each command that builds the workspace (`test`, `clippy`, `check`, `build`): the IO layer links libhdf5, and this feature compiles it from source (the first build takes a few minutes; see the README). Where libhdf5 is installed, drop the flag. The feature-matrix test passes the flag on to the combinations that include the IO layer when it is given.
+
 A pull request fills in [the template](../.github/pull_request_template.md): the requirement ids, the named tests, the boundaries, and the impact on provisional fixtures.

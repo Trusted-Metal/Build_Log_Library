@@ -23,6 +23,7 @@ fn package(name: &str, dir: &str, dependencies: Vec<Dependency>) -> Package {
         dir: dir.to_string(),
         publishable: false,
         lib_name: Some(name.replace('-', "_")),
+        rust_version: Some("1.85.1".to_string()),
         dependencies,
     }
 }
@@ -75,6 +76,7 @@ fn healthy() -> Workspace {
             .iter()
             .map(|s| s.to_string())
             .collect(),
+        rust_versions: BTreeMap::new(),
         rust_dirs: ["build-log", "io", "model", "processing", "testkit"]
             .iter()
             .map(|d| (d.to_string(), true))
@@ -115,12 +117,14 @@ fn the_healthy_workspace_passes_every_guard() {
     assert!(model_hdf5_violations(&ws).is_empty() && processing_io_violations(&ws).is_empty());
     assert!(mcf_violations(&ws).is_empty() && spec_location_violations(&ws).is_empty());
     assert!(layer_violations(&ws).is_empty() && crate_directory_violations(&ws).is_empty());
+    assert!(msrv_violations(&ws, "1.85.1").is_empty());
 }
 
 #[test]
 fn each_guard_rejects_a_synthetic_violation() {
     type Guard = fn(&Workspace) -> Vec<String>;
     let allowed_layering: Guard = |ws| layering_violations(ws, &allowed_dependencies());
+    let msrv_check: Guard = |ws| msrv_violations(ws, "1.85.1");
     let mut cases: Vec<(&str, Workspace, Guard, &str)> = Vec::new();
 
     // layering: every forbidden edge is named
@@ -265,6 +269,33 @@ fn each_guard_rejects_a_synthetic_violation() {
         ws,
         spec_location_violations,
         "rust/model/schema is a `schema` folder under rust/",
+    ));
+
+    // the minimum supported Rust version (phase 1D)
+    let mut ws = healthy();
+    ws.members[0].rust_version = None;
+    cases.push((
+        "a crate declares no rust-version",
+        ws,
+        msrv_check,
+        "package `build-log-model` declares no rust-version",
+    ));
+    let mut ws = healthy();
+    ws.members[1].rust_version = Some("1.80.0".to_string());
+    cases.push((
+        "a crate declares another rust-version",
+        ws,
+        msrv_check,
+        "package `build-log-io` declares rust-version 1.80.0",
+    ));
+    let mut ws = healthy();
+    ws.rust_versions
+        .insert("hdf5-metno".to_string(), "1.90.0".to_string());
+    cases.push((
+        "a dependency needs a newer compiler",
+        ws,
+        msrv_check,
+        "`hdf5-metno` requires Rust 1.90.0, newer than the recorded minimum 1.85.1",
     ));
 
     // the shape of the workspace (phase 1B)

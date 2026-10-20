@@ -2,6 +2,7 @@
 name = "build-log-model"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish = false
 description = "Plain Rust types mirroring the Build Log HDF5 schema, derived from a reference fixture. Pre-peer-review; shapes may still change."
 

@@ -69,6 +69,8 @@ pub struct Package {
     pub dir: String,
     pub publishable: bool,
     pub lib_name: Option<String>,
+    /// The `rust-version` the package declares, if any.
+    pub rust_version: Option<String>,
     pub dependencies: Vec<Dependency>,
 }
 
@@ -79,6 +81,8 @@ pub struct Workspace {
     pub graph: BTreeMap<String, BTreeSet<String>>,
     /// The package names in `Cargo.lock`.
     pub lock_packages: BTreeSet<String>,
+    /// The `rust-version` each package of the resolved graph declares (packages that declare none are absent).
+    pub rust_versions: BTreeMap<String, String>,
     /// Each folder directly under `rust/`, and whether it has a `Cargo.toml`.
     pub rust_dirs: Vec<(String, bool)>,
     pub schema_top_level: bool,
@@ -160,6 +164,12 @@ pub fn workspace_from_metadata(metadata: &Value, root: &Path) -> Result<Workspac
         .collect();
     let mut ws = Workspace::default();
     for package in packages {
+        if let Some(version) = package.get("rust_version").and_then(Value::as_str) {
+            ws.rust_versions
+                .insert(str_field(package, "name")?.to_string(), version.to_string());
+        }
+    }
+    for package in packages {
         if !member_ids.contains(str_field(package, "id")?) {
             continue;
         }
@@ -207,6 +217,10 @@ pub fn workspace_from_metadata(metadata: &Value, root: &Path) -> Result<Workspac
             dir: relative_dir(str_field(package, "manifest_path")?, root),
             publishable,
             lib_name,
+            rust_version: package
+                .get("rust_version")
+                .and_then(Value::as_str)
+                .map(str::to_string),
             dependencies,
         });
     }
@@ -525,6 +539,61 @@ pub fn crate_directory_violations(ws: &Workspace) -> Vec<String> {
             found.push(format!(
                 "member `{}` is in {}, outside rust/",
                 p.name, p.dir
+            ));
+        }
+    }
+    found
+}
+
+/// `1.85.1` as numbers; a missing part counts as 0 (`1.85` is `1.85.0`).
+pub fn parse_rust_version(text: &str) -> Option<(u32, u32, u32)> {
+    let mut parts = text.trim().split('.').map(|p| p.parse::<u32>());
+    let major = parts.next()?.ok()?;
+    let minor = parts.next().unwrap_or(Ok(0)).ok()?;
+    let micro = parts.next().unwrap_or(Ok(0)).ok()?;
+    if parts.next().is_some() {
+        return None;
+    }
+    Some((major, minor, micro))
+}
+
+/// The minimum supported Rust version a document records: the number after the words "Minimum supported Rust version".
+pub fn recorded_msrv(document: &str) -> Option<String> {
+    let after = &document[document.find("Minimum supported Rust version")?
+        + "Minimum supported Rust version".len()..];
+    let start = after.find(|c: char| c.is_ascii_digit())?;
+    let number: String = after[start..]
+        .chars()
+        .take_while(|c| c.is_ascii_digit() || *c == '.')
+        .collect();
+    Some(number.trim_end_matches('.').to_string())
+}
+
+/// The minimum supported Rust version is measured, recorded, and set: every crate declares exactly the recorded version, and no package in the
+/// resolved dependency graph declares a newer one (so the workspace can be built with the oldest compiler we claim).
+pub fn msrv_violations(ws: &Workspace, recorded: &str) -> Vec<String> {
+    let Some(wanted) = parse_rust_version(recorded) else {
+        return vec![format!(
+            "the recorded minimum Rust version {recorded:?} is not a version number"
+        )];
+    };
+    let mut found = Vec::new();
+    for package in &ws.members {
+        match package.rust_version.as_deref() {
+            None => found.push(format!(
+                "package `{}` declares no rust-version (set `rust-version.workspace = true`)",
+                package.name
+            )),
+            Some(declared) if parse_rust_version(declared) != Some(wanted) => {
+                found.push(format!("package `{}` declares rust-version {declared}, but {recorded} is the recorded minimum", package.name));
+            }
+            Some(_) => {}
+        }
+    }
+    for (name, declared) in &ws.rust_versions {
+        if parse_rust_version(declared).is_some_and(|v| v > wanted) {
+            found.push(format!(
+                "`{name}` requires Rust {declared}, newer than the recorded minimum {recorded}"
             ));
         }
     }

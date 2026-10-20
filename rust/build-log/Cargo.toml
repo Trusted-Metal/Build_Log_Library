@@ -2,6 +2,7 @@
 name = "build-log"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 publish = false
 description = "The public entry point of the Build Log Library: the Model, and the IO and Processing layers behind features. Consumers depend on this crate, by git tag."
 
