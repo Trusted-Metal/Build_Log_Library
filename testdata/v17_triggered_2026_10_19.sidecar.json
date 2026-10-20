@@ -1,0 +1,138 @@
+{
+  "sidecar_version": 1,
+  "miniature": {
+    "name": "v17_triggered_2026_10_19.h5",
+    "size_bytes": 8630461,
+    "sha256": "02bcee2da612064acfefbf7dd9808e7976c59d3780453637059a805325483d01"
+  },
+  "source": {
+    "name": "V17_triggered_2026_10_19.h5",
+    "root": "fixtures",
+    "path": "Build Log Fixtures/V17_triggered_2026_10_19.h5",
+    "size_bytes": 22123035,
+    "sha256": "45614378f7bca018c18cc3e8ca823e9926eb09417acb4c0790845f95bba1dc91",
+    "sha256_scheme": "full",
+    "manifest_id": "v17-triggered-2026-10-19"
+  },
+  "tools": {
+    "extractor": "bl_fixtures.miniature",
+    "redaction": "bl_fixtures.redact",
+    "redaction_rules_sha256": "77cc7b3af35fb90630357ba013ae3b286d92d6221950d74c2b7180b6033b6461"
+  },
+  "parameters": {
+    "preset": "mini",
+    "layers": 2,
+    "layer_ids": null,
+    "samples": 25000,
+    "crop": 128,
+    "layer_quantity": "retained"
+  },
+  "layers": {
+    "kept": "1",
+    "in_source": "1"
+  },
+  "counts": {
+    "attributes": 224,
+    "datasets": 44,
+    "datasets_truncated": 16,
+    "datasets_verbatim": 28,
+    "groups": 58
+  },
+  "layer_quantity": {
+    "source": 1,
+    "miniature": 1
+  },
+  "fingerprint": {
+    "version": 1,
+    "source": "aa9cad4a0168f74f557a1269924b93e2d5dfa56bb14da0575f7422d15b3a53dc",
+    "miniature": "aa9cad4a0168f74f557a1269924b93e2d5dfa56bb14da0575f7422d15b3a53dc",
+    "equal": true
+  },
+  "redacted": true,
+  "redactions": [
+    {
+      "path": "/Built_Part",
+      "attribute": "Build_ID",
+      "lengths": [
+        29
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Machine_Serial",
+      "lengths": [
+        8
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Scanner_ID",
+      "lengths": [
+        8
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Username",
+      "lengths": [
+        20
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part/Calibration_Data/Optical_Train_1/Light_Source",
+      "attribute": "Laser_Serial_Number",
+      "lengths": [
+        5
+      ],
+      "styles": [
+        "numeric"
+      ]
+    },
+    {
+      "path": "/Built_Part/Calibration_Data/Optical_Train_1/Scanner",
+      "attribute": "Scanner_Serial_Number",
+      "lengths": [
+        11
+      ],
+      "styles": [
+        "numeric"
+      ]
+    },
+    {
+      "path": "/Built_Part/Calibration_Data/Optical_Train_2/Light_Source",
+      "attribute": "Laser_Serial_Number",
+      "lengths": [
+        5
+      ],
+      "styles": [
+        "numeric"
+      ]
+    },
+    {
+      "path": "/Built_Part/Calibration_Data/Optical_Train_2/Scanner",
+      "attribute": "Scanner_Serial_Number",
+      "lengths": [
+        11
+      ],
+      "styles": [
+        "numeric"
+      ]
+    }
+  ],
+  "scan": {
+    "listed_values_remaining": [],
+    "looks_identifying": []
+  }
+}

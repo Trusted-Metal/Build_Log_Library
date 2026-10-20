@@ -22,8 +22,8 @@ pub const FIXTURES_ENV: &str = "BUILD_LOG_FIXTURES_DIR";
 
 /// A committed miniature may be at most this large (IP-00 decision D00-5: 12 MB).
 pub const MINIATURE_FILE_LIMIT_BYTES: u64 = 12_000_000;
-/// All the committed miniatures together may be at most this large (IP-00 decision D00-5: 50 MB).
-pub const MINIATURE_TOTAL_LIMIT_BYTES: u64 = 50_000_000;
+/// All the committed miniatures together may be at most this large (IP-00 decision D00-5: 50 MB, raised to 75 MB by the owner on 2026-10-20 when the seventh miniature was added).
+pub const MINIATURE_TOTAL_LIMIT_BYTES: u64 = 75_000_000;
 
 /// The names of the committed miniatures in `testdata/`. A new miniature is a new constant, and a line in `testdata/SHA256SUMS`.
 pub mod miniature {
@@ -35,6 +35,8 @@ pub mod miniature {
     pub const V17_MOCK: &str = "v17_mock.h5";
     /// V17 of 2026-10-15, a real machine build with an empty `Laser_2`.
     pub const V17_OCT15: &str = "v17_oct15.h5";
+    /// V17 of 2026-10-19 with the OPC UA join output (`Global_Sensors`, `Build_Status`): one layer, both lasers recorded, no `Synchronous_*` samples.
+    pub const V17_TRIGGERED_2026_10_19: &str = "v17_triggered_2026_10_19.h5";
     /// V18, which is provisional: its owner is still finalizing it.
     pub const V18: &str = "v18.h5";
     /// Layers 1964 to 1967 and 2006 to 2008 of the V17 original: a 39.9-hour pause and a laser that did not fire.

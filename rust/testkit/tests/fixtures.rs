@@ -74,10 +74,10 @@ fn the_variable_is_named_as_the_python_tools_name_it() {
 
 #[test]
 fn the_budget_constants_are_the_ones_the_owner_approved() {
-    // IP-00 decision D00-5: at most 12 MB a file and 50 MB in all
+    // IP-00 decision D00-5: at most 12 MB a file and, since the owner raised it on 2026-10-20, 75 MB in all (it was 50 MB)
     assert_eq!(
         (MINIATURE_FILE_LIMIT_BYTES, MINIATURE_TOTAL_LIMIT_BYTES),
-        (12_000_000, 50_000_000)
+        (12_000_000, 75_000_000)
     );
 }
 
