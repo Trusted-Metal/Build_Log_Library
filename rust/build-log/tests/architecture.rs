@@ -86,6 +86,36 @@ fn the_facade_reexports_the_model_at_its_root() {
     );
 }
 
+// ---------------------------------------------------------------- phase 1D: the minimum supported Rust version
+
+#[test]
+fn msrv_recorded_and_set() {
+    // recorded in the README (measured: the oldest toolchain that builds and tests the workspace) and set in every crate (`rust-version.workspace = true`)
+    let readme = fs::read_to_string(repo_root().join("README.md")).expect("the README");
+    let recorded =
+        recorded_msrv(&readme).expect("the README records the minimum supported Rust version");
+    assert_clean(
+        "the minimum supported Rust version",
+        msrv_violations(workspace(), &recorded),
+    );
+}
+
+#[test]
+fn the_recorded_minimum_is_read_from_the_words_that_state_it() {
+    assert_eq!(
+        recorded_msrv("Minimum supported Rust version (measured): **1.85.1**.").as_deref(),
+        Some("1.85.1")
+    );
+    assert_eq!(recorded_msrv("nothing here"), None);
+    assert_eq!(parse_rust_version("1.85.1"), Some((1, 85, 1)));
+    assert_eq!(parse_rust_version("1.85"), Some((1, 85, 0)));
+    assert_eq!(parse_rust_version("one"), None);
+    assert!(
+        parse_rust_version("1.10.0") > parse_rust_version("1.9.9"),
+        "versions compare as numbers, not text"
+    );
+}
+
 // ---------------------------------------------------------------- phase 1C: the guards, on the real workspace
 
 #[test]

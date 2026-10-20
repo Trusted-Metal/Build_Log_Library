@@ -21,7 +21,7 @@ How tests are written, named, placed and skipped in this repository. Written 202
 
 A **guard** protects a rule that nobody should be able to break silently (layering, the MCF boundary, "an unknown version is an error"). The mandatory guard tests keep the names in section 8.2 of the library requirements, because the names are the contract. A guard works on a parsed model of what it checks, so it can be tested against a hand-made violation as well as the real thing.
 
-The architecture guards (the layering of the crates, the Model without HDF5, Processing without IO, no MCF, the specification folder) are in `rust/build-log/tests/`: `support/` holds the guard functions over a parsed model of the workspace (read from `cargo metadata`), `architecture.rs` runs them on the real workspace, and `guards_reject_violations.rs` feeds each one a hand-made workspace that breaks its rule and checks it names the offender. **The dependencies the layers may have are data**, in `tests/data/allowed_dependencies.json` (the matrix of IP-01 Appendix C), so a new crate adds a line there and no code changes. `testdata_matches_checksums` in `rust/testkit/tests/` is the guard of the committed miniatures.
+The architecture guards (the layering of the crates, the Model without HDF5, Processing without IO, no MCF, the specification folder) are in `rust/build-log/tests/`: `support/` holds the guard functions over a parsed model of the workspace (read from `cargo metadata`), `architecture.rs` runs them on the real workspace, and `guards_reject_violations.rs` feeds each one a hand-made workspace that breaks its rule and checks it names the offender. **The dependencies the layers may have are data**, in `tests/data/allowed_dependencies.json` (the matrix of IP-01 Appendix C), so a new crate adds a line there and no code changes. `testdata_matches_checksums` in `rust/testkit/tests/` is the guard of the committed miniatures. `documentation_links_resolve` (`rust/build-log/tests/documentation.rs`) is the guard of the documentation: every relative link in a Markdown file of the repository must point at a file or folder that is in the repository and, if it names a heading, at one that exists, so a link to a document kept only on one machine fails it.
 
 ## Three tiers of test data
 
@@ -45,5 +45,7 @@ cargo test --workspace -- --nocapture                  # and the reasons for the
 cargo clippy --workspace --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
+
+**On a machine without libhdf5**, add `--features build-log/static-hdf5` to each command that builds the workspace (`test`, `clippy`, `check`, `build`): the IO layer links libhdf5, and this feature compiles it from source (the first build takes a few minutes; see the README). Where libhdf5 is installed, drop the flag. The feature-matrix test passes the flag on to the combinations that include the IO layer when it is given.
 
 A pull request fills in [the template](../.github/pull_request_template.md): the requirement ids, the named tests, the boundaries, and the impact on provisional fixtures.

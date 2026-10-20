@@ -5,6 +5,8 @@ members = ["rust/*"]
 [workspace.package]
 version = "0.0.0"
 edition = "2021"
+# The oldest compiler that builds and tests the workspace (measured 2026-10-20 with Rust 1.85.1). The HDF5 binding declares the same number, so it is the floor.
+rust-version = "1.85.1"
 
 [workspace.lints.rust]
 unsafe_code = "deny"
@@ -16,3 +18,6 @@ build-log-model = { path = "rust/model", version = "0.0.0" }
 build-log-io = { path = "rust/io", version = "0.0.0" }
 build-log-processing = { path = "rust/processing", version = "0.0.0" }
 build-log-testkit = { path = "rust/testkit", version = "0.0.0" }
+
+# The HDF5 binding, pinned once. `hdf5-metno` 0.12 is the version the consumer apps pin; renamed so the code says `hdf5::`. Its `-sys` crate (0.12.x) comes with it.
+hdf5 = { package = "hdf5-metno", version = "0.12" }

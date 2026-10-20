@@ -51,11 +51,25 @@ const MATRIX: [(&str, &[&str]); 4] = [
     ),
 ];
 
+/// Does this combination include the IO layer (the default features, or `hdf5`, or `jobs`, which implies it)?
+fn includes_io(features: &[&str]) -> bool {
+    let default_off = features.contains(&"--no-default-features");
+    let named = features
+        .iter()
+        .any(|f| f.split(',').any(|x| x == "hdf5" || x == "jobs"));
+    !default_off || named
+}
+
 #[test]
 fn every_feature_combination_in_the_matrix_builds() {
     for (what, features) in MATRIX {
         let mut args = vec!["check", "-p", "build-log"];
         args.extend_from_slice(features);
+        // A machine without libhdf5 runs these tests with `--features build-log/static-hdf5`; a combination that includes the IO layer then
+        // needs the same, or its `cargo check` would look for a libhdf5 that is not there. (CI installs one and does not need it.)
+        if cfg!(feature = "static-hdf5") && includes_io(features) {
+            args.extend_from_slice(&["--features", "static-hdf5"]);
+        }
         let (ok, _out, err) = cargo(&args);
         assert!(
             ok,

@@ -1,37 +1,308 @@
 name: Rust
 
-# Deliberately minimal: single OS, no HDF5 install, no matrix, no fixture
-# smoke test. None of that is relevant until a crate with a real hdf5
-# dependency exists (see Machine_Config_Library's rust.yml for what this
-# grows into at that point).
+# CI for the Build Log Library (IP-01 phases 1G, 1H and 1I).
+#
+#   Test            the required check (decision D01-5): passes only if every job below it succeeded. It is the only job called `Test`.
+#   Lint            fmt and clippy.
+#   Test (<leg>)    the test suite on ubuntu-latest, windows-latest and in Debian bookworm (the image tauri's container is built on, libhdf5 1.10.8).
+#                   Each leg reports and checks the libhdf5 it linked (phase 1I).
+#   Feature matrix  the facade builds with each feature combination of BL-AR-07.
+#   Commit messages commitlint over the commits of the change.
+#   WebAssembly check (advisory) and Static libhdf5 (advisory) are not part of the required check: they show on the pull request but never block it.
+#
+# HDF5: Linux installs libhdf5-dev with apt; Windows installs hdf5 with vcpkg. Only vcpkg's *archives* are cached, never `installed/`: a cached
+# `installed/` went stale when the runner's compiler changed (Machine_Config_Library, 2026-08). A failure that looks like "Unable to locate HDF5 root
+# directory and/or headers" (the binding's build script) or "Could NOT find HDF5" (CMake) after a runner image update means vcpkg's archive folder or
+# the HDF5_DIR step needs another look.
 
 on:
   workflow_dispatch:
+    inputs:
+      simulate:
+        description: "Prove the required check: make one job fail or be skipped. Leave as none for a real run."
+        type: choice
+        options: [none, fail-lint, skip-lint]
+        default: none
   push:
     branches: ["main"]
   pull_request:
 
-jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
 
+env:
+  CARGO_TERM_COLOR: always
+  # The candidate minimum libhdf5 for BL-ST-01: the oldest version a tauri deployment uses (its container has 1.10.8). IP-03 declares the real one.
+  # Every test leg fails if the libhdf5 it links is older.
+  LIBHDF5_MINIMUM: "1.10.8"
+
+jobs:
+  lint:
+    name: Lint
+    if: ${{ inputs.simulate != 'skip-lint' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Forced failure (workflow_dispatch input)
+        if: ${{ inputs.simulate == 'fail-lint' }}
+        run: |
+          echo "::error::forced failure, to prove that the required check fails when a job fails"
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      # clippy compiles every crate, and the IO crate's build script needs the HDF5 headers.
+      - name: Install libhdf5
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: cargo clippy --locked --workspace --all-targets -- -D warnings
+
+  test:
+    name: Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install libhdf5 (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
+
+      - name: Record how libhdf5 was installed (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p libhdf5-report
+          dpkg -l 'libhdf5-*' | awk '/^ii/ {print $2, $3}' > libhdf5-report/install.txt
+
+      - name: Work out the vcpkg cache key (Windows)
+        if: runner.os == 'Windows'
+        id: vcpkg-key
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash "$env:VCPKG_INSTALLATION_ROOT\vcpkg.exe" -Algorithm SHA256).Hash.ToLower()
+          "key=vcpkg-archives-x64-windows-$hash" >> $env:GITHUB_OUTPUT
+
+      # vcpkg's binary archives only. `vcpkg install` below runs every time and rebuilds `installed/` from them (about 30 seconds on a hit, several
+      # minutes on a miss). A partial hit through restore-keys is still useful when the runner image brings a new vcpkg.
+      - name: Cache vcpkg archives (Windows)
+        if: runner.os == 'Windows'
+        id: vcpkg-cache
+        uses: actions/cache@v4
         with:
-          components: clippy
+          path: ~\AppData\Local\vcpkg\archives
+          key: ${{ steps.vcpkg-key.outputs.key }}
+          restore-keys: vcpkg-archives-x64-windows-
 
-      - name: Cache Rust build artifacts
-        uses: Swatinem/rust-cache@v2
+      - name: Install libhdf5 with vcpkg (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: vcpkg install hdf5:x64-windows
 
-      - name: Run tests
-        run: cargo test --workspace
+      - name: Point the HDF5 binding at vcpkg's libhdf5 and put its DLLs on PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $root = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows"
+          if (-not (Test-Path "$root\include\H5pubconf.h")) { Write-Error "HDF5 headers not found in $root"; exit 1 }
+          "HDF5_DIR=$root" >> $env:GITHUB_ENV
+          "$root\bin" | Out-File -Append -Encoding utf8 -FilePath $env:GITHUB_PATH
 
-      - name: Run clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Record how libhdf5 was installed (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force libhdf5-report | Out-Null
+          $notes = "libhdf5-report/install.txt"
+          $dll = Get-Item "$env:HDF5_DIR\bin\hdf5.dll"
+          "vcpkg archives cache, exact hit: ${{ steps.vcpkg-cache.outputs.cache-hit }}" | Set-Content $notes
+          "vcpkg package:" | Add-Content $notes
+          vcpkg list hdf5 | Add-Content $notes
+          "hdf5.dll file version: $($dll.VersionInfo.FileVersion)" | Add-Content $notes
+          "hdf5.dll: $($dll.FullName)" | Add-Content $notes
 
-      # There is no `cargo package` step. Nothing is published (`publish = false`), and cargo cannot package a crate whose
-      # workspace dependencies are unpublishable (IP-01 question Q1-10, decided 2026-10-20).
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Report the libhdf5 version
+        shell: bash
+        run: bash .github/scripts/report-libhdf5.sh "${{ matrix.os }}"
+
+      - name: Run the tests
+        run: cargo test --locked --workspace
+
+      - name: Upload the libhdf5 report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: libhdf5-${{ matrix.os }}
+          path: libhdf5-report
+          retention-days: 30
+
+  # The image tauri's headless container is built on (clearbox-tauri's Dockerfile: rust:1-bookworm, apt libhdf5-dev, libhdf5 1.10.8). A library tested
+  # only on newer libhdf5 versions could pass everywhere else and fail there.
+  test-bookworm:
+    name: Test (debian-bookworm)
+    runs-on: ubuntu-latest
+    container: rust:1-bookworm
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install libhdf5
+        run: apt-get update && apt-get install -y libhdf5-dev pkg-config
+
+      - name: Record how libhdf5 was installed
+        run: |
+          mkdir -p libhdf5-report
+          dpkg -l 'libhdf5-*' | awk '/^ii/ {print $2, $3}' > libhdf5-report/install.txt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Report the libhdf5 version (it must be exactly the version tauri's container has)
+        shell: bash
+        run: bash .github/scripts/report-libhdf5.sh debian-bookworm --exactly 1.10.8
+
+      - name: Run the tests
+        run: cargo test --locked --workspace
+
+      - name: Upload the libhdf5 report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: libhdf5-debian-bookworm
+          path: libhdf5-report
+          retention-days: 30
+
+  features:
+    name: Feature matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install libhdf5
+        run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build every feature combination
+        run: cargo test --locked -p build-log --test feature_matrix
+
+  commitlint:
+    name: Commit messages
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # --ignore-scripts: the `prepare` script would install the husky hooks, which a CI run must not do.
+      - name: Install the commit-lint tooling
+        run: npm ci --ignore-scripts
+
+      - name: Lint the commits of this change
+        env:
+          HUSKY: "0"
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ -z "${BASE:-}" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            npx --no-install commitlint --last --verbose
+          else
+            npx --no-install commitlint --from "$BASE" --to "$HEAD" --verbose
+          fi
+
+  # Not part of the required check: shown on the pull request, never blocking. It answers spike S7: the Model must stay free of anything that cannot
+  # compile for the web, which is the only web work kept (decision D01-12).
+  wasm:
+    name: WebAssembly check (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Check that the Model builds for wasm32
+        run: cargo check --locked --target wasm32-unknown-unknown -p build-log-model
+
+  # Not part of the required check: compiling libhdf5 from source is slow. It proves the no-system-libhdf5 path that a developer machine without libhdf5
+  # uses. It becomes required if it proves fast and stable once cached.
+  static-hdf5:
+    name: Static libhdf5 (advisory)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Test the IO crate with libhdf5 compiled from source
+        run: cargo test --locked -p build-log-io --features static-hdf5
+
+  # The required check (decision D01-5). A matrix renames its jobs, so the name the ruleset requires lives here, on one job that depends on all the
+  # gating ones. It runs even when they fail, and a job that was skipped or cancelled counts as a failure: a skipped job tested nothing.
+  required-check:
+    name: Test
+    needs: [lint, test, test-bookworm, features, commitlint]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every job this check depends on succeeded
+        env:
+          RESULTS: >-
+            lint=${{ needs.lint.result }}
+            test=${{ needs.test.result }}
+            test-bookworm=${{ needs.test-bookworm.result }}
+            features=${{ needs.features.result }}
+            commitlint=${{ needs.commitlint.result }}
+        run: |
+          bad=0
+          if [ -z "$RESULTS" ]; then bad=1; fi
+          {
+            echo "### Required check"
+            echo
+            echo "| Job | Result |"
+            echo "|---|---|"
+          } >> "$GITHUB_STEP_SUMMARY"
+          for pair in $RESULTS; do
+            job="${pair%%=*}"
+            result="${pair#*=}"
+            echo "$job: $result"
+            echo "| $job | $result |" >> "$GITHUB_STEP_SUMMARY"
+            if [ "$result" != "success" ]; then bad=1; fi
+          done
+          if [ "$bad" -ne 0 ]; then
+            echo "::error::a job that gates the merge did not succeed (a skipped or cancelled job counts as a failure)"
+            exit 1
+          fi
