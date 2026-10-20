@@ -1,0 +1,139 @@
+{
+  "sidecar_version": 1,
+  "miniature": {
+    "name": "v18.h5",
+    "size_bytes": 6595264,
+    "sha256": "342f0d542159b1f4d626cef6de711b2f110eaf58c872b38afc22a2ec114f566c"
+  },
+  "source": {
+    "name": "V18_fixture.h5",
+    "root": "fixtures",
+    "path": "Build Log Fixtures/V18_fixture.h5",
+    "size_bytes": 121881315,
+    "sha256": "d7e9ccb15b054afd75088cce6f183304d36c660eac23760592823dc91c7367ec",
+    "sha256_scheme": "full",
+    "manifest_id": "v18-fixture"
+  },
+  "tools": {
+    "extractor": "bl_fixtures.miniature",
+    "redaction": "bl_fixtures.redact",
+    "redaction_rules_sha256": "77cc7b3af35fb90630357ba013ae3b286d92d6221950d74c2b7180b6033b6461"
+  },
+  "parameters": {
+    "preset": "mini",
+    "layers": 2,
+    "layer_ids": null,
+    "samples": 25000,
+    "crop": 128,
+    "layer_quantity": "retained"
+  },
+  "layers": {
+    "kept": "1-2",
+    "in_source": "1-2"
+  },
+  "counts": {
+    "attributes": 139,
+    "datasets": 184,
+    "datasets_cropped": 4,
+    "datasets_truncated": 36,
+    "datasets_verbatim": 144,
+    "groups": 212
+  },
+  "layer_quantity": {
+    "source": 2,
+    "miniature": 2
+  },
+  "fingerprint": {
+    "version": 1,
+    "source": "24f847cee45532024eff0066f0c7833482d2715591b62fea8332257e3787f775",
+    "miniature": "24f847cee45532024eff0066f0c7833482d2715591b62fea8332257e3787f775",
+    "equal": true
+  },
+  "redacted": true,
+  "redactions": [
+    {
+      "path": "/Build",
+      "attribute": "Build_ID",
+      "lengths": [
+        7
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build",
+      "attribute": "Username",
+      "lengths": [
+        4
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_1/Corrections/Correction_File",
+      "attribute": "document_id",
+      "lengths": [
+        36
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_1/Corrections/Correction_File",
+      "attribute": "document_name",
+      "lengths": [
+        29
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_1/Corrections/Correction_File",
+      "attribute": "original_uri",
+      "lengths": [
+        75
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_2/Corrections/Correction_File",
+      "attribute": "document_id",
+      "lengths": [
+        36
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_2/Corrections/Correction_File",
+      "attribute": "document_name",
+      "lengths": [
+        29
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Build/Lasers/Laser_2/Corrections/Correction_File",
+      "attribute": "original_uri",
+      "lengths": [
+        75
+      ],
+      "styles": [
+        "text"
+      ]
+    }
+  ],
+  "scan": {
+    "listed_values_remaining": [],
+    "looks_identifying": []
+  }
+}

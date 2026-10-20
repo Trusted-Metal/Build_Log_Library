@@ -1,0 +1,99 @@
+{
+  "sidecar_version": 1,
+  "miniature": {
+    "name": "v16.h5",
+    "size_bytes": 5338981,
+    "sha256": "7f72b76a80f7cc171c551d2e5c7c45463e92816dbc257ff64f43dffdd67fd8f0"
+  },
+  "source": {
+    "name": "V16_trimmed_fixture.h5",
+    "root": "fixtures",
+    "path": "Build Log Fixtures/V16_trimmed_fixture.h5",
+    "size_bytes": 206501430,
+    "sha256": "a4983e5b699873a876613b62c9f52aaa59e960e565d657dbd8d39136c76f31a4",
+    "sha256_scheme": "full",
+    "manifest_id": "v16-trimmed"
+  },
+  "tools": {
+    "extractor": "bl_fixtures.miniature",
+    "redaction": "bl_fixtures.redact",
+    "redaction_rules_sha256": "77cc7b3af35fb90630357ba013ae3b286d92d6221950d74c2b7180b6033b6461"
+  },
+  "parameters": {
+    "preset": "mini",
+    "layers": 2,
+    "layer_ids": null,
+    "samples": 25000,
+    "crop": 128,
+    "layer_quantity": "retained"
+  },
+  "layers": {
+    "kept": "1-2",
+    "in_source": "1-15"
+  },
+  "counts": {
+    "attributes": 83,
+    "datasets": 20,
+    "datasets_truncated": 16,
+    "datasets_verbatim": 4,
+    "groups": 20,
+    "layers_dropped": 13
+  },
+  "layer_quantity": {
+    "source": 15,
+    "miniature": 2
+  },
+  "fingerprint": {
+    "version": 1,
+    "source": "ffa42de28debb32fe32706554260793b5bdb48f7effcdef34b4f122a1705d08d",
+    "miniature": "ffa42de28debb32fe32706554260793b5bdb48f7effcdef34b4f122a1705d08d",
+    "equal": true
+  },
+  "redacted": true,
+  "redactions": [
+    {
+      "path": "/Built_Part",
+      "attribute": "Build_ID",
+      "lengths": [
+        13
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Machine_Serial",
+      "lengths": [
+        28
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Scanner_ID",
+      "lengths": [
+        26
+      ],
+      "styles": [
+        "text"
+      ]
+    },
+    {
+      "path": "/Built_Part",
+      "attribute": "Username",
+      "lengths": [
+        7
+      ],
+      "styles": [
+        "text"
+      ]
+    }
+  ],
+  "scan": {
+    "listed_values_remaining": [],
+    "looks_identifying": []
+  }
+}
