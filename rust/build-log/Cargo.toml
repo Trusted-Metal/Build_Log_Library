@@ -1,0 +1,31 @@
+[package]
+name = "build-log"
+version.workspace = true
+edition.workspace = true
+publish = false
+description = "The public entry point of the Build Log Library: the Model, and the IO and Processing layers behind features. Consumers depend on this crate, by git tag."
+
+[features]
+# `hdf5` is on by default: it brings the IO layer. Without it the crate is the Model only (and builds for wasm32).
+default = ["hdf5"]
+hdf5 = ["dep:build-log-io"]
+processing = ["dep:build-log-processing"]
+# Placeholders until their layers exist: the job layer (IP-15) sits on the IO layer; TypeScript generation (IP-02 phase 2R) adds `specta`.
+jobs = ["hdf5"]
+specta = []
+# Compile libhdf5 from source (the local default on a machine without HDF5). Forwarded to the IO layer.
+static-hdf5 = ["hdf5", "build-log-io/static-hdf5"]
+# RULE: no feature changes the on-disk schema. A feature adds or removes code, never what a file means or contains.
+
+[dependencies]
+build-log-model = { workspace = true }
+build-log-io = { workspace = true, optional = true }
+build-log-processing = { workspace = true, optional = true }
+
+[dev-dependencies]
+build-log-testkit = { workspace = true }
+# the architecture guards read `cargo metadata`
+serde_json = "1"
+
+[lints]
+workspace = true

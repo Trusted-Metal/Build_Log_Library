@@ -1,0 +1,20 @@
+[package]
+name = "build-log-io"
+version.workspace = true
+edition.workspace = true
+publish = false
+description = "The IO layer of the Build Log Library: HDF5 files to and from the Model. Skeleton: the HDF5 binding arrives with IP-01 phase 1D and the adapters with IP-04 and after."
+
+[features]
+# Compile libhdf5 from source instead of using the system library. The binding and its `static` feature arrive in phase 1D;
+# until then this feature only exists so the facade can forward to it.
+static-hdf5 = []
+
+[dependencies]
+build-log-model = { workspace = true }
+
+[dev-dependencies]
+build-log-testkit = { workspace = true }
+
+[lints]
+workspace = true

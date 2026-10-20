@@ -1,0 +1,15 @@
+[package]
+name = "build-log-processing"
+version.workspace = true
+edition.workspace = true
+publish = false
+description = "The Processing layer of the Build Log Library: derived computation over Model data. Skeleton: the stages arrive with IP-16."
+
+[dependencies]
+build-log-model = { workspace = true }
+
+[dev-dependencies]
+build-log-testkit = { workspace = true }
+
+[lints]
+workspace = true
