@@ -1,3 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["crates/model"]
+members = ["rust/*"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2021"
+
+[workspace.lints.rust]
+unsafe_code = "deny"

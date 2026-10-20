@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "model"
+name = "build-log-model"
 version = "0.0.0"

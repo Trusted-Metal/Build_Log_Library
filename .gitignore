@@ -1,6 +1,14 @@
 /Implementation_Plans
+# Cargo build output. Cargo.lock is deliberately NOT ignored: it is tracked, so CI and every machine resolve the same
+# dependency versions (IP-01 T01.14). Do not add it here.
 /target
 /_archive
+# Large local fixtures (the working fixtures and the layer extracts). Never committed; the committed miniatures live in
+# testdata/, which is not ignored.
 /fixtures
 /node_modules
 /scratch
+# Python tooling (tools/fixtures)
+.venv/
+__pycache__/
+.pytest_cache/
