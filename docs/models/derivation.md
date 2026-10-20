@@ -1,6 +1,6 @@
 # Model Derivation
 
-Maps HDF5 fixture structure to Rust types in `crates/model`. Updated
+Maps HDF5 fixture structure to Rust types in `rust/model` (package `build-log-model`). Updated
 incrementally as each type is proposed and reviewed — this is a review aid,
 not general reference documentation.
 
