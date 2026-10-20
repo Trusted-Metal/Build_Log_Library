@@ -4,3 +4,10 @@
 # here from the start rather than as a later cleanup commit.
 .husky/* text eol=lf
 *.sh text eol=lf
+
+# HDF5 files are binary. Without this, a checkout with core.autocrlf=true can rewrite line endings inside a file that git
+# mistakes for text, which changes its bytes and its hash (IP-01 T01.14). The committed miniatures in testdata/ are checked by hash.
+*.h5 binary
+
+# The hashes of the committed miniatures are read by `sha256sum -c`, which takes a CR at the end of a line as part of the file name: keep this file LF on every platform.
+testdata/SHA256SUMS text eol=lf
