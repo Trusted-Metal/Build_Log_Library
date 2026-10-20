@@ -1,0 +1,17 @@
+[package]
+name = "build-log-testkit"
+version.workspace = true
+edition.workspace = true
+publish = false
+description = "Test support for the Build Log Library: where the committed miniatures and the large local fixtures are, and how a test skips when they are not there. Dev-only."
+
+# No workspace crate is a dependency of this one (it offers paths and skip helpers only): a crate that dev-depends on a kit that depends back on it
+# is compiled twice in its own tests, and the two copies of its types do not match.
+[dependencies]
+
+[dev-dependencies]
+# the checksum test of the committed miniatures (tests/testdata_checksums.rs)
+sha2 = "0.10"
+
+[lints]
+workspace = true

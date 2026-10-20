@@ -1,0 +1,23 @@
+{
+  "source": "IP-01 plan, Appendix C: allowed dependencies between workspace crates",
+  "reading": "An edge between two workspace crates is allowed only if a rule below names it, with its kind (normal or dev). Every other edge fails layering_is_one_way. Nothing inside the workspace depends on `build-log` (the facade), so no rule has it as a target. A rule with optional = true says the dependency must be optional, behind a feature. The test kit depends on no workspace crate, so no rule starts at it. Third-party dependencies are not governed here.",
+  "allowed": [
+    { "from": "build-log-model", "to": "build-log-testkit", "kinds": ["dev"] },
+
+    { "from": "build-log-io", "to": "build-log-model", "kinds": ["normal"] },
+    { "from": "build-log-io", "to": "build-log-testkit", "kinds": ["dev"] },
+    { "from": "build-log-io", "to": "build-log-conformance", "kinds": ["dev"] },
+
+    { "from": "build-log-processing", "to": "build-log-model", "kinds": ["normal"] },
+    { "from": "build-log-processing", "to": "build-log-testkit", "kinds": ["dev"] },
+    { "from": "build-log-processing", "to": "build-log-conformance", "kinds": ["dev"] },
+
+    { "from": "build-log", "to": "build-log-model", "kinds": ["normal"] },
+    { "from": "build-log", "to": "build-log-io", "kinds": ["normal"], "optional": true },
+    { "from": "build-log", "to": "build-log-processing", "kinds": ["normal"], "optional": true },
+    { "from": "build-log", "to": "build-log-testkit", "kinds": ["dev"] },
+    { "from": "build-log", "to": "build-log-conformance", "kinds": ["dev"] },
+
+    { "from": "build-log-conformance", "to": "build-log-model", "kinds": ["normal", "dev"] }
+  ]
+}

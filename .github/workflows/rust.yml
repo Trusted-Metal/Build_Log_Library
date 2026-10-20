@@ -33,8 +33,5 @@ jobs:
       - name: Run clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
 
-      # Verification only, not a distribution step — catches packaging-manifest
-      # problems (file inclusion rules, metadata) early, the same way
-      # `cargo publish` would, without actually publishing anywhere.
-      - name: Verify cargo package (packaging sanity check, not published)
-        run: cargo package --workspace
+      # There is no `cargo package` step. Nothing is published (`publish = false`), and cargo cannot package a crate whose
+      # workspace dependencies are unpublishable (IP-01 question Q1-10, decided 2026-10-20).
