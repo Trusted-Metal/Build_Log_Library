@@ -37,6 +37,8 @@ pub mod miniature {
     pub const V17_OCT15: &str = "v17_oct15.h5";
     /// V17 of 2026-10-19 with the OPC UA join output (`Global_Sensors`, `Build_Status`): one layer, both lasers recorded, no `Synchronous_*` samples.
     pub const V17_TRIGGERED_2026_10_19: &str = "v17_triggered_2026_10_19.h5";
+    /// V17 of 2026-08-18 as tauri writes it, the fullest one: three layers with the camera images (`Pre_Exposure/raw`, `Post_Exposure/raw`) and the OPC UA events inside each layer.
+    pub const V17_2026_08_18_IMAGES: &str = "v17_2026_08_18_images.h5";
     /// V18, which is provisional: its owner is still finalizing it.
     pub const V18: &str = "v18.h5";
     /// Layers 1964 to 1967 and 2006 to 2008 of the V17 original: a 39.9-hour pause and a laser that did not fire.
