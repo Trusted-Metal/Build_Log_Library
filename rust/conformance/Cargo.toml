@@ -1,0 +1,15 @@
+[package]
+name = "build-log-conformance"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+description = "Conformance assertions for the Build Log Library: what the Common Data Model must show for each committed miniature, checked against the independent expectation files. Dev-only."
+
+[dependencies]
+build-log-model = { workspace = true }
+# reads the expectation files of testdata/expectations
+serde_json = "1"
+
+[lints]
+workspace = true

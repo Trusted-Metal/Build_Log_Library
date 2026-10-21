@@ -19,7 +19,7 @@ fn workspace() -> &'static Workspace {
 // ---------------------------------------------------------------- phase 1B: the shape of the workspace
 
 #[test]
-fn workspace_has_the_four_layers_and_the_testkit() {
+fn workspace_has_the_four_layers_the_testkit_and_the_conformance_crate() {
     assert_clean("the layers of the workspace", layer_violations(workspace()));
 }
 
@@ -45,7 +45,12 @@ fn every_crate_opts_into_the_workspace_lints() {
 fn unsafe_code_is_forbidden_where_the_decision_says() {
     // D01-7: forbid in the Model, Processing and the facade; the IO layer stays at the workspace's `deny` (it may need `unsafe` for the HDF5 binding).
     let root = repo_root();
-    for dir in ["rust/model", "rust/processing", "rust/build-log"] {
+    for dir in [
+        "rust/model",
+        "rust/processing",
+        "rust/build-log",
+        "rust/conformance",
+    ] {
         let source =
             fs::read_to_string(root.join(dir).join("src").join("lib.rs")).expect("a lib.rs");
         assert!(
@@ -153,13 +158,9 @@ fn spec_directory_is_outside_language_directories() {
 }
 
 #[test]
-fn the_allowed_dependency_data_names_only_crates_of_the_workspace_or_of_a_later_plan() {
-    // a typo in the data would silently allow nothing or everything; the one crate that does not exist yet is the conformance crate of IP-02
-    let known: Vec<&str> = LAYERS
-        .iter()
-        .map(|(name, _)| *name)
-        .chain(["build-log-conformance"])
-        .collect();
+fn the_allowed_dependency_data_names_only_crates_of_the_workspace() {
+    // a typo in the data would silently allow nothing or everything
+    let known: Vec<&str> = LAYERS.iter().map(|(name, _)| *name).collect();
     for rule in &allowed_dependencies().rules {
         assert!(
             known.contains(&rule.from.as_str()) && known.contains(&rule.to.as_str()),
