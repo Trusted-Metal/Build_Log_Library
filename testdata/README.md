@@ -28,6 +28,10 @@ Beside every `.h5` is a `.sidecar.json`: what it was cut from (name and hash), t
 
 `expectations/` holds, for each miniature, the facts the Common Data Model must show for it: the layers and lasers (and whether each is recorded, recorded and empty, or not recorded), the channels with their kind and declared unit, the times as the file wrote them, and for V18 the sensors. An independent script that reads only the miniature writes them; they are never edited by hand, and each names the SHA-256 of its miniature, so a changed miniature makes its file stale. They hold no sample value and no value that is not already in the miniature.
 
+## The primitives file
+
+`primitives.json` holds how each kind of value in the miniatures is stored: for every distinct encoding of an attribute (class, width, signedness, byte order, text form and padding, scalar or array) an instance with its value and how many the miniatures hold, for every distinct kind of dataset its layout, chunks, filters and first values, and the `File_Version` of each file. The same independent script writes it, it is never edited by hand, and it says nothing about what a value means.
+
 ## Rules
 
 1. **Do not edit, regenerate or replace a file.** HDF5 does not write the same bytes twice, so a rebuilt miniature has another hash. A change needs the repository owner's approval and a new line in `SHA256SUMS`.
