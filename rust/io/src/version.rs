@@ -6,6 +6,8 @@
 use std::fmt;
 use std::str::FromStr;
 
+use build_log_model::{Error, ErrorKind};
+
 /// A libhdf5 version, as the library itself reports it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Libhdf5Version {
@@ -76,6 +78,27 @@ impl FromStr for Libhdf5Version {
 pub fn libhdf5_version() -> Libhdf5Version {
     let (major, minor, micro) = hdf5::library_version();
     Libhdf5Version::new(major, minor, micro)
+}
+
+/// The oldest libhdf5 that the library works with (BL-ST-01, decision D03-5): 1.10.8, the version in tauri's container, declared here once. **There is no
+/// maximum**: the range tested is 1.10.8 to 2.2.0, and a newer version is reported by the version report of CI and not refused. The CI workflow names the same
+/// number, and a test keeps the two equal.
+pub const LIBHDF5_MINIMUM: Libhdf5Version = Libhdf5Version::new(1, 10, 8);
+
+/// Refuses a libhdf5 older than `minimum`. The error is `UnsupportedInVersion`, and names the libhdf5 that was found and the minimum.
+pub fn check_libhdf5(found: Libhdf5Version, minimum: Libhdf5Version) -> Result<(), Error> {
+    if found >= minimum {
+        return Ok(());
+    }
+    Err(Error::new(ErrorKind::UnsupportedInVersion {
+        version: format!("libhdf5 {found}"),
+        feature: format!("reading or writing Build Log files with a libhdf5 older than {minimum}"),
+    }))
+}
+
+/// Checks the linked libhdf5 against [`LIBHDF5_MINIMUM`]. Opening a file through [`crate::hdf5::open_file`] does this first.
+pub fn check_linked_libhdf5() -> Result<(), Error> {
+    check_libhdf5(libhdf5_version(), LIBHDF5_MINIMUM)
 }
 
 #[cfg(test)]

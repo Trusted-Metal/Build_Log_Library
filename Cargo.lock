@@ -64,6 +64,7 @@ dependencies = [
  "build-log-model",
  "build-log-testkit",
  "hdf5-metno",
+ "serde_json",
 ]
 
 [[package]]

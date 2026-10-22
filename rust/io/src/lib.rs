@@ -14,6 +14,12 @@
 // Unsafe code is denied for every crate by the workspace lints; this crate needs none while it uses the `hdf5-metno` wrapper (decision D01-7),
 // so it stays at `deny` rather than `forbid`.
 
+/// The HDF5 primitives (IP-03). Internal: the adapters of this crate and its tests use them; they are not part of the facade's contract.
+#[doc(hidden)]
+pub mod hdf5;
 mod version;
 
-pub use version::{libhdf5_version, Libhdf5Version, ParseLibhdf5VersionError};
+pub use version::{
+    check_libhdf5, check_linked_libhdf5, libhdf5_version, Libhdf5Version, ParseLibhdf5VersionError,
+    LIBHDF5_MINIMUM,
+};
