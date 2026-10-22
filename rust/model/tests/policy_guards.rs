@@ -210,10 +210,9 @@ fn bracket_balance(text: &str) -> i32 {
 fn item_header(line: &str) -> Option<(Kind, String)> {
     let (kind, rest) = if let Some(rest) = line.strip_prefix("pub struct ") {
         (Kind::Struct, rest)
-    } else if let Some(rest) = line.strip_prefix("pub enum ") {
-        (Kind::Enum, rest)
     } else {
-        return None;
+        let rest = line.strip_prefix("pub enum ")?;
+        (Kind::Enum, rest)
     };
     let name: String = rest.chars().take_while(|c| is_ident(*c)).collect();
     (!name.is_empty()).then_some((kind, name))
