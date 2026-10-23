@@ -49,6 +49,10 @@ pub use column::{
     Precision, ProgressSink, ReadContext, Revision, Shared, CANCEL_CHECK_INTERVAL,
 };
 pub use error::{Error, ErrorClass, ErrorKind, Location, Violation};
+pub use extra::{
+    AttrShape, AttrValue, Dims, Extra, ExtraAttribute, NodeKind, StoredAs, StoredClass,
+    TextCharset, TextPadding, UnknownNode, MAX_ATTRIBUTE_BYTES, MAX_DIMS,
+};
 pub use identity::{Availability, ByLayer, ChannelKey, LaserKey, LayerId, Presence};
 pub use meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
 pub use provenance::{Origin, Origins};

@@ -14,11 +14,14 @@
 //!   the other. (A writer may declare the number planned or the last committed, CT-UC-09; no file says which, so nothing here does.)
 //! * **The build date is the string the file gave** (phase 2E, which would parse it, was dropped): [`BuildIdentity::date`] is written back unchanged.
 //! * **Absent is absent** (decision D02-4). Optional fields are `Option`, and a value that was read as "not recorded" says so in the node's
-//!   [`Origins`] (a thickness of `0.0` that a writer uses when it does not know, decision J4).
-//! * **The completion tranche adds** parameters, provenance, quality, events and `extra` to these nodes (task T02.26); they are optional and omitted when
-//!   absent, so they do not change what is written here.
+//!   [`Origins`] (a thickness of `0.0` that a writer uses when it does not know, decision J4). A layer has two thicknesses, the actual and the commanded; each
+//!   is read and reported on its own.
+//! * **Nothing a file holds is dropped.** Every node but the channel carries an [`Extra`]: what the adapter did not type is kept there (IP-13 phase 13A).
+//! * **The completion tranche adds** parameters, provenance, quality and events to these nodes (task T02.26); they are optional and omitted when absent,
+//!   so they do not change what is written here.
 
 use crate::channel::ChannelDescriptor;
+use crate::extra::Extra;
 use crate::identity::{ByLayer, LaserKey, LayerId, Presence};
 use crate::provenance::{Origin, Origins};
 use crate::time::{TimeAxis, TimeValue};
@@ -41,7 +44,7 @@ pub struct BuildIdentity {
     pub source_mcf_hash: Option<String>,
 }
 
-/// A layer of the build: its id (the file's own), its times as written and its thickness.
+/// A layer of the build: its id (the file's own), its times as written and its two thicknesses.
 // constructed-by: library
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive]
@@ -50,9 +53,15 @@ pub struct LayerMeta {
     /// The start and end of the layer as the file gave them, with a unit only if the file records one (decision D02-19).
     pub start: Option<TimeValue>,
     pub end: Option<TimeValue>,
-    /// The thickness of the layer, where the file gives a real one. A placeholder is not a thickness: see [`LayerMeta::set_thickness_from_file`].
-    pub thickness: Option<Quantity>,
+    /// The thickness that the file says was laid, where it gives a real one. A placeholder is not a thickness: see
+    /// [`LayerMeta::set_actual_thickness_from_file`]. It is a different quantity from [`LayerMeta::commanded_thickness`], and neither is derived from the other.
+    pub actual_thickness: Option<Quantity>,
+    /// The thickness that the file says was commanded, where it gives a real one. A placeholder is not a thickness: see
+    /// [`LayerMeta::set_commanded_thickness_from_file`].
+    pub commanded_thickness: Option<Quantity>,
     pub origins: Origins,
+    /// What the adapter did not type of this layer.
+    pub extra: Extra,
 }
 
 impl LayerMeta {
@@ -61,31 +70,67 @@ impl LayerMeta {
             id,
             start: None,
             end: None,
-            thickness: None,
+            actual_thickness: None,
+            commanded_thickness: None,
             origins: Origins::new(),
+            extra: Extra::new(),
         }
     }
 
-    /// Sets the thickness from the value a file gave. A value that is one of `placeholders` (what that version's writer writes when it does not know:
-    /// `1.0` in V16, `0.0` in V17) is **not a thickness**: the field stays absent and the origin `PlaceholderDropped` records the value that was
-    /// there. Which values are placeholders is the adapter's knowledge of its version, so the adapter passes them.
-    pub fn set_thickness_from_file(
+    /// Sets the actual thickness from the value a file gave. A value that is one of `placeholders` (what that version's writer writes when it does not
+    /// know: `1.0` in V16, `0.0` in V17) is **not a thickness**: the field stays absent and the origin `actual_thickness` is `PlaceholderDropped` and
+    /// records the value that was there. Which values are placeholders is the adapter's knowledge of its version, so the adapter passes them.
+    pub fn set_actual_thickness_from_file(
         &mut self,
         value: f64,
         unit: Option<&str>,
         placeholders: &[f64],
     ) {
-        if placeholders.contains(&value) {
-            self.thickness = None;
-            self.origins.record(
-                "thickness",
-                Origin::PlaceholderDropped {
-                    raw: format!("{value:?}"),
-                },
-            );
-        } else {
-            self.thickness = Some(Quantity::from_file(value, unit));
-        }
+        self.actual_thickness = thickness_from_file(
+            &mut self.origins,
+            "actual_thickness",
+            value,
+            unit,
+            placeholders,
+        );
+    }
+
+    /// The same for the commanded thickness, whose origin is `commanded_thickness`. The two are separate facts of the file and are read, kept and reported
+    /// separately: one can be a placeholder while the other is not.
+    pub fn set_commanded_thickness_from_file(
+        &mut self,
+        value: f64,
+        unit: Option<&str>,
+        placeholders: &[f64],
+    ) {
+        self.commanded_thickness = thickness_from_file(
+            &mut self.origins,
+            "commanded_thickness",
+            value,
+            unit,
+            placeholders,
+        );
+    }
+}
+
+/// A thickness that a file gave, or nothing and an origin if the value is a placeholder.
+fn thickness_from_file(
+    origins: &mut Origins,
+    field: &str,
+    value: f64,
+    unit: Option<&str>,
+    placeholders: &[f64],
+) -> Option<Quantity> {
+    if placeholders.contains(&value) {
+        origins.record(
+            field,
+            Origin::PlaceholderDropped {
+                raw: format!("{value:?}"),
+            },
+        );
+        None
+    } else {
+        Some(Quantity::from_file(value, unit))
     }
 }
 
@@ -97,6 +142,8 @@ pub struct LaserLayerMeta {
     pub presence: Presence,
     pub time_axis: TimeAxis,
     pub origins: Origins,
+    /// What the adapter did not type of this laser in this layer.
+    pub extra: Extra,
 }
 
 impl LaserLayerMeta {
@@ -105,6 +152,7 @@ impl LaserLayerMeta {
             presence,
             time_axis: TimeAxis::new(),
             origins: Origins::new(),
+            extra: Extra::new(),
         }
     }
 
@@ -123,6 +171,8 @@ pub struct LaserMeta {
     pub channels: Vec<ChannelDescriptor>,
     pub layers: ByLayer<LaserLayerMeta>,
     pub origins: Origins,
+    /// What the adapter did not type of this laser.
+    pub extra: Extra,
 }
 
 impl LaserMeta {
@@ -132,6 +182,7 @@ impl LaserMeta {
             channels: Vec::new(),
             layers: ByLayer::new(),
             origins: Origins::new(),
+            extra: Extra::new(),
         }
     }
 }
@@ -151,6 +202,8 @@ pub struct BuildMeta {
     /// Build-level channels: the sensors. Provisional (decision D02-16).
     pub sensors: Vec<ChannelDescriptor>,
     pub origins: Origins,
+    /// What the adapter did not type of the build.
+    pub extra: Extra,
     lasers: Vec<LaserMeta>,
 }
 
@@ -163,6 +216,7 @@ impl BuildMeta {
             layers: ByLayer::new(),
             sensors: Vec::new(),
             origins: Origins::new(),
+            extra: Extra::new(),
             lasers: Vec::new(),
         }
     }
@@ -278,7 +332,7 @@ mod tests {
             (
                 layer.start.is_none(),
                 layer.end.is_none(),
-                layer.thickness.is_none()
+                layer.actual_thickness.is_none() && layer.commanded_thickness.is_none()
             ),
             (true, true, true)
         );
@@ -295,26 +349,71 @@ mod tests {
     fn thickness_placeholder_becomes_not_recorded_with_origin() {
         // V17 writes 0.0 when it does not know the thickness; V16 writes 1.0
         let mut layer = LayerMeta::new(LayerId(1));
-        layer.set_thickness_from_file(0.0, None, &[0.0]);
-        assert_eq!(layer.thickness, None);
+        layer.set_actual_thickness_from_file(0.0, None, &[0.0]);
+        layer.set_commanded_thickness_from_file(0.0, None, &[0.0]);
         assert_eq!(
-            layer.origins.get("thickness"),
-            Some(&Origin::PlaceholderDropped { raw: "0.0".into() })
+            (
+                layer.actual_thickness.clone(),
+                layer.commanded_thickness.clone()
+            ),
+            (None, None)
         );
+        // each of the two says so on its own, with the value that was there
+        for field in ["actual_thickness", "commanded_thickness"] {
+            assert_eq!(
+                layer.origins.get(field),
+                Some(&Origin::PlaceholderDropped { raw: "0.0".into() }),
+                "{field}"
+            );
+        }
         // a real thickness is kept as written, with an unknown unit when the file has none (J5), and says nothing
         let mut real = LayerMeta::new(LayerId(2));
-        real.set_thickness_from_file(0.03, None, &[0.0]);
-        let thickness = real.thickness.as_ref().unwrap();
+        real.set_actual_thickness_from_file(0.03, None, &[0.0]);
+        let thickness = real.actual_thickness.as_ref().unwrap();
         assert_eq!(thickness.value, 0.03);
         assert!(!thickness.unit.is_known());
         assert!(real.origins.is_empty());
         // the same value is a thickness where the adapter's version does not use it as a placeholder
         let mut v16 = LayerMeta::new(LayerId(3));
-        v16.set_thickness_from_file(1.0, None, &[1.0]);
-        assert_eq!(v16.thickness, None);
+        v16.set_actual_thickness_from_file(1.0, None, &[1.0]);
+        assert_eq!(v16.actual_thickness, None);
         let mut other = LayerMeta::new(LayerId(4));
-        other.set_thickness_from_file(1.0, None, &[0.0]);
-        assert_eq!(other.thickness.as_ref().map(|t| t.value), Some(1.0));
+        other.set_actual_thickness_from_file(1.0, None, &[0.0]);
+        assert_eq!(other.actual_thickness.as_ref().map(|t| t.value), Some(1.0));
+    }
+
+    #[test]
+    fn the_actual_and_the_commanded_thickness_are_separate_facts() {
+        // one can be real while the other is a placeholder: neither stands for the other, and each origin is its own
+        let mut layer = LayerMeta::new(LayerId(1));
+        layer.set_actual_thickness_from_file(0.031, None, &[0.0]);
+        layer.set_commanded_thickness_from_file(0.0, None, &[0.0]);
+        assert_eq!(
+            layer.actual_thickness.as_ref().map(|t| t.value),
+            Some(0.031)
+        );
+        assert_eq!(layer.commanded_thickness, None);
+        assert_eq!(layer.origins.get("actual_thickness"), None);
+        assert_eq!(
+            layer.origins.get("commanded_thickness"),
+            Some(&Origin::PlaceholderDropped { raw: "0.0".into() })
+        );
+        // and the other way round
+        let mut other = LayerMeta::new(LayerId(2));
+        other.set_actual_thickness_from_file(0.0, None, &[0.0]);
+        other.set_commanded_thickness_from_file(0.03, None, &[0.0]);
+        assert_eq!(other.actual_thickness, None);
+        assert_eq!(
+            other.commanded_thickness.as_ref().map(|t| t.value),
+            Some(0.03)
+        );
+        // an attribute that the file does not have is not set at all: absent is absent, and says nothing
+        let absent = LayerMeta::new(LayerId(3));
+        assert!(
+            absent.actual_thickness.is_none()
+                && absent.commanded_thickness.is_none()
+                && absent.origins.is_empty()
+        );
     }
 
     #[test]
@@ -341,6 +440,16 @@ mod tests {
             1
         );
         assert!(build.laser(&LaserKey::new("7", 7)).is_none());
+    }
+
+    #[test]
+    fn every_node_carries_an_extra_that_starts_empty() {
+        assert!(BuildMeta::new(identity()).extra.is_empty());
+        assert!(LayerMeta::new(LayerId(1)).extra.is_empty());
+        assert!(LaserMeta::new(LaserKey::new("1", 1)).extra.is_empty());
+        assert!(LaserLayerMeta::new(Presence::from_count(1))
+            .extra
+            .is_empty());
     }
 
     #[test]
