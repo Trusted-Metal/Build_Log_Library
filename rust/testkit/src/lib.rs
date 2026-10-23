@@ -17,6 +17,8 @@
 
 use std::path::{Path, PathBuf};
 
+pub mod scan;
+
 /// The environment variable that names the folder holding the large local fixtures.
 pub const FIXTURES_ENV: &str = "BUILD_LOG_FIXTURES_DIR";
 
