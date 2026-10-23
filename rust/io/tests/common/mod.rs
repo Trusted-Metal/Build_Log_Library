@@ -63,6 +63,65 @@ pub fn locate(file: &File, path: &str) -> Location {
     }
 }
 
+// ---------------------------------------------------------------- small HDF5 files made at test time (IP-04)
+
+/// A temporary HDF5 file, removed when the value is dropped, even if the test fails.
+pub struct TempH5(pub std::path::PathBuf);
+
+impl Drop for TempH5 {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
+}
+
+/// A temporary file with one group, `Mount`, that `write` fills. The label must be different in each test, because tests run side by side.
+pub fn temp_h5(label: &str, write: impl FnOnce(&hdf5::Group)) -> TempH5 {
+    let path = std::env::temp_dir().join(format!("build-log-io-{}-{label}.h5", std::process::id()));
+    {
+        let file = File::create(&path).expect("a new HDF5 file can be created");
+        let group = file.create_group("Mount").expect("a group can be created");
+        write(&group);
+    }
+    TempH5(path)
+}
+
+/// A temporary file that `write` fills, with whatever groups it likes. The label must be different in each test.
+pub fn temp_file(label: &str, write: impl FnOnce(&File)) -> TempH5 {
+    let path = std::env::temp_dir().join(format!("build-log-io-{}-{label}.h5", std::process::id()));
+    {
+        let file = File::create(&path).expect("a new HDF5 file can be created");
+        write(&file);
+    }
+    TempH5(path)
+}
+
+pub fn put_scalar<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, value: T) {
+    group
+        .new_attr::<T>()
+        .create(name)
+        .expect("an attribute can be created")
+        .write_scalar(&value)
+        .expect("it can be written");
+}
+
+pub fn put_array<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, values: &[T]) {
+    group
+        .new_attr::<T>()
+        .shape(values.len())
+        .create(name)
+        .expect("an attribute can be created")
+        .write_raw(values)
+        .expect("it can be written");
+}
+
+pub fn put_text(group: &hdf5::Group, name: &str, text: &str) {
+    put_scalar(
+        group,
+        name,
+        text.parse::<hdf5::types::VarLenUnicode>().expect("text"),
+    );
+}
+
 // ---------------------------------------------------------------- the oracle, `testdata/primitives.json` (phase 3A)
 
 pub fn oracle() -> Json {

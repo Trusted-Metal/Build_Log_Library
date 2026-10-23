@@ -11,6 +11,8 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use build_log_testkit::scan::code_of;
+
 /// Names of groups, datasets and attributes of the committed miniatures that mean something in a version's layout (read from them on 2026-10-22). A name
 /// that is also an everyday word (`Value`, `State`, `Date`) is left out on purpose: the types of the primitives use such words. A new version that
 /// brings names of this kind adds them here.
@@ -80,97 +82,6 @@ fn is_ident(c: char) -> bool {
     c.is_alphanumeric() || c == '_'
 }
 
-/// The text of a Rust source with every comment blanked out (its line breaks are kept, so that a line number is still the line of the file). The content of
-/// a string, a raw string or a character literal is kept, because that is where a name would be.
-fn code_of(text: &str) -> String {
-    let c: Vec<char> = text.chars().collect();
-    let mut out = String::with_capacity(text.len());
-    let mut i = 0;
-    while i < c.len() {
-        let next = c.get(i + 1).copied();
-        if c[i] == '/' && next == Some('/') {
-            while i < c.len() && c[i] != '\n' {
-                out.push(' ');
-                i += 1;
-            }
-        } else if c[i] == '/' && next == Some('*') {
-            let mut depth = 0;
-            while i < c.len() {
-                if c[i] == '/' && c.get(i + 1) == Some(&'*') {
-                    depth += 1;
-                    out.push_str("  ");
-                    i += 2;
-                } else if c[i] == '*' && c.get(i + 1) == Some(&'/') {
-                    depth -= 1;
-                    out.push_str("  ");
-                    i += 2;
-                    if depth == 0 {
-                        break;
-                    }
-                } else {
-                    out.push(if c[i] == '\n' { '\n' } else { ' ' });
-                    i += 1;
-                }
-            }
-        } else if c[i] == 'r'
-            && (i == 0 || !is_ident(c[i - 1]))
-            && raw_string_hashes(&c, i).is_some()
-        {
-            let hashes = raw_string_hashes(&c, i).unwrap_or(0);
-            let start = i + 1 + hashes + 1; // after `r`, the hashes and the opening quote
-            out.extend(&c[i..start]);
-            i = start;
-            while i < c.len() {
-                let closes = c[i] == '"' && (0..hashes).all(|k| c.get(i + 1 + k) == Some(&'#'));
-                out.push(c[i]);
-                i += 1;
-                if closes {
-                    out.extend(std::iter::repeat_n('#', hashes));
-                    i += hashes;
-                    break;
-                }
-            }
-        } else if c[i] == '"' {
-            out.push('"');
-            i += 1;
-            while i < c.len() {
-                out.push(c[i]);
-                if c[i] == '\\' && i + 1 < c.len() {
-                    out.push(c[i + 1]);
-                    i += 2;
-                    continue;
-                }
-                i += 1;
-                if c[i - 1] == '"' {
-                    break;
-                }
-            }
-        } else if c[i] == '\'' {
-            // a character literal ('x' or '\n'), or a lifetime ('a), which has no closing quote
-            let len = if next == Some('\\') {
-                c[i + 1..].iter().position(|&ch| ch == '\'').map(|p| p + 2)
-            } else if c.get(i + 2) == Some(&'\'') {
-                Some(3)
-            } else {
-                None
-            };
-            let len = len.unwrap_or(1).min(c.len() - i);
-            out.extend(&c[i..i + len]);
-            i += len;
-        } else {
-            out.push(c[i]);
-            i += 1;
-        }
-    }
-    out
-}
-
-/// The number of `#` of a raw string that starts at `c[i]` (`r"` is 0, `r#"` is 1), or `None` if `c[i]` does not start one.
-fn raw_string_hashes(c: &[char], i: usize) -> Option<usize> {
-    let hashes = c[i + 1..].iter().take_while(|&&ch| ch == '#').count();
-    (c.get(i + 1 + hashes) == Some(&'"')).then_some(hashes)
-}
-
 /// The contents of the string literals of one line of code.
 fn string_literals(line: &str) -> Vec<String> {
     let mut found = Vec::new();
@@ -205,7 +116,7 @@ fn has_word(line: &str, name: &str) -> bool {
 /// What is wrong with one source file: the layout names, numbered group names and path-like strings in its code.
 fn violations(file: &str, text: &str) -> Vec<String> {
     let mut found = Vec::new();
-    for (n, line) in code_of(text).lines().enumerate() {
+    for (n, line) in code_of(text, true).lines().enumerate() {
         let at = n + 1;
         for name in LAYOUT_NAMES {
             if has_word(line, name) {
@@ -358,4 +269,60 @@ fn the_guard_rejects_a_source_made_to_break_it() {
             "the guard rejected a clean source: {source:?} gave {found:?}"
         );
     }
+}
+
+/// The Rust files that lie directly in a folder, not those of its subfolders.
+fn files_in(dir: &Path) -> Vec<PathBuf> {
+    let mut files: Vec<PathBuf> = fs::read_dir(dir)
+        .expect("the folder is readable")
+        .flatten()
+        .map(|entry| entry.path())
+        .filter(|path| path.is_file() && path.extension().is_some_and(|e| e == "rs"))
+        .collect();
+    files.sort();
+    files
+}
+
+#[test]
+fn the_dispatcher_holds_no_layout_names() {
+    // BL-VA-02: the dispatcher reads the marker, looks the version up and hands over, and knows no group or attribute. The place of the marker is the
+    // data that each adapter set declares. The guard scans the dispatch core and the files of `adapters/` that are not a version; the folders of
+    // `adapters/` are versions, and naming their layout is their job.
+    let src = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    let mut files = source_files(&src.join("dispatch"));
+    files.extend(files_in(&src.join("adapters")));
+    let names: Vec<String> = files
+        .iter()
+        .map(|f| {
+            f.strip_prefix(&src)
+                .unwrap()
+                .display()
+                .to_string()
+                .replace('\\', "/")
+        })
+        .collect();
+    // a guard that scanned nothing would pass for the wrong reason
+    for expected in [
+        "dispatch/mod.rs",
+        "dispatch/marker.rs",
+        "dispatch/registry.rs",
+        "dispatch/open.rs",
+        "adapters/mod.rs",
+        "adapters/set.rs",
+    ] {
+        assert!(
+            names.iter().any(|n| n == expected),
+            "the guard did not find {expected}"
+        );
+    }
+    let mut found = Vec::new();
+    for (file, name) in files.iter().zip(&names) {
+        let text = fs::read_to_string(file).expect("a readable source");
+        found.extend(violations(name, &text));
+    }
+    assert!(
+        found.is_empty(),
+        "layout names in the dispatcher:\n{}",
+        found.join("\n")
+    );
 }
