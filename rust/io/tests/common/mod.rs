@@ -227,3 +227,73 @@ pub fn int_of(j: &Json) -> i128 {
         .or_else(|| j.as_u64().map(i128::from))
         .unwrap_or_else(|| panic!("{j} is not an integer"))
 }
+
+// ---------------------------------------------------------------- V17 payloads made at test time (IP-13)
+
+use build_log_io::adapters::v17::layout;
+use hdf5::Group;
+
+pub fn monitoring(mount: &Group) -> Group {
+    mount
+        .create_group(layout::MONITORING_DATA)
+        .expect("the layers' group")
+}
+
+pub fn layer(monitoring: &Group, id: u32) -> Group {
+    monitoring
+        .create_group(&format!("{}{id}", layout::LAYER_PREFIX))
+        .expect("a layer's group")
+}
+
+pub fn dataset<T: hdf5::H5Type>(group: &Group, name: &str, samples: usize) {
+    group
+        .new_dataset::<T>()
+        .shape(samples)
+        .create(name)
+        .expect("a dataset");
+}
+
+/// A laser in a layer with all eight channels of `samples` samples each: the power as `float32`, the state as `uint8`, the positions as `int32`.
+pub fn laser(layer: &Group, number: u32, samples: usize, window: Option<(i64, i64)>) -> Group {
+    let group = layer
+        .create_group(&format!("{}{number}", layout::LASER_PREFIX))
+        .expect("a laser's group");
+    if let Some((start, end)) = window {
+        put_array(&group, layout::START_LASER_TIME, &[start]);
+        put_array(&group, layout::END_LASER_TIME, &[end]);
+    }
+    let data = group
+        .create_group(layout::LASER_DATA)
+        .expect("the group of the power");
+    dataset::<f32>(&data, layout::LASER_POWER, samples);
+    dataset::<u8>(&data, layout::LASER_STATE, samples);
+    let position = group
+        .create_group(layout::POSITION)
+        .expect("the group of the positions");
+    for name in [
+        layout::ACTUAL_X,
+        layout::ACTUAL_Y,
+        layout::ACTUAL_Z,
+        layout::COMMANDED_X,
+        layout::COMMANDED_Y,
+        layout::COMMANDED_Z,
+    ] {
+        dataset::<i32>(&position, name, samples);
+    }
+    group
+}
+
+/// A scanner card with a sample period, in the optical train `train`.
+pub fn scanner_card(mount: &Group, train: u32, period: f32) {
+    let calibration = mount
+        .create_group(layout::CALIBRATION_DATA)
+        .or_else(|_| mount.group(layout::CALIBRATION_DATA))
+        .expect("the calibration group");
+    let train = calibration
+        .create_group(&format!("{}{train}", layout::OPTICAL_TRAIN_PREFIX))
+        .expect("an optical train");
+    let card = train
+        .create_group(layout::SCANNER_CARD)
+        .expect("a scanner card");
+    put_array(&card, layout::SAMPLE_PERIOD, &[period]);
+}

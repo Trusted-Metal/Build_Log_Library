@@ -6,6 +6,10 @@
 //! * `every_adapter_folder_is_registered_exactly_once`: the production list of the registry names each folder once, the mock excepted, so that adding a version is a
 //!   folder and one line, and a folder that was never registered (or was registered twice) is caught.
 //!
+//! * `layout_names_appear_only_in_the_layout_module` (IP-13 phase 13B, decision D13-10, requirement BL-ST-13): in a folder that has a `layout.rs`, no other file
+//!   holds a name of that layout as a string. The names are read from the constants of `layout.rs`, so the guard needs no list of its own. Every folder but the
+//!   mock has a `layout.rs`.
+//!
 //! Each guard is also run on source made to break it, so that one that stopped looking would be noticed.
 
 use std::fs;
@@ -325,4 +329,155 @@ fn every_adapter_folder_is_registered_exactly_once() {
         !registration_problems(&two, "fn something_else() {}").is_empty(),
         "a source without the production list is reported"
     );
+}
+
+// ---------------------------------------------------------------- layout names only in the layout module (BL-ST-13)
+
+/// Does `name` occur in `text` as a whole word (not inside a longer identifier)?
+fn has_word(text: &str, name: &str) -> bool {
+    text.match_indices(name).any(|(at, _)| {
+        let before = text[..at].chars().next_back();
+        let after = text[at + name.len()..].chars().next();
+        !before.is_some_and(is_ident) && !after.is_some_and(is_ident)
+    })
+}
+
+/// The names that a layout module declares: the string constants (`pub const NAME: &str = "value";`), comments left out.
+fn layout_names(layout_source: &str) -> Vec<String> {
+    code_of(layout_source, true)
+        .lines()
+        .filter(|line| line.contains("const ") && line.contains(": &str"))
+        .filter_map(|line| line.split('"').nth(1).map(str::to_string))
+        .filter(|name| !name.is_empty())
+        .collect()
+}
+
+/// Where the other files of a folder hold a name of its layout: in a string, or anywhere else in the code. A name is spelled in `layout.rs` and nowhere else,
+/// so the search is of the whole line of code, with comments left out.
+fn names_outside_the_layout(
+    folder: &str,
+    layout_source: &str,
+    others: &[(String, String)],
+) -> Vec<String> {
+    let names = layout_names(layout_source);
+    let mut found = Vec::new();
+    for (file, text) in others {
+        for (n, line) in code_of(text, true).lines().enumerate() {
+            for name in &names {
+                if has_word(line, name) {
+                    found.push(format!(
+                        "adapters/{folder}/{file}:{}: the code holds the layout name `{name}`: use the constant of layout.rs",
+                        n + 1
+                    ));
+                }
+            }
+        }
+    }
+    found
+}
+
+#[test]
+fn layout_names_appear_only_in_the_layout_module() {
+    let mut checked = Vec::new();
+    let mut without_layout = Vec::new();
+    let mut found = Vec::new();
+    for folder in adapter_folders() {
+        let root = adapters_dir().join(&folder);
+        let layout = root.join("layout.rs");
+        if !layout.is_file() {
+            without_layout.push(folder);
+            continue;
+        }
+        let layout_source = fs::read_to_string(&layout).expect("a readable layout module");
+        assert!(
+            !layout_names(&layout_source).is_empty(),
+            "adapters/{folder}/layout.rs declares no name: the guard would check nothing"
+        );
+        let others: Vec<(String, String)> = rust_files(&root)
+            .into_iter()
+            .filter(|file| file != &layout)
+            .map(|file| {
+                let name = file
+                    .strip_prefix(&root)
+                    .unwrap()
+                    .display()
+                    .to_string()
+                    .replace('\\', "/");
+                (name, fs::read_to_string(&file).expect("a readable source"))
+            })
+            .collect();
+        found.extend(names_outside_the_layout(&folder, &layout_source, &others));
+        checked.push(folder);
+    }
+    // a guard that checked no folder would pass for the wrong reason; only the mock may go without a layout module
+    assert!(
+        checked.iter().any(|f| f == "v17"),
+        "the guard did not check v17: {checked:?}"
+    );
+    assert_eq!(
+        without_layout,
+        ["mock"],
+        "every folder but the mock has a layout.rs"
+    );
+    assert!(
+        found.is_empty(),
+        "layout names outside a layout module:\n{}",
+        found.join("\n")
+    );
+}
+
+#[test]
+fn the_layout_guard_rejects_a_name_outside_the_layout_module() {
+    let layout = "//! the layout\npub const MOUNT: &str = \"Built_Part\";\n/// the marker\npub const MARKER: &str = \"File_Version\";\npub const LIST: [&str; 2] = [MOUNT, MARKER];\n";
+    assert_eq!(layout_names(layout), ["Built_Part", "File_Version"]);
+    let other = |text: &str| vec![("read.rs".to_string(), text.to_string())];
+    let breaking = [
+        (
+            "a name as a string",
+            "let group = \"Built_Part\";",
+            "Built_Part",
+        ),
+        (
+            "a name inside a message",
+            "let m = format!(\"no File_Version on {}\", mount);",
+            "File_Version",
+        ),
+        (
+            "a name in a raw string",
+            "let g = r#\"Built_Part\"#;",
+            "Built_Part",
+        ),
+        (
+            "a name after a character literal",
+            "let q = '\"'; let g = \"File_Version\";",
+            "File_Version",
+        ),
+    ];
+    for (what, source, named) in breaking {
+        let found = names_outside_the_layout("v17", layout, &other(source));
+        assert!(
+            found.iter().any(|f| f.contains(&format!("`{named}`"))),
+            "the guard did not reject {what}: {source:?} gave {found:?}"
+        );
+    }
+    let clean = [
+        ("the constant", "let group = layout::MOUNT;"),
+        ("a comment", "// the mount is Built_Part\nlet x = 1;"),
+        (
+            "a doc comment",
+            "/// reads File_Version from the mount\nfn f() {}",
+        ),
+        (
+            "a longer name",
+            "let g = \"Built_Parts\"; let h = \"my_File_Version_2\";",
+        ),
+        ("another string", "let m = \"the mount has no marker\";"),
+    ];
+    for (what, source) in clean {
+        let found = names_outside_the_layout("v17", layout, &other(source));
+        assert!(
+            found.is_empty(),
+            "the guard rejected {what}: {source:?} gave {found:?}"
+        );
+    }
 }
