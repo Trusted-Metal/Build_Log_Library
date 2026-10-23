@@ -59,7 +59,17 @@ jobs:
         with:
           components: clippy, rustfmt
 
+      # The HDF5 binding's build script reads the installed libhdf5 and is not run again when that changes, so a cached `target/` must not outlive the
+      # library it was built against: the key names the library (2026-10-23: a runner with a newer libhdf5 restored a binding built for an older one,
+      # and the link failed with `undefined symbol: H5Literate`).
+      - name: Work out the libhdf5 cache key
+        id: hdf5-key
+        shell: bash
+        run: echo "key=libhdf5-$(dpkg-query -W -f='${Version}' libhdf5-dev | tr -c 'A-Za-z0-9._-' '-')" >> "$GITHUB_OUTPUT"
+
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ steps.hdf5-key.outputs.key }}
 
       - name: Check formatting
         run: cargo fmt --all -- --check
@@ -136,7 +146,24 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      # The binding's build script is not run again when the installed libhdf5 changes, so the cache key names the library (see the Lint job).
+      - name: Work out the libhdf5 cache key (Linux)
+        if: runner.os == 'Linux'
+        id: hdf5-key-linux
+        shell: bash
+        run: echo "key=libhdf5-$(dpkg-query -W -f='${Version}' libhdf5-dev | tr -c 'A-Za-z0-9._-' '-')" >> "$GITHUB_OUTPUT"
+
+      - name: Work out the libhdf5 cache key (Windows)
+        if: runner.os == 'Windows'
+        id: hdf5-key-windows
+        shell: pwsh
+        run: |
+          $version = (Get-Item "$env:HDF5_DIR\bin\hdf5.dll").VersionInfo.FileVersion -replace '[^0-9A-Za-z._-]', '-'
+          "key=libhdf5-$version" >> $env:GITHUB_OUTPUT
+
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ steps.hdf5-key-linux.outputs.key }}${{ steps.hdf5-key-windows.outputs.key }}
 
       - name: Report the libhdf5 version
         shell: bash
@@ -171,7 +198,14 @@ jobs:
           mkdir -p libhdf5-report
           dpkg -l 'libhdf5-*' | awk '/^ii/ {print $2, $3}' > libhdf5-report/install.txt
 
+      - name: Work out the libhdf5 cache key
+        id: hdf5-key
+        shell: bash
+        run: echo "key=libhdf5-$(dpkg-query -W -f='${Version}' libhdf5-dev | tr -c 'A-Za-z0-9._-' '-')" >> "$GITHUB_OUTPUT"
+
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ steps.hdf5-key.outputs.key }}
 
       - name: Report the libhdf5 version (it must be exactly the version tauri's container has)
         shell: bash
@@ -200,7 +234,14 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - name: Work out the libhdf5 cache key
+        id: hdf5-key
+        shell: bash
+        run: echo "key=libhdf5-$(dpkg-query -W -f='${Version}' libhdf5-dev | tr -c 'A-Za-z0-9._-' '-')" >> "$GITHUB_OUTPUT"
+
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ steps.hdf5-key.outputs.key }}
 
       - name: Build every feature combination
         run: cargo test --locked -p build-log --test feature_matrix
