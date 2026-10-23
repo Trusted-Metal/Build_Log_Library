@@ -3,8 +3,8 @@
 //! * **The registry is data** (BL-VA-04): a map from version to [`AdapterSet`]. Every function takes `&Registry`; production uses [`production`], a lazily
 //!   initialised static; tests build their own and inject fake versions without touching global state. [`Registry::supported_versions`] is derived from
 //!   the keys and never from a separate list.
-//! * **The production registry is empty in this plan.** The V17, V18 and V16 adapters add one line each to [`build_production`] (IP-13, IP-05, IP-12). The
-//!   mock version is registered only by injection and is never in it.
+//! * **The production registry holds the real versions only.** Each adapter adds one line to [`build_production`]: V17 (IP-13), then V18 (IP-05) and V16
+//!   (IP-12). The mock version is registered only by injection and is never in it.
 //! * **Exact match** (BL-VA-10): an unknown version is `UnsupportedVersion { found, supported }`; `open` preserves the on-disk version, and nothing upgrades
 //!   or downgrades a file; `create(version)` selects the adapter, and a version without a writer answers `UnsupportedInVersion`.
 
@@ -79,7 +79,7 @@ impl Registry {
     }
 }
 
-/// The registry of the real versions, built on first use. **Empty until the first adapter** (IP-13).
+/// The registry of the real versions, built on first use.
 pub fn production() -> &'static Registry {
     static PRODUCTION: OnceLock<Registry> = OnceLock::new();
     PRODUCTION.get_or_init(build_production)
@@ -88,8 +88,11 @@ pub fn production() -> &'static Registry {
 /// The production list: one line for each version that has an adapter. Adding a version is a folder in `adapters/` and a line here, and nothing else
 /// (BL-VA-06); a guard checks that every folder is named here once (phase 4E).
 fn build_production() -> Registry {
-    let registry = Registry::new();
-    // IP-13 adds the V17 adapter here, IP-05 the V18 adapter and IP-12 the V16 adapter.
+    let mut registry = Registry::new();
+    registry
+        .register(crate::adapters::v17::adapter_set())
+        .expect("the production list names each version once");
+    // IP-05 adds the V18 adapter here and IP-12 the V16 adapter.
     registry
 }
 

@@ -8,6 +8,7 @@
 //!
 //! * [`Expectation`]: one file of `testdata/expectations`, written from a miniature alone by an independent script (IP-02 phase 2K).
 //! * [`check`]: every way in which a [`BuildMeta`](build_log_model::BuildMeta) does not conform to an expectation, as lines that say what was found and what was expected.
+//!   [`check_parts`] does the same for the [`Part`]s named, so that an adapter built in steps asserts what it implements so far; the parts together are the whole.
 //! * [`synthesise`]: a `BuildMeta` made straight from an expectation. Until adapters exist it is the only producer of a CDM, and it is how the assertions are tested: a
 //!   CDM built from an expectation passes them, and the same CDM with one thing changed fails them.
 //!
@@ -20,6 +21,6 @@ mod expectation;
 mod names;
 mod synthesise;
 
-pub use check::check;
+pub use check::{check, check_parts, Part};
 pub use expectation::{expectations_dir, load_all, Expectation, EXPECTATIONS_VERSION};
 pub use synthesise::synthesise;

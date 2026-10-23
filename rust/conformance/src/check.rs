@@ -4,7 +4,7 @@
 //! the CDM must show, not how an adapter reads it, so any adapter of any version is held to the same facts.
 
 use build_log_model::{
-    BuildMeta, ChannelDescriptor, ChannelKey, LaserMeta, LayerId, LayerMeta, Origin, Presence,
+    BuildMeta, ChannelDescriptor, ChannelKey, LaserMeta, LayerId, Origin, Presence, Quantity,
     Renderability, TimeAxis, TimeValue, Unit, UnitSource,
 };
 use serde_json::Value;
@@ -12,10 +12,35 @@ use serde_json::Value;
 use crate::expectation::{array, field, int, opt_int, opt_text, text, Expectation};
 use crate::names::{accuracy_to, dtype_to, kind_from, kind_to, presence_to};
 
+/// One part of the whole check. An adapter that is built in steps asserts the parts it implements so far (IP-13 decision D13-9); [`check`] is all of them.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum Part {
+    /// The identity of the build, the declared layer count and the build's layer thickness.
+    Build,
+    /// The layers the file holds: their ids, times and thickness.
+    Layers,
+    /// The lasers: their presence in each layer, time axes and channels.
+    Lasers,
+    /// The build-level sensors.
+    Sensors,
+}
+
+impl Part {
+    /// Every part, in the order that [`check`] reports them.
+    pub const ALL: [Part; 4] = [Part::Build, Part::Layers, Part::Lasers, Part::Sensors];
+}
+
 /// Every way in which `meta` does not conform to `expectation`. Empty when it conforms.
 pub fn check(meta: &BuildMeta, expectation: &Expectation) -> Vec<String> {
+    check_parts(meta, expectation, &Part::ALL)
+}
+
+/// The same for the parts named only, reported in the order of [`Part::ALL`] whatever order they are given in. The parts together are the whole: the lines
+/// of [`check`] are the lines of each part, one after the other.
+pub fn check_parts(meta: &BuildMeta, expectation: &Expectation, parts: &[Part]) -> Vec<String> {
     let mut found = Vec::new();
-    if let Err(problem) = run(meta, expectation, &mut found) {
+    if let Err(problem) = run(meta, expectation, parts, &mut found) {
         found.push(format!("the expectation file cannot be read: {problem}"));
     }
     found
@@ -33,9 +58,30 @@ fn same<T: PartialEq + std::fmt::Debug>(
     }
 }
 
-fn run(meta: &BuildMeta, expectation: &Expectation, found: &mut Vec<String>) -> Result<(), String> {
+fn run(
+    meta: &BuildMeta,
+    expectation: &Expectation,
+    parts: &[Part],
+    found: &mut Vec<String>,
+) -> Result<(), String> {
     let root = expectation.root();
-    let build = field(root, "build")?;
+    if parts.contains(&Part::Build) {
+        build_level(meta, field(root, "build")?, found)?;
+    }
+    if parts.contains(&Part::Layers) {
+        layers(meta, array(root, "layers")?, found)?;
+    }
+    if parts.contains(&Part::Lasers) {
+        lasers(meta, array(root, "lasers")?, found)?;
+    }
+    if parts.contains(&Part::Sensors) {
+        sensors(meta, array(root, "sensors")?, found)?;
+    }
+    Ok(())
+}
+
+/// The build level: the identity, the declared layer count and the build's layer thickness.
+fn build_level(meta: &BuildMeta, build: &Value, found: &mut Vec<String>) -> Result<(), String> {
     identity(meta, field(build, "identity")?, found)?;
     same(
         found,
@@ -69,9 +115,7 @@ fn run(meta: &BuildMeta, expectation: &Expectation, found: &mut Vec<String>) -> 
             }
         },
     }
-    layers(meta, array(root, "layers")?, found)?;
-    lasers(meta, array(root, "lasers")?, found)?;
-    sensors(meta, array(root, "sensors")?, found)
+    Ok(())
 }
 
 fn identity(meta: &BuildMeta, expected: &Value, found: &mut Vec<String>) -> Result<(), String> {
@@ -198,11 +242,20 @@ fn layers(meta: &BuildMeta, expected: &[Value], found: &mut Vec<String>) -> Resu
             actual.end.as_ref(),
             opt_int(layer, "end")?,
         );
+        // the two thicknesses are two facts, each with its own origin
         thickness(
             found,
-            &what("its thickness"),
-            actual,
-            layer.get("thickness"),
+            &what("its actual thickness"),
+            actual.actual_thickness.as_ref(),
+            actual.origins.get("actual_thickness"),
+            layer.get("actual_thickness"),
+        )?;
+        thickness(
+            found,
+            &what("its commanded thickness"),
+            actual.commanded_thickness.as_ref(),
+            actual.origins.get("commanded_thickness"),
+            layer.get("commanded_thickness"),
         )?;
         let inferred = layer.get("origin").and_then(Value::as_str) == Some("Inferred");
         same(
@@ -215,31 +268,29 @@ fn layers(meta: &BuildMeta, expected: &[Value], found: &mut Vec<String>) -> Resu
     Ok(())
 }
 
+/// One of a layer's two thicknesses against its expectation: absent (the file has no such attribute), a placeholder that is not recorded (with its raw
+/// value as its origin), or a real value with its unit.
 fn thickness(
     found: &mut Vec<String>,
     what: &str,
-    layer: &LayerMeta,
+    actual: Option<&Quantity>,
+    origin: Option<&Origin>,
     expected: Option<&Value>,
 ) -> Result<(), String> {
     match expected.filter(|v| !v.is_null()) {
         None => {
-            same(found, what, layer.thickness.is_some(), false);
-            same(
-                found,
-                &format!("{what}, its origin"),
-                layer.origins.get("thickness").cloned(),
-                None,
-            );
+            same(found, what, actual.is_some(), false);
+            same(found, &format!("{what}, its origin"), origin.cloned(), None);
         }
         Some(e) if e.get("origin").and_then(Value::as_str) == Some("PlaceholderDropped") => {
-            same(found, what, layer.thickness.is_some(), false);
+            same(found, what, actual.is_some(), false);
             let raw = Origin::PlaceholderDropped {
                 raw: text(e, "raw")?.to_string(),
             };
             same(
                 found,
                 &format!("{what}, its origin"),
-                layer.origins.get("thickness").cloned(),
+                origin.cloned(),
                 Some(raw),
             );
         }
@@ -247,10 +298,10 @@ fn thickness(
             same(
                 found,
                 what,
-                layer.thickness.as_ref().map(|t| t.value),
+                actual.map(|t| t.value),
                 e.get("value").and_then(Value::as_f64),
             );
-            if let Some(t) = &layer.thickness {
+            if let Some(t) = actual {
                 unit(
                     found,
                     &format!("{what}, its unit"),

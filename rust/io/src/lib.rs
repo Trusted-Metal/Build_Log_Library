@@ -4,7 +4,8 @@
 //! * **May depend on:** `build-log-model`, and the HDF5 binding (`hdf5-metno`, pinned once in the workspace manifest). In tests only: `build-log-testkit`.
 //! * **Must not depend on:** `build-log-processing` or the `build-log` facade. Nothing above it may reach an HDF5 path or group name through it.
 //!
-//! The binding is here and proven to link (`tests/link_smoke.rs`); the adapters are not: the first arrives with IP-05 and IP-13.
+//! The binding is here and proven to link (`tests/link_smoke.rs`). The first adapter is V17 (IP-13), which reads the build level so far; V18 (IP-05) and V16
+//! (IP-12) follow.
 //! The architecture guards in `rust/build-log/tests` enforce the dependency rules above.
 //!
 //! # Building without a libhdf5 on the machine

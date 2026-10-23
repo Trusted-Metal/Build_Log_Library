@@ -8,8 +8,9 @@ description = "Conformance assertions for the Build Log Library: what the Common
 
 [dependencies]
 build-log-model = { workspace = true }
-# reads the expectation files of testdata/expectations
-serde_json = "1"
+# reads the expectation files of testdata/expectations. `float_roundtrip` makes a number parse to the nearest `f64` of its text: without it a value such as
+# 0.029999999329447746 comes out one unit in the last place lower, and an adapter that reads the same number exactly would be reported as wrong (found by IP-13 phase 13B)
+serde_json = { version = "1", features = ["float_roundtrip"] }
 
 [lints]
 workspace = true

@@ -24,8 +24,9 @@
 //! adapter from the file's own version marker, so **a consumer holds no code that depends on a version, and a new version needs no change in it**. Nothing here
 //! reaches an adapter or a group name: the adapters are not part of this crate's surface, and a guard test checks that.
 //!
-//! Until the first adapter lands (IP-13) the production registry is empty and [`open`] answers `UnsupportedVersion`; [`testing`] holds the mock version, so a
-//! consumer can be written and tried before that. `examples/mock_consumer.rs` is the shape of an integration.
+//! The production registry holds the versions that have an adapter: V17 so far (IP-13), then V18 and V16. [`open`] on a file of another version answers
+//! `UnsupportedVersion` and names the versions it can read. [`testing`] holds the mock version, so a consumer can be written and tried against a file of a
+//! version that is not real. `examples/mock_consumer.rs` is the shape of an integration.
 
 #![forbid(unsafe_code)]
 

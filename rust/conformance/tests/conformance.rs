@@ -6,7 +6,9 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
-use build_log_conformance::{check, expectations_dir, load_all, synthesise, Expectation};
+use build_log_conformance::{
+    check, check_parts, expectations_dir, load_all, synthesise, Expectation, Part,
+};
 use build_log_model::{
     Accuracy, BuildMeta, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind, ClockClass,
     NumericType, Presence, Quantity, TimeValue, TimeWindow, UnitSource,
@@ -148,18 +150,52 @@ fn mutations() -> Vec<Mutation> {
                 }
             })
         }),
-        ("a placeholder thickness is read as a number", |m| {
+        ("a placeholder actual thickness is read as a number", |m| {
             let ids: Vec<_> = m.layers.ids().collect();
             ids.into_iter().any(|id| {
                 let layer = m.layers.get_mut(id).expect("a layer");
-                if layer.origins.get("thickness").is_some() {
-                    layer.thickness = Some(Quantity::from_file(0.0, None));
+                if layer.origins.get("actual_thickness").is_some() {
+                    layer.actual_thickness = Some(Quantity::from_file(0.0, None));
                     true
                 } else {
                     false
                 }
             })
         }),
+        (
+            "a placeholder commanded thickness is read as a number",
+            |m| {
+                let ids: Vec<_> = m.layers.ids().collect();
+                ids.into_iter().any(|id| {
+                    let layer = m.layers.get_mut(id).expect("a layer");
+                    if layer.origins.get("commanded_thickness").is_some() {
+                        layer.commanded_thickness = Some(Quantity::from_file(0.0, None));
+                        true
+                    } else {
+                        false
+                    }
+                })
+            },
+        ),
+        (
+            "the commanded thickness is reported as the actual one",
+            |m| {
+                // the two are separate facts: the value of one must not stand in for the other
+                let ids: Vec<_> = m.layers.ids().collect();
+                ids.into_iter().any(|id| {
+                    let layer = m.layers.get_mut(id).expect("a layer");
+                    if layer.commanded_thickness.is_none()
+                        && layer.origins.get("commanded_thickness").is_some()
+                    {
+                        layer.commanded_thickness = Some(Quantity::from_file(0.03, None));
+                        layer.origins = build_log_model::Origins::new();
+                        true
+                    } else {
+                        false
+                    }
+                })
+            },
+        ),
         ("a laser disappears", |m| match without_last_laser(m) {
             Some(copy) => {
                 *m = copy;
@@ -354,6 +390,80 @@ fn each_assertion_fails_on_a_mutated_cdm() {
             "the mutation `{name}` applied to none of the expectation files, so it proves nothing"
         );
     }
+}
+
+#[test]
+fn the_parts_together_equal_the_whole() {
+    // an adapter built in steps asserts the parts it implements (IP-13, D13-9), so the parts must add up to the whole: on a CDM that is right, and on
+    // every mutated CDM of the list above, the lines of `check` are the lines of the parts one after the other, and no line belongs to two parts
+    let all = load_all().expect("the expectation files can be read");
+    let mut mutated = 0;
+    for expectation in &all {
+        let right = synthesise(expectation).expect("a synthetic CDM");
+        for part in Part::ALL {
+            assert!(
+                check_parts(&right, expectation, &[part]).is_empty(),
+                "{} fails {part:?} on a CDM built from it",
+                expectation.miniature()
+            );
+        }
+        assert!(check_parts(&right, expectation, &[]).is_empty());
+        for (name, mutate) in mutations() {
+            let mut meta = synthesise(expectation).expect("a synthetic CDM");
+            if !mutate(&mut meta) {
+                continue;
+            }
+            mutated += 1;
+            let whole = check(&meta, expectation);
+            let in_parts: Vec<String> = Part::ALL
+                .iter()
+                .flat_map(|part| check_parts(&meta, expectation, &[*part]))
+                .collect();
+            assert_eq!(
+                whole,
+                in_parts,
+                "{} after {name}: the parts do not add up to the whole",
+                expectation.miniature()
+            );
+            // the order in which the parts are named does not change the order of the lines
+            assert_eq!(
+                check_parts(
+                    &meta,
+                    expectation,
+                    &[Part::Sensors, Part::Lasers, Part::Layers, Part::Build]
+                ),
+                whole
+            );
+        }
+    }
+    assert!(mutated > 0, "no mutation applied, so nothing was compared");
+}
+
+#[test]
+fn a_part_reports_only_its_own_disagreements() {
+    let all = load_all().expect("the expectation files can be read");
+    let expectation = all
+        .iter()
+        .find(|e| e.miniature() == "v17_mock.h5")
+        .expect("the mock capture");
+    let mut meta = synthesise(expectation).unwrap();
+    meta.identity.build_id.push('x'); // a fault of the build level
+    edit_laser(&mut meta, 0, |laser| {
+        laser.channels.remove(0); // and one of the lasers
+        true
+    });
+    let build = check_parts(&meta, expectation, &[Part::Build]);
+    let lasers = check_parts(&meta, expectation, &[Part::Lasers]);
+    assert!(
+        build.iter().any(|l| l.starts_with("the build id")) && build.len() == 1,
+        "{build:?}"
+    );
+    assert!(
+        !lasers.is_empty() && lasers.iter().all(|l| !l.starts_with("the build id")),
+        "{lasers:?}"
+    );
+    assert!(check_parts(&meta, expectation, &[Part::Layers]).is_empty());
+    assert!(check_parts(&meta, expectation, &[Part::Sensors]).is_empty());
 }
 
 #[test]

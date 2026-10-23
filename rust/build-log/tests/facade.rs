@@ -11,9 +11,10 @@ use std::path::{Path, PathBuf};
 use build_log::testing::{mock_registry, mount_for, write_mock_file, write_mock_group};
 use build_log::{
     hdf5, library_versions, open, open_at, open_at_with, open_with, supported_versions,
-    Capabilities, ErrorKind, CDM_VERSION, PACKAGE_VERSION,
+    Capabilities, ErrorKind, LayerId, CDM_VERSION, PACKAGE_VERSION,
 };
 use build_log_testkit::scan::code_of;
+use build_log_testkit::{miniature, miniature_path};
 
 // The consumer example is a module of this test, so that it runs here for the mock version and for a second one: it is written against the facade only.
 #[allow(dead_code)]
@@ -71,13 +72,66 @@ fn the_facade_opens_the_mock_version_through_an_injected_registry() {
     let by_depth = open_at_with(&registry, &deep).expect("a nested mount opens");
     assert_eq!(by_depth.source().build().expect("the metadata"), build);
 
-    // the production registry holds no real version yet, and the mock is never in it: opening says what it can do instead
-    assert!(supported_versions().is_empty());
-    for result in [open(&file.0), open_at(&mount)] {
-        match result.expect_err("nothing is registered").kind() {
-            ErrorKind::UnsupportedVersion { supported, .. } => assert!(supported.is_empty()),
-            other => panic!("expected UnsupportedVersion, got {other:?}"),
+    // the production registry holds the real versions only (V17 so far), and the mock is never in it
+    assert_eq!(supported_versions(), ["17"]);
+    // `open` looks where the real versions keep their marker, and the mock keeps it elsewhere: the file is unversioned for the production registry
+    match open(&file.0)
+        .expect_err("no real version reads a mock file")
+        .kind()
+    {
+        ErrorKind::Unversioned { .. } => {}
+        other => panic!("expected Unversioned, got {other:?}"),
+    }
+    // `open_at` is handed the mock's own group, whose marker says 9001: a version that no real adapter reads, and the answer names what is supported
+    match open_at(&mount)
+        .expect_err("the version 9001 is not registered")
+        .kind()
+    {
+        ErrorKind::UnsupportedVersion { found, supported } => {
+            assert_eq!(found, "9001");
+            assert_eq!(supported, &["17".to_string()]);
         }
+        other => panic!("expected UnsupportedVersion, got {other:?}"),
+    }
+}
+
+#[test]
+fn the_facade_opens_the_gate_file_and_reports_schema_17() {
+    // the first real file: tauri's current output, opened with nothing but the facade (IP-13 phase 13D)
+    let opened =
+        open(miniature_path(miniature::V17_TRIGGERED_2026_10_19)).expect("the gate file opens");
+    let report = opened.report();
+    assert_eq!(report.schema_version, "17");
+    assert_eq!(report.adapter, "v17");
+    assert_eq!(report.cdm_version, CDM_VERSION);
+    assert_eq!(report.package_version, PACKAGE_VERSION);
+    assert_eq!(opened.key().as_str(), "17");
+    // what the library says V17 can do is what its reader returns so far: the metadata, and no feature beyond it
+    assert_eq!(*opened.capabilities(), Capabilities::new());
+
+    // the build, as the Model's own types: its layers, its lasers in each layer, and the channels of each laser
+    let source = opened.source();
+    assert_eq!(
+        source.build().expect("the metadata").layers_declared,
+        Some(1)
+    );
+    assert_eq!(source.layers().expect("the layers"), [LayerId(1)]);
+    let lasers = source
+        .lasers_in_layer(LayerId(1))
+        .expect("the lasers of the layer");
+    assert_eq!(lasers.len(), 2);
+    for laser in &lasers {
+        assert_eq!(source.channels(laser).expect("the channels").len(), 8);
+    }
+
+    // a file of a version that has no adapter yet names what the library can read, and does not guess
+    let other = open(miniature_path(miniature::V16)).expect_err("V16 has no adapter yet");
+    match other.kind() {
+        ErrorKind::UnsupportedVersion { found, supported } => {
+            assert_eq!(found, "16");
+            assert_eq!(supported, &supported_versions());
+        }
+        kind => panic!("expected UnsupportedVersion, got {kind:?}"),
     }
 }
 
@@ -425,7 +479,7 @@ fn ip04_exit_checklist_holds() {
         missing.join("\n")
     );
 
-    // 8: the production registry is empty (until IP-13) and the mock is registered only by injection
+    // 8: the production registry holds only real versions (V17 so far) and the mock is registered only by injection
     assert!(
         supported_versions().iter().all(|v| !v.starts_with("90")),
         "the mock is in the production registry: {:?}",

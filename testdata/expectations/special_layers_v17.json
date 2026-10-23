@@ -30,7 +30,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -45,7 +50,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -60,7 +70,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -75,7 +90,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -90,7 +110,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -105,7 +130,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -120,7 +150,12 @@
         "unit_id": null,
         "source": "Unknown"
       },
-      "thickness": {
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
         "value": null,
         "origin": "PlaceholderDropped",
         "raw": "0.0"
@@ -1215,7 +1250,7 @@
   "notes": [
     "Times are the integers the file holds, in no unit the file states (decision D02-19).",
     "The build date is the string as written (phase 2E was dropped).",
-    "A thickness that is the placeholder of the version is not recorded, with the origin PlaceholderDropped (J4).",
+    "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
     "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
   ]
 }

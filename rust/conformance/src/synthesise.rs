@@ -46,19 +46,30 @@ pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
         let mut meta_layer = LayerMeta::new(id);
         meta_layer.start = opt_int(layer, "start")?.map(|v| TimeValue::from_file(v, None));
         meta_layer.end = opt_int(layer, "end")?.map(|v| TimeValue::from_file(v, None));
-        match layer.get("thickness").filter(|v| !v.is_null()) {
-            None => {}
-            Some(thickness)
-                if thickness.get("origin").and_then(Value::as_str)
-                    == Some("PlaceholderDropped") =>
-            {
-                let raw: f64 = text(thickness, "raw")?
-                    .parse()
-                    .map_err(|_| "a placeholder thickness is not a number".to_string())?;
-                meta_layer.set_thickness_from_file(raw, None, &[raw]);
-            }
-            Some(thickness) => {
-                meta_layer.set_thickness_from_file(float(thickness, "value")?, None, &[])
+        // the two thicknesses, each on its own: absent, a placeholder that is not recorded, or a real value
+        for (key, set) in [
+            (
+                "actual_thickness",
+                LayerMeta::set_actual_thickness_from_file
+                    as fn(&mut LayerMeta, f64, Option<&str>, &[f64]),
+            ),
+            (
+                "commanded_thickness",
+                LayerMeta::set_commanded_thickness_from_file,
+            ),
+        ] {
+            match layer.get(key).filter(|v| !v.is_null()) {
+                None => {}
+                Some(thickness)
+                    if thickness.get("origin").and_then(Value::as_str)
+                        == Some("PlaceholderDropped") =>
+                {
+                    let raw: f64 = text(thickness, "raw")?
+                        .parse()
+                        .map_err(|_| "a placeholder thickness is not a number".to_string())?;
+                    set(&mut meta_layer, raw, None, &[raw]);
+                }
+                Some(thickness) => set(&mut meta_layer, float(thickness, "value")?, None, &[]),
             }
         }
         meta.layers.insert(id, meta_layer);
