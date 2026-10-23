@@ -144,6 +144,9 @@ pub enum ErrorKind {
     },
     /// A feature or direction the version does not offer (for example creating a file of a version that is read only); the feature is named.
     UnsupportedInVersion { version: String, feature: String },
+    /// The file carries no version marker, so no adapter can be chosen for it (BL-VA-01). It is a typed outcome of its own so that a caller can tell it from
+    /// every other failure and, if it knows what the file is, ask for a probe explicitly; `detail` says where the marker was looked for.
+    Unversioned { detail: String },
     /// An optional group or field is absent in the file.
     NotPresent { what: String },
     /// One or more violations, every one of them listed.
@@ -177,6 +180,7 @@ impl ErrorKind {
             | ErrorKind::Closed
             | ErrorKind::Cancelled => ErrorClass::Caller,
             ErrorKind::NotPresent { .. }
+            | ErrorKind::Unversioned { .. }
             | ErrorKind::ValidationError { .. }
             | ErrorKind::OutOfWidth { .. } => ErrorClass::Validation,
             ErrorKind::IoError { .. } | ErrorKind::BudgetExceeded { .. } => ErrorClass::Io,
@@ -207,6 +211,9 @@ impl fmt::Display for ErrorKind {
             }
             ErrorKind::UnsupportedInVersion { version, feature } => {
                 write!(f, "{feature} is not supported in version {version}")
+            }
+            ErrorKind::Unversioned { detail } => {
+                write!(f, "the file has no version marker: {detail}")
             }
             ErrorKind::NotPresent { what } => write!(f, "{what} is not present in the file"),
             ErrorKind::ValidationError { violations } => {
@@ -393,6 +400,13 @@ mod tests {
                 false,
             ),
             (
+                ErrorKind::Unversioned {
+                    detail: "no marker on any mount".into(),
+                },
+                Validation,
+                false,
+            ),
+            (
                 ErrorKind::ValidationError {
                     violations: vec![Violation::new("x")],
                 },
@@ -458,6 +472,26 @@ mod tests {
         assert!(Error::new(ErrorKind::Closed)
             .with_retryable(true)
             .is_retryable());
+    }
+
+    #[test]
+    fn unversioned_is_a_validation_error_that_cannot_be_retried() {
+        let error = Error::new(ErrorKind::Unversioned {
+            detail: "looked for a marker on 2 mounts".into(),
+        });
+        // a missing marker is a fact about the file, not the caller's mistake and not a failing device: asking again cannot change it
+        assert_eq!(error.class(), ErrorClass::Validation);
+        assert!(!error.is_retryable());
+        // and it reads as what it is, with its detail, so that a caller can tell it from a version nobody registered
+        let text = error.to_string();
+        assert!(
+            text.contains("no version marker") && text.contains("2 mounts"),
+            "{text}"
+        );
+        assert!(!matches!(
+            error.kind(),
+            ErrorKind::UnsupportedVersion { .. }
+        ));
     }
 
     #[test]

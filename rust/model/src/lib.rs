@@ -15,6 +15,7 @@
 // The Common Data Model (IP-02): one module per concept, in the layout of the plan's Appendix A. They are empty until the phases that fill them; consumers
 // never name a module, because every public type is re-exported from the crate root (BL-AR-03). The policy guards in `tests/policy_guards.rs` read each of
 // these files.
+mod capabilities;
 mod channel;
 mod column;
 mod error;
@@ -38,6 +39,7 @@ mod laser;
 mod sensor;
 
 // The Common Data Model, re-exported from the root: consumers never name a module (BL-AR-03).
+pub use capabilities::{Capabilities, Direction, Feature, VersionReport, CDM_VERSION};
 pub use channel::{
     Axis, CapturedEncoding, CapturedWidth, ChannelDType, ChannelDescriptor, ChannelKind,
     ClockClass, EnumLabel, EnumLabels, NumericType, Renderability,
