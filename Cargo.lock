@@ -50,12 +50,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "build-log-io"
+name = "build-log-conformance"
 version = "0.0.0"
 dependencies = [
  "build-log-model",
+ "serde_json",
+]
+
+[[package]]
+name = "build-log-io"
+version = "0.0.0"
+dependencies = [
+ "build-log-conformance",
+ "build-log-model",
  "build-log-testkit",
  "hdf5-metno",
+ "serde_json",
 ]
 
 [[package]]

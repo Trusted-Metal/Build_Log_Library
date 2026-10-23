@@ -1,0 +1,2063 @@
+{
+ "primitives_oracle_version": 1,
+ "about": "How each kind of value in the committed miniatures is stored, written by bl_fixtures.primitives from h5py alone. One instance stands for each distinct encoding: a decoder is written per kind. A path is where an instance was found; nothing here says what a value means.",
+ "miniatures": [
+  "special_layers_v17.h5",
+  "v16.h5",
+  "v17_2026_08_18_images.h5",
+  "v17_march.h5",
+  "v17_mock.h5",
+  "v17_oct15.h5",
+  "v17_triggered_2026_10_19.h5",
+  "v18.h5"
+ ],
+ "attribute_encodings": [
+  {
+   "id": "A01",
+   "kind": "string, variable length, utf-8, scalar",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": "variable",
+     "pad": "nullterm",
+     "cset": "utf-8"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 603,
+   "files": 5,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part",
+     "name": "Build_ID",
+     "value": {
+      "text": "XXXXXXX"
+     }
+    },
+    {
+     "reason": "first with an empty value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part",
+     "name": "Alloys",
+     "value": {
+      "text": ""
+     }
+    }
+   ]
+  },
+  {
+   "id": "A02",
+   "kind": "float32, array of one",
+   "encoding": {
+    "type": {
+     "class": "float",
+     "bits": 32,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "attributes_in_miniatures": 268,
+   "files": 4,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part",
+     "name": "Build_Plate_Dimensions",
+     "value": [
+      280.0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A03",
+   "kind": "int32, array of one",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "attributes_in_miniatures": 141,
+   "files": 5,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v16.h5",
+     "path": "/Built_Part",
+     "name": "Layer_Quantity",
+     "value": [
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A04",
+   "kind": "float32, scalar",
+   "encoding": {
+    "type": {
+     "class": "float",
+     "bits": 32,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 100,
+   "files": 4,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Build_Plate_Dimensions",
+     "value": 0.0
+    }
+   ]
+  },
+  {
+   "id": "A05",
+   "kind": "float64, scalar",
+   "encoding": {
+    "type": {
+     "class": "float",
+     "bits": 64,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 90,
+   "files": 6,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1",
+     "name": "Build_Plane_Offset_Major",
+     "value": 0.216544
+    }
+   ]
+  },
+  {
+   "id": "A06",
+   "kind": "int32, scalar",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 63,
+   "files": 4,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "File_Version",
+     "value": 17
+    }
+   ]
+  },
+  {
+   "id": "A07",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 9,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 50,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Machine_Serial",
+     "value": {
+      "bytes_hex": "585858585858585800",
+      "text": "XXXXXXXX"
+     }
+    },
+    {
+     "reason": "first whose bytes are not text",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Light_Source",
+     "name": "Power_Min",
+     "value": {
+      "bytes_hex": "cdcccccccc6c594000",
+      "text": null
+     }
+    }
+   ]
+  },
+  {
+   "id": "A08",
+   "kind": "int64, scalar",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 64,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 45,
+   "files": 8,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Layer_Quantity",
+     "value": 2110
+    }
+   ]
+  },
+  {
+   "id": "A09",
+   "kind": "int64, array of one",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 64,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "attributes_in_miniatures": 29,
+   "files": 5,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part/Monitoring_Data/Layer_1/Laser_1",
+     "name": "End_Laser_Time",
+     "value": [
+      1787071738579682
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A10",
+   "kind": "uint8, array of one",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 8,
+     "signed": false,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "attributes_in_miniatures": 26,
+   "files": 4,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part/Calibration_Data/BitsToMillimetersFormula",
+     "name": "IMAGE_WHITE_IS_ZERO",
+     "value": [
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A11",
+   "kind": "array of 64 uint8, array of one",
+   "encoding": {
+    "type": {
+     "class": "array",
+     "dims": [
+      64
+     ],
+     "base": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     }
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "attributes_in_miniatures": 24,
+   "files": 4,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v17_2026_08_18_images.h5",
+     "path": "/Built_Part/Calibration_Data/BitsToMillimetersFormula",
+     "name": "CLASS",
+     "value": [
+      [
+       73,
+       77,
+       65,
+       71,
+       69,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0,
+       0
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "A12",
+   "kind": "int16, scalar",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 16,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 20,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v16.h5",
+     "path": "/Built_Part/Laser_Calibration_Data/Laser_Calibration_1",
+     "name": "Build_Plane_Offset_X",
+     "value": 0
+    }
+   ]
+  },
+  {
+   "id": "A13",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 16,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 18,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/BitsToMillimetersFormula",
+     "name": "CLASS",
+     "value": {
+      "bytes_hex": "494d414745000000494d4147455f5452",
+      "text": "IMAGE"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A14",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 1,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 16,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with an empty value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Light_Source",
+     "name": "Power_Max",
+     "value": {
+      "bytes_hex": "00",
+      "text": ""
+     }
+    }
+   ]
+  },
+  {
+   "id": "A15",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 6,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 15,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Alloys",
+     "value": {
+      "bytes_hex": "494e37313800",
+      "text": "IN718"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A16",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 8,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 15,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Scanner/Galvo_X",
+     "name": "Communication_Protocol",
+     "value": {
+      "bytes_hex": "534c322d31303000",
+      "text": "SL2-100"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A17",
+   "kind": "uint8, scalar",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 8,
+     "signed": false,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 10,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/BitsToMillimetersFormula",
+     "name": "IMAGE_WHITE_IS_ZERO",
+     "value": 0
+    }
+   ]
+  },
+  {
+   "id": "A18",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 12,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 10,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Scanner",
+     "name": "Scan_Head_Model",
+     "value": {
+      "bytes_hex": "41636f6e6974795363616e00",
+      "text": "AconityScan"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A19",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 3,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 9,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Actual_Bit_Resolution",
+     "value": {
+      "bytes_hex": "323000",
+      "text": "20"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A20",
+   "kind": "string, fixed length, ascii, null-padded",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 1,
+     "pad": "nullpad",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 8,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Monitoring_Data/Layer_1966/Laser_1/Synchronous_Digital_Sensors",
+     "name": "Number_Of_Sensors",
+     "value": {
+      "bytes_hex": "30",
+      "text": "0"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A21",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 2,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 8,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Monitoring_Data/Layer_1964/Laser_1/Synchronous_Digital_Sensors",
+     "name": "Number_Of_Sensors",
+     "value": {
+      "bytes_hex": "3000",
+      "text": "0"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A22",
+   "kind": "string, fixed length, ascii, null-padded",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 5,
+     "pad": "nullpad",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 8,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Monitoring_Data/Layer_1966/Laser_1/Synchronous_Digital_Sensors",
+     "name": "Sample_Period",
+     "value": {
+      "bytes_hex": "3130756d73",
+      "text": "10ums"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A23",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 7,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 8,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Build_Plate_Shape",
+     "value": {
+      "bytes_hex": "53717561726500",
+      "text": "Square"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A24",
+   "kind": "string, fixed length, ascii, null-padded",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 8,
+     "pad": "nullpad",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 8,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Monitoring_Data/Layer_1966/Laser_1/Synchronous_Digital_Sensors",
+     "name": "Metadata",
+     "value": {
+      "bytes_hex": "6d65746164617461",
+      "text": "metadata"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A25",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 5,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 6,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Recoater_Blade_Type",
+     "value": {
+      "bytes_hex": "536f667400",
+      "text": "Soft"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A26",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 13,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 4,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Build_ID",
+     "value": {
+      "bytes_hex": "58585858585858585858585800",
+      "text": "XXXXXXXXXXXX"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A27",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 25,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 4,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Light_Source",
+     "name": "Laser_Model",
+     "value": {
+      "bytes_hex": "4e4c2d464c532d5231312d312e30302d313037302d32333000",
+      "text": "NL-FLS-R11-1.00-1070-230"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A28",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 30,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 3,
+   "files": 3,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part",
+     "name": "Date",
+     "value": {
+      "bytes_hex": "323032362d30332d32302032303a33373a3537205554432d30353a303000",
+      "text": "2026-03-20 20:37:57 UTC-05:00"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A29",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 11,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 2,
+   "files": 2,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "special_layers_v17.h5",
+     "path": "/Built_Part/Calibration_Data/Optical_Train_1/Light_Source",
+     "name": "Volts_To_Watts_Params",
+     "value": {
+      "bytes_hex": "35302e352c3130372e3500",
+      "text": "50.5,107.5"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A30",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 14,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 1,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v16.h5",
+     "path": "/Built_Part",
+     "name": "Build_ID",
+     "value": {
+      "bytes_hex": "5858585858585858585858585800",
+      "text": "XXXXXXXXXXXXX"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A31",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 27,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 1,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v16.h5",
+     "path": "/Built_Part",
+     "name": "Scanner_ID",
+     "value": {
+      "bytes_hex": "585858585858585858585858585858585858585858585858585800",
+      "text": "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+     }
+    }
+   ]
+  },
+  {
+   "id": "A32",
+   "kind": "string, fixed length, ascii, null-terminated",
+   "encoding": {
+    "type": {
+     "class": "string",
+     "length": 29,
+     "pad": "nullterm",
+     "cset": "ascii"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "attributes_in_miniatures": 1,
+   "files": 1,
+   "instances": [
+    {
+     "reason": "first with a value",
+     "file": "v16.h5",
+     "path": "/Built_Part",
+     "name": "Machine_Serial",
+     "value": {
+      "bytes_hex": "5858585858585858585858585858585858585858585858585858585800",
+      "text": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+     }
+    }
+   ]
+  }
+ ],
+ "dataset_encodings": [
+  {
+   "id": "D01",
+   "kind": "uint64, 1D",
+   "datasets_in_miniatures": 130,
+   "files": 2,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Global_Sensors/sensor_events/Actuators/optical_axis::drive::node/current_velocity/Source_ts",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 64,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      72
+     ],
+     "max_shape": [
+      "unlimited"
+     ],
+     "chunks": [
+      10000
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     1787072590200777400,
+     1787072590435969200,
+     1787072591449068200,
+     1787072592438750400,
+     1787072592695876700,
+     1787072592947034700,
+     1787072593200201700,
+     1787072593435387400
+    ]
+   }
+  },
+  {
+   "id": "D02",
+   "kind": "string, variable length, 1D",
+   "datasets_in_miniatures": 120,
+   "files": 2,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Global_Sensors/sensor_events/Actuators/optical_axis::drive::node/current_velocity/Value",
+    "descriptor": {
+     "type": {
+      "class": "string",
+      "length": "variable",
+      "pad": "nullterm",
+      "cset": "utf-8"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      72
+     ],
+     "max_shape": [
+      "unlimited"
+     ],
+     "chunks": [
+      10000
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     },
+     {
+      "bytes_hex": "302e303133",
+      "text": "0.013"
+     },
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     },
+     {
+      "bytes_hex": "302e303133",
+      "text": "0.013"
+     },
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D03",
+   "kind": "int32, 1D",
+   "datasets_in_miniatures": 108,
+   "files": 3,
+   "instance": {
+    "file": "special_layers_v17.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1964/Laser_1/Position/Actual_X",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 32,
+      "signed": true,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        5
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      25000
+     ],
+     "chunks": [
+      25000
+     ],
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     -178501,
+     -178409,
+     -178326,
+     -178255,
+     -178176,
+     -178094,
+     -178009,
+     -177928
+    ]
+   }
+  },
+  {
+   "id": "D04",
+   "kind": "int32, 1D",
+   "datasets_in_miniatures": 108,
+   "files": 5,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Laser_1/Position/Actual_X",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 32,
+      "signed": true,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      "unlimited"
+     ],
+     "chunks": [
+      10000
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     -43281,
+     -43282,
+     -43283,
+     -43280,
+     -43276,
+     -43275,
+     -43277,
+     -43278
+    ]
+   }
+  },
+  {
+   "id": "D05",
+   "kind": "uint64, 1D",
+   "datasets_in_miniatures": 73,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Sensors/Actuators_Optical_Axis_Drive_Node_Current_Velocity_OPCUA/Monitoring_Data/Layer_1/Source_Ts",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 64,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      72
+     ],
+     "max_shape": [
+      72
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     1787072590200777400,
+     1787072590435969200,
+     1787072591449068200,
+     1787072592438750400,
+     1787072592695876700,
+     1787072592947034700,
+     1787072593200201700,
+     1787072593435387400
+    ]
+   }
+  },
+  {
+   "id": "D06",
+   "kind": "string, variable length, 1D",
+   "datasets_in_miniatures": 63,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Sensors/Actuators_Optical_Axis_Drive_Node_Current_Velocity_OPCUA/Monitoring_Data/Layer_1/Value",
+    "descriptor": {
+     "type": {
+      "class": "string",
+      "length": "variable",
+      "pad": "nullterm",
+      "cset": "utf-8"
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      72
+     ],
+     "max_shape": [
+      72
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "late"
+    },
+    "first_values": [
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     },
+     {
+      "bytes_hex": "302e303133",
+      "text": "0.013"
+     },
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     },
+     {
+      "bytes_hex": "302e303133",
+      "text": "0.013"
+     },
+     {
+      "bytes_hex": "30",
+      "text": "0"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D07",
+   "kind": "float64, 3D",
+   "datasets_in_miniatures": 26,
+   "files": 7,
+   "instance": {
+    "file": "special_layers_v17.h5",
+    "path": "/Built_Part/Calibration_Data/Optical_Train_1/Correction_Data",
+    "descriptor": {
+     "type": {
+      "class": "float",
+      "bits": 64,
+      "order": "little"
+     },
+     "rank": 3,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      257,
+      257,
+      2
+     ],
+     "max_shape": [
+      257,
+      257,
+      2
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     "nan",
+     "nan"
+    ]
+   }
+  },
+  {
+   "id": "D08",
+   "kind": "float32, 1D",
+   "datasets_in_miniatures": 18,
+   "files": 3,
+   "instance": {
+    "file": "special_layers_v17.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1964/Laser_1/Laser_Data/Laser_Power",
+    "descriptor": {
+     "type": {
+      "class": "float",
+      "bits": 32,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        5
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      25000
+     ],
+     "chunks": [
+      25000
+     ],
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     2.0244200229644775,
+     2.019536018371582,
+     2.0244200229644775,
+     2.026862144470215,
+     2.019536018371582,
+     2.0244200229644775,
+     2.029304027557373,
+     2.026862144470215
+    ]
+   }
+  },
+  {
+   "id": "D09",
+   "kind": "uint8, 1D",
+   "datasets_in_miniatures": 18,
+   "files": 3,
+   "instance": {
+    "file": "special_layers_v17.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1964/Laser_1/Laser_Data/Laser_State",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        5
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      25000
+     ],
+     "chunks": [
+      25000
+     ],
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "D10",
+   "kind": "float32, 1D",
+   "datasets_in_miniatures": 18,
+   "files": 5,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Laser_1/Laser_Data/Laser_Power",
+    "descriptor": {
+     "type": {
+      "class": "float",
+      "bits": 32,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      "unlimited"
+     ],
+     "chunks": [
+      10000
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     0.02442002482712269,
+     0.014652014710009098,
+     0.01953602023422718,
+     0.017094017937779427,
+     0.02442002482712269,
+     0.01953602023422718,
+     0.017094017937779427,
+     0.01953602023422718
+    ]
+   }
+  },
+  {
+   "id": "D11",
+   "kind": "uint8, 1D",
+   "datasets_in_miniatures": 18,
+   "files": 5,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Laser_1/Laser_Data/Laser_State",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      "unlimited"
+     ],
+     "chunks": [
+      10000
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "D12",
+   "kind": "uint8, 3D",
+   "datasets_in_miniatures": 14,
+   "files": 7,
+   "instance": {
+    "file": "special_layers_v17.h5",
+    "path": "/Built_Part/Calibration_Data/BitsToMillimetersFormula",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 3,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      660,
+      692,
+      3
+     ],
+     "max_shape": [
+      660,
+      692,
+      3
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     255,
+     255,
+     255
+    ]
+   }
+  },
+  {
+   "id": "D13",
+   "kind": "uint8, 2D",
+   "datasets_in_miniatures": 10,
+   "files": 2,
+   "instance": {
+    "file": "v17_2026_08_18_images.h5",
+    "path": "/Built_Part/Monitoring_Data/Layer_1/Post_Exposure/raw",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 2,
+     "layout": "chunked",
+     "filters": [
+      {
+       "id": "deflate",
+       "parameters": [
+        6
+       ]
+      }
+     ],
+     "shape": [
+      128,
+      128
+     ],
+     "max_shape": [
+      128,
+      128
+     ],
+     "chunks": [
+      128,
+      128
+     ],
+     "fill_value": "default",
+     "fill_time": "alloc",
+     "allocation": "incremental"
+    },
+    "first_values": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "id": "D14",
+   "kind": "float64, 1D",
+   "datasets_in_miniatures": 4,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Sensors/Oxygen_Sensor_ClearBox_Optical_Train_1/Monitoring_Data/Layer_1/Value",
+    "descriptor": {
+     "type": {
+      "class": "float",
+      "bits": 64,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      25000
+     ],
+     "max_shape": [
+      25000
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     12.000015235853988,
+     11.999963236648675,
+     12.000000759208467,
+     12.000047787444286,
+     11.999950235684853,
+     11.99988512670951,
+     11.999891518729669,
+     11.99987570660005
+    ]
+   }
+  },
+  {
+   "id": "D15",
+   "kind": "compound, 1D",
+   "datasets_in_miniatures": 3,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Lasers/Laser_1/Corrections/Power_Calibration/Derivation_Equation_Constants",
+    "descriptor": {
+     "type": {
+      "class": "compound",
+      "bytes": 72,
+      "fields": [
+       {
+        "name": "name",
+        "type": {
+         "class": "string",
+         "length": 64,
+         "pad": "nullpad",
+         "cset": "utf-8"
+        }
+       },
+       {
+        "name": "value",
+        "type": {
+         "class": "float",
+         "bits": 64,
+         "order": "little"
+        }
+       }
+      ]
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      2
+     ],
+     "max_shape": [
+      2
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     {
+      "name": {
+       "bytes_hex": "62000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+       "text": "b"
+      },
+      "value": 50.5
+     },
+     {
+      "name": {
+       "bytes_hex": "61000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+       "text": "a"
+      },
+      "value": 107.5
+     }
+    ]
+   }
+  },
+  {
+   "id": "D16",
+   "kind": "uint8, 1D",
+   "datasets_in_miniatures": 2,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Lasers/Laser_1/Corrections/Correction_File",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 8,
+      "signed": false,
+      "order": "little"
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      1138799
+     ],
+     "max_shape": [
+      1138799
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     123,
+     34,
+     67,
+     111,
+     110,
+     102,
+     105,
+     103
+    ]
+   }
+  },
+  {
+   "id": "D17",
+   "kind": "int32, 3D",
+   "datasets_in_miniatures": 2,
+   "files": 1,
+   "instance": {
+    "file": "v16.h5",
+    "path": "/Built_Part/Laser_Calibration_Data/Laser_Calibration_1/CorrectionData",
+    "descriptor": {
+     "type": {
+      "class": "integer",
+      "bits": 32,
+      "signed": true,
+      "order": "little"
+     },
+     "rank": 3,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      2,
+      257,
+      257
+     ],
+     "max_shape": [
+      2,
+      257,
+      257
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     -419115,
+     -416038,
+     -412954,
+     -409864,
+     -406767,
+     -403665,
+     -400556,
+     -397442
+    ]
+   }
+  },
+  {
+   "id": "D18",
+   "kind": "compound, 1D",
+   "datasets_in_miniatures": 1,
+   "files": 1,
+   "instance": {
+    "file": "v18.h5",
+    "path": "/Build/Sensors/Photodiode_Reflection_Sensor_ClearBox_Optical_Train_2/Calibration_Data/Derivation_Equation_Constants",
+    "descriptor": {
+     "type": {
+      "class": "compound",
+      "bytes": 72,
+      "fields": [
+       {
+        "name": "name",
+        "type": {
+         "class": "string",
+         "length": 64,
+         "pad": "nullpad",
+         "cset": "ascii"
+        }
+       },
+       {
+        "name": "value",
+        "type": {
+         "class": "float",
+         "bits": 64,
+         "order": "little"
+        }
+       }
+      ]
+     },
+     "rank": 1,
+     "layout": "contiguous",
+     "filters": [],
+     "shape": [
+      2
+     ],
+     "max_shape": [
+      2
+     ],
+     "chunks": null,
+     "fill_value": "default",
+     "fill_time": "ifset",
+     "allocation": "late"
+    },
+    "first_values": [
+     {
+      "name": {
+       "bytes_hex": "61000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+       "text": "a"
+      },
+      "value": 10.0
+     },
+     {
+      "name": {
+       "bytes_hex": "62000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+       "text": "b"
+      },
+      "value": 0.0
+     }
+    ]
+   }
+  }
+ ],
+ "file_versions": [
+  {
+   "file": "special_layers_v17.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "value": 17
+  },
+  {
+   "file": "v16.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "value": 16
+  },
+  {
+   "file": "v17_2026_08_18_images.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "value": [
+    17
+   ]
+  },
+  {
+   "file": "v17_march.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "value": 17
+  },
+  {
+   "file": "v17_mock.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "value": [
+    17
+   ]
+  },
+  {
+   "file": "v17_oct15.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "value": [
+    17
+   ]
+  },
+  {
+   "file": "v17_triggered_2026_10_19.h5",
+   "path": "/Built_Part",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "array",
+     "shape": [
+      1
+     ]
+    }
+   },
+   "value": [
+    17
+   ]
+  },
+  {
+   "file": "v18.h5",
+   "path": "/Build",
+   "encoding": {
+    "type": {
+     "class": "integer",
+     "bits": 32,
+     "signed": true,
+     "order": "little"
+    },
+    "space": {
+     "kind": "scalar"
+    }
+   },
+   "value": 18
+  }
+ ]
+}

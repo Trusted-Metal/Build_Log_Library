@@ -4,7 +4,8 @@
 //! * **May depend on:** `build-log-model`, and the HDF5 binding (`hdf5-metno`, pinned once in the workspace manifest). In tests only: `build-log-testkit`.
 //! * **Must not depend on:** `build-log-processing` or the `build-log` facade. Nothing above it may reach an HDF5 path or group name through it.
 //!
-//! The binding is here and proven to link (`tests/link_smoke.rs`); the adapters are not: the first arrives with IP-05 and IP-13.
+//! The binding is here and proven to link (`tests/link_smoke.rs`). The first adapter is V17 (IP-13), which reads the build level so far; V18 (IP-05) and V16
+//! (IP-12) follow.
 //! The architecture guards in `rust/build-log/tests` enforce the dependency rules above.
 //!
 //! # Building without a libhdf5 on the machine
@@ -14,6 +15,21 @@
 // Unsafe code is denied for every crate by the workspace lints; this crate needs none while it uses the `hdf5-metno` wrapper (decision D01-7),
 // so it stays at `deny` rather than `forbid`.
 
+/// The adapters (IP-04): one folder per on-disk version and the registration unit of a version. Internal: a consumer reaches an adapter only through the facade.
+#[doc(hidden)]
+pub mod adapters;
+/// The dispatch core (IP-04): the marker reader, the registry and the choice of an adapter. Internal: the facade's `open` is the contract.
+#[doc(hidden)]
+pub mod dispatch;
+/// The HDF5 primitives (IP-03). Internal: the adapters of this crate and its tests use them; they are not part of the facade's contract.
+#[doc(hidden)]
+pub mod hdf5;
 mod version;
 
-pub use version::{libhdf5_version, Libhdf5Version, ParseLibhdf5VersionError};
+/// The HDF5 binding this library is built on, re-exported so that a consumer names the very same types as `open_at` (a mount is a `Group` of it).
+pub use ::hdf5 as binding;
+
+pub use version::{
+    check_libhdf5, check_linked_libhdf5, libhdf5_version, Libhdf5Version, ParseLibhdf5VersionError,
+    LIBHDF5_MINIMUM,
+};

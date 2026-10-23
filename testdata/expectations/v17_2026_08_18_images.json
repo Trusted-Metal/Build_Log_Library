@@ -1,0 +1,775 @@
+{
+  "expectations_version": 1,
+  "about": "What the CDM must show for this miniature. Written by bl_fixtures.expectations from the miniature alone; never edited by hand.",
+  "miniature": {
+    "file": "v17_2026_08_18_images.h5",
+    "sha256": "be510775b0dd7fcb004820033320e809d41a310313a5768fb7df6d24b1b387c2"
+  },
+  "file_version": 17,
+  "build": {
+    "identity": {
+      "build_id": "XXXXXXX",
+      "date": "2026-08-18 16:48:25 UTC+00:00",
+      "username": "XXXX",
+      "alloy": "",
+      "part_count": 1,
+      "project_id": null,
+      "source_mcf_name": null,
+      "source_mcf_hash": null
+    },
+    "layers_declared": 3,
+    "layer_thickness": {
+      "value": 0.029999999329447746,
+      "unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": 1,
+      "start": 1787071705620,
+      "end": 1787071738579,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    },
+    {
+      "id": 2,
+      "start": 1787071738604,
+      "end": 1787071772013,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    },
+    {
+      "id": 3,
+      "start": 1787071772040,
+      "end": 1787071805795,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    }
+  ],
+  "lasers": [
+    {
+      "key": "Laser_1",
+      "number": 1,
+      "channels": [
+        {
+          "source_name": "Laser_Power",
+          "kind": "LaserPower",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "F32"
+          },
+          "enum_labels": null,
+          "stored_as": "F32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "V",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Laser_State",
+          "kind": "LaserState",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": "Enum",
+          "enum_labels": "unknown",
+          "stored_as": "U8",
+          "unit": null,
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_X",
+          "kind": "ActualPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Y",
+          "kind": "ActualPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Z",
+          "kind": "ActualPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_X",
+          "kind": "CommandedPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Y",
+          "kind": "CommandedPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Z",
+          "kind": "CommandedPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071705620000,
+            "window_end": 1787071738579682,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        },
+        {
+          "layer": 2,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071738604000,
+            "window_end": 1787071772013178,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        },
+        {
+          "layer": 3,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071772040000,
+            "window_end": 1787071805795026,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        }
+      ]
+    },
+    {
+      "key": "Laser_2",
+      "number": 2,
+      "channels": [
+        {
+          "source_name": "Laser_Power",
+          "kind": "LaserPower",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "F32"
+          },
+          "enum_labels": null,
+          "stored_as": "F32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "V",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Laser_State",
+          "kind": "LaserState",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": "Enum",
+          "enum_labels": "unknown",
+          "stored_as": "U8",
+          "unit": null,
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_X",
+          "kind": "ActualPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Y",
+          "kind": "ActualPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Z",
+          "kind": "ActualPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_X",
+          "kind": "CommandedPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Y",
+          "kind": "CommandedPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Z",
+          "kind": "CommandedPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071705620000,
+            "window_end": 1787071738579682,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        },
+        {
+          "layer": 2,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071738604000,
+            "window_end": 1787071772013178,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        },
+        {
+          "layer": 3,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071772040000,
+            "window_end": 1787071805795026,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal"
+        }
+      ]
+    }
+  ],
+  "sensors": [],
+  "notes": [
+    "Times are the integers the file holds, in no unit the file states (decision D02-19).",
+    "The build date is the string as written (phase 2E was dropped).",
+    "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
+  ]
+}

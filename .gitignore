@@ -14,3 +14,4 @@ __pycache__/
 .pytest_cache/
 # What a CI leg reports about the libhdf5 it linked (.github/scripts/report-libhdf5.sh); uploaded as an artifact, never committed
 /libhdf5-report/
+/docs/Build Log Library Map.html

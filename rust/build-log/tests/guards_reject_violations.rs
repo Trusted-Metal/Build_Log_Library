@@ -59,6 +59,11 @@ fn healthy() -> Workspace {
             ],
         ),
         package(TESTKIT, "rust/testkit", vec![]),
+        package(
+            CONFORMANCE,
+            "rust/conformance",
+            vec![dep(MODEL, Kind::Normal, false)],
+        ),
     ];
     let mut members = members;
     members[3].lib_name = Some("build_log".to_string());
@@ -72,15 +77,30 @@ fn healthy() -> Workspace {
     Workspace {
         members,
         graph,
-        lock_packages: [MODEL, IO, PROCESSING, FACADE, TESTKIT, "serde_json"]
-            .iter()
-            .map(|s| s.to_string())
-            .collect(),
+        lock_packages: [
+            MODEL,
+            IO,
+            PROCESSING,
+            FACADE,
+            TESTKIT,
+            CONFORMANCE,
+            "serde_json",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect(),
         rust_versions: BTreeMap::new(),
-        rust_dirs: ["build-log", "io", "model", "processing", "testkit"]
-            .iter()
-            .map(|d| (d.to_string(), true))
-            .collect(),
+        rust_dirs: [
+            "build-log",
+            "io",
+            "model",
+            "processing",
+            "testkit",
+            "conformance",
+        ]
+        .iter()
+        .map(|d| (d.to_string(), true))
+        .collect(),
         schema_top_level: true,
         schema_dirs_under_rust: vec![],
         text_files: vec![(
@@ -354,19 +374,74 @@ fn each_guard_rejects_a_synthetic_violation() {
 }
 
 #[test]
-fn the_conformance_crate_of_a_later_plan_fits_the_matrix_without_changing_code() {
-    // IP-02 adds `build-log-conformance`; the matrix is data, so its row is a line in tests/data/allowed_dependencies.json, not a change here
+fn layering_guard_accepts_the_conformance_crate_and_rejects_other_edges() {
+    // the crate as IP-02 builds it: it depends on the Model, and the IO layer, Processing and the facade may use it in their tests
     let mut ws = healthy();
-    ws.members.push(package(
-        "build-log-conformance",
-        "rust/conformance",
-        vec![
-            dep(MODEL, Kind::Normal, false),
-            dep(TESTKIT, Kind::Dev, false),
-        ],
-    ));
-    let found = layering_violations(&ws, &allowed_dependencies());
-    assert_eq!(found, vec!["build-log-conformance -> build-log-testkit (dev): this dependency is not allowed (IP-01 Appendix C)".to_string()]);
+    for from in [IO, PROCESSING, FACADE] {
+        add_dependency(&mut ws, from, dep(CONFORMANCE, Kind::Dev, false));
+    }
+    assert_eq!(
+        layering_violations(&ws, &allowed_dependencies()),
+        Vec::<String>::new(),
+        "the conformance crate and the edges that use it are what Appendix C allows"
+    );
+    assert!(layer_violations(&ws).is_empty() && crate_directory_violations(&ws).is_empty());
+
+    // every other edge of or to it is named by the guard
+    let cases: Vec<(&str, &str, Kind, &str)> = vec![
+        (
+            CONFORMANCE,
+            IO,
+            Kind::Normal,
+            "build-log-conformance -> build-log-io (normal): this dependency is not allowed",
+        ),
+        (
+            CONFORMANCE,
+            PROCESSING,
+            Kind::Dev,
+            "build-log-conformance -> build-log-processing (dev): this dependency is not allowed",
+        ),
+        (
+            CONFORMANCE,
+            TESTKIT,
+            Kind::Dev,
+            "build-log-conformance -> build-log-testkit (dev): this dependency is not allowed",
+        ),
+        (
+            MODEL,
+            CONFORMANCE,
+            Kind::Dev,
+            "build-log-model -> build-log-conformance (dev): this dependency is not allowed",
+        ),
+        (
+            IO,
+            CONFORMANCE,
+            Kind::Normal,
+            "build-log-io -> build-log-conformance (normal): allowed only as a dev dependency",
+        ),
+        (
+            FACADE,
+            CONFORMANCE,
+            Kind::Normal,
+            "build-log -> build-log-conformance (normal): allowed only as a dev dependency",
+        ),
+        (
+            TESTKIT,
+            CONFORMANCE,
+            Kind::Dev,
+            "build-log-testkit -> build-log-conformance (dev): this dependency is not allowed",
+        ),
+    ];
+    for (from, to, kind, expected) in cases {
+        let mut ws = healthy();
+        add_dependency(&mut ws, from, dep(to, kind, false));
+        let found = layering_violations(&ws, &allowed_dependencies());
+        assert!(
+            found.iter().any(|f| f.contains(expected)),
+            "{from} -> {to} ({}): the guard did not say {expected:?}; it said {found:?}",
+            kind.word()
+        );
+    }
 }
 
 #[test]
