@@ -8,7 +8,7 @@
 //!
 //! | Feature | What it adds |
 //! |---|---|
-//! | `hdf5` (default) | the IO layer, as the module `io` |
+//! | `hdf5` (default) | opening a build: [`open`], [`open_at`], [`supported_versions`], [`library_versions`]; the HDF5 binding as `hdf5`; the module `io`; `testing` |
 //! | `processing` | the Processing layer, as the module `processing` |
 //! | `jobs` | placeholder for the job layer (IP-15); implies `hdf5` |
 //! | `specta` | placeholder for TypeScript type generation (IP-02) |
@@ -17,15 +17,49 @@
 //! **No feature changes the on-disk schema.** A feature adds or removes code, never what a file means or contains.
 //! With `--no-default-features` the crate is the Model only.
 //!
-//! This is a skeleton: the curated public surface arrives with the dispatch core (IP-04) and the adapters.
+//! # Opening a build
+//!
+//! A consumer calls [`open`] with a path (or [`open_at`] with the group that holds the library's data) and gets an [`Opened`]: the build as the Model's own
+//! types, the version of the file, the adapter that read it, what that version can do and [`Opened::report`], the three version numbers. The library chooses the
+//! adapter from the file's own version marker, so **a consumer holds no code that depends on a version, and a new version needs no change in it**. Nothing here
+//! reaches an adapter or a group name: the adapters are not part of this crate's surface, and a guard test checks that.
+//!
+//! Until the first adapter lands (IP-13) the production registry is empty and [`open`] answers `UnsupportedVersion`; [`testing`] holds the mock version, so a
+//! consumer can be written and tried before that. `examples/mock_consumer.rs` is the shape of an integration.
 
 #![forbid(unsafe_code)]
 
 pub use build_log_model::*;
 
-/// The IO layer (HDF5 files to and from the Model). Present with the `hdf5` feature.
+/// The version of this package: the one an application depends on, and the third number of a [`VersionReport`].
+pub const PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// The HDF5 binding the library is built on, so that a consumer names the very same types as [`open_at`] (a mount is a [`hdf5::Group`] of it).
 #[cfg(feature = "hdf5")]
-pub use build_log_io as io;
+pub use build_log_io::binding as hdf5;
+
+#[cfg(feature = "hdf5")]
+mod open;
+#[cfg(feature = "hdf5")]
+pub mod testing;
+
+#[cfg(feature = "hdf5")]
+pub use build_log_io::dispatch::{Registry, VersionKey};
+#[cfg(feature = "hdf5")]
+pub use open::{
+    library_versions, open, open_at, open_at_with, open_with, supported_versions, LibraryVersions,
+    Opened,
+};
+
+/// The part of the IO layer that a consumer sees: which libhdf5 is linked and whether it is new enough. The adapters and the dispatch core are not here:
+/// [`open`] is the way in.
+#[cfg(feature = "hdf5")]
+pub mod io {
+    pub use build_log_io::{
+        check_libhdf5, check_linked_libhdf5, libhdf5_version, Libhdf5Version,
+        ParseLibhdf5VersionError, LIBHDF5_MINIMUM,
+    };
+}
 
 /// The Processing layer (derived computation over Model data). Present with the `processing` feature.
 #[cfg(feature = "processing")]
