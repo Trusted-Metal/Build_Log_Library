@@ -1,6 +1,6 @@
 //! The lasers of a V17 build (IP-13 phase 13D, task T13.5; decisions D13-4, D13-5, D13-6, D13-18 and D13-21).
 //!
-//! * A laser is a group named for it in a layer; its presence is the length of its power: with samples, empty, or (no group) not recorded.
+//! * A laser is a group named for it in a layer; its presence is the length of its longest channel (IP-07 phase 7A, D07-1; `v17_streams.rs` holds the rule): with samples, empty, or (no group) not recorded.
 //! * A channel carries its kind, axis, stored type and the unit that the adapter declares; its presence is by layer.
 //! * The time axis is the laser's own: its window is its start and end as written, its period the scanner card's of the optical train of the same number.
 //! * A laser or a channel that cannot be read is reported on itself and the build still opens; what else a group holds is kept.
@@ -332,7 +332,7 @@ fn the_sample_period_is_paired_with_the_laser_by_number() {
 // ---------------------------------------------------------------- what cannot be read, and what else a group holds
 
 #[test]
-fn a_laser_that_cannot_be_read_is_reported_on_itself_and_the_build_opens() {
+fn a_laser_that_cannot_be_read_is_recorded_as_not_read_and_the_build_still_opens() {
     let build = read_mount("v17-laser-unreadable", |mount| {
         let layers = monitoring(mount);
         let first = layer(&layers, 1);
@@ -373,10 +373,10 @@ fn a_laser_that_cannot_be_read_is_reported_on_itself_and_the_build_opens() {
         .unwrap();
     assert_eq!(broken.presence, Presence::NotRecorded);
     match broken.origins.get("laser") {
-        Some(Origin::Other(why)) => assert!(
-            why.contains("not read") && why.contains("2 values"),
-            "{why}"
-        ),
+        Some(Origin::NotRead { cause, reason }) => {
+            assert_eq!(*cause, build_log_model::NotReadCause::Fault);
+            assert!(reason.contains("2 values"), "{reason}");
+        }
         other => panic!("expected the reason, got {other:?}"),
     }
     let layer_one = build.layers.get(LayerId(1)).unwrap();
@@ -388,7 +388,9 @@ fn a_laser_that_cannot_be_read_is_reported_on_itself_and_the_build_opens() {
     assert_eq!(in_second.presence.samples(), Some(4));
     for channel in ["channel Actual_X", "channel Laser_Power"] {
         match in_second.origins.get(channel) {
-            Some(Origin::Other(why)) => assert!(why.contains("not read"), "{channel}: {why}"),
+            Some(Origin::NotRead { cause, .. }) => {
+                assert_eq!(*cause, build_log_model::NotReadCause::Fault, "{channel}")
+            }
             other => panic!("expected a reason for {channel}, got {other:?}"),
         }
     }
@@ -412,7 +414,7 @@ fn what_else_a_laser_and_its_layer_hold_is_kept() {
         let layers = monitoring(mount);
         let first = layer(&layers, 1);
         let group = laser(&first, 1, 2, None);
-        put_array(&group, "complete", &[1u8]);
+        put_array(&group, "A_Flag", &[1u8]);
         let sensors = group.create_group("Synchronous_Analog_Sensors").unwrap();
         put_scalar(&sensors, "Number_Of_Sensors", 0i32);
         // an unlisted dataset next to the power, and an attribute on a group of channels
@@ -430,7 +432,7 @@ fn what_else_a_laser_and_its_layer_hold_is_kept() {
         .get(LayerId(1))
         .unwrap();
     // an attribute of the laser that is not typed is kept; the two that are typed are not
-    assert!(entry.extra.attribute("complete").is_some());
+    assert!(entry.extra.attribute("A_Flag").is_some());
     assert!(entry.extra.attribute(layout::START_LASER_TIME).is_none());
     let nodes: Vec<(String, NodeKind)> = entry
         .extra
@@ -456,7 +458,7 @@ fn what_else_a_laser_and_its_layer_hold_is_kept() {
         .extra
         .nodes()
         .all(|n| !n.path.iter().any(|p| p == layout::LASER_POWER)));
-    // and the layer keeps what is not a laser
+    // and the layer keeps what is not a laser and not an event: the group of events is read as events (phase 13K), and an empty one holds nothing to keep
     let kept: Vec<String> = build
         .layers
         .get(LayerId(1))
@@ -465,7 +467,7 @@ fn what_else_a_laser_and_its_layer_hold_is_kept() {
         .nodes()
         .map(|n| n.path.join("/"))
         .collect();
-    assert_eq!(kept, ["A_Table", "Global_Sensors"]);
+    assert_eq!(kept, ["A_Table"]);
 }
 
 // ---------------------------------------------------------------- the real files

@@ -235,6 +235,15 @@ fn describe_dataset_node(
     path: Vec<String>,
     typed_attributes: &[&str],
 ) -> Result<UnknownNode, Error> {
+    describe_dataset_node_with(dataset, path, other_attributes(dataset, typed_attributes)?)
+}
+
+/// A dataset as a node, with the attributes that were found on it.
+fn describe_dataset_node_with(
+    dataset: &hdf5::Dataset,
+    path: Vec<String>,
+    attributes: Vec<(String, ExtraAttribute)>,
+) -> Result<UnknownNode, Error> {
     let descriptor = describe_dataset(dataset)?;
     let extents: Vec<u64> = descriptor.shape.iter().map(|&n| n as u64).collect();
     let mut node = UnknownNode::dataset(
@@ -242,7 +251,7 @@ fn describe_dataset_node(
         Dims::new(&extents)?,
         form_of(&descriptor.class, false),
     );
-    for (name, attribute) in other_attributes(dataset, typed_attributes)? {
+    for (name, attribute) in attributes {
         node.set_attribute(name, attribute)?;
     }
     Ok(node)
@@ -303,6 +312,18 @@ fn keep_children(
     let names = group
         .member_names()
         .map_err(|e| from_binding("listing the members of a group", e))?;
+    keep_children_named(group, &names, typed, base, extra, depth)
+}
+
+/// The same for a group whose member names the caller has already listed: a listing is a call into the file of its own.
+fn keep_children_named(
+    group: &Group,
+    names: &[String],
+    typed: &[&str],
+    base: &[String],
+    extra: &mut Extra,
+    depth: usize,
+) -> Result<(), Error> {
     for name in names.iter().filter(|name| !typed.contains(&name.as_str())) {
         keep_node_at(group, name, base, extra, depth)?;
     }
@@ -329,11 +350,27 @@ pub fn keep_group_remainder(
     base: &[String],
     extra: &mut Extra,
 ) -> Result<(), Error> {
+    let names = group
+        .member_names()
+        .map_err(|e| from_binding("listing the members of a group", e))?;
+    keep_group_remainder_named(group, &names, typed_children, typed_attributes, base, extra)
+}
+
+/// The same for a group whose member names the caller has already listed (IP-07 phase 7E): a laser in a layer lists each of its two groups of channels once, to find the channels, and
+/// the remainder is what those names hold besides them. The result is what [`keep_group_remainder`] gives for the same group.
+pub fn keep_group_remainder_named(
+    group: &Group,
+    names: &[String],
+    typed_children: &[&str],
+    typed_attributes: &[&str],
+    base: &[String],
+    extra: &mut Extra,
+) -> Result<(), Error> {
     let node = describe_group(group, base.to_vec(), typed_attributes)?;
     if node.attributes().next().is_some() {
         extra.add_node(node);
     }
-    keep_children(group, typed_children, base, extra, 1)
+    keep_children_named(group, names, typed_children, base, extra, 1)
 }
 
 /// Keeps the attributes that an adapter did not type of a dataset that it **does** type (a channel's samples): if there are any, as a node at `base` with its
@@ -344,9 +381,16 @@ pub fn keep_dataset_remainder(
     base: &[String],
     extra: &mut Extra,
 ) -> Result<(), Error> {
-    let node = describe_dataset_node(dataset, base.to_vec(), typed_attributes)?;
-    if node.attributes().next().is_some() {
-        extra.add_node(node);
+    // the attributes first: **a dataset with nothing untyped adds nothing**, which is every channel of every file we hold, and it is not described for that (IP-07 phase 7E: the
+    // description is about fifteen calls into the file, and there are sixteen channels in a layer of two lasers)
+    let attributes = other_attributes(dataset, typed_attributes)?;
+    if attributes.is_empty() {
+        return Ok(());
     }
+    extra.add_node(describe_dataset_node_with(
+        dataset,
+        base.to_vec(),
+        attributes,
+    )?);
     Ok(())
 }

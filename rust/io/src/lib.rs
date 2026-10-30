@@ -18,6 +18,10 @@
 /// The adapters (IP-04): one folder per on-disk version and the registration unit of a version. Internal: a consumer reaches an adapter only through the facade.
 #[doc(hidden)]
 pub mod adapters;
+/// The column engine (IP-06): the code every adapter uses to turn a request for a column into values, with its range rules, blocks, precision and errors. It names no
+/// layout word. Internal: a consumer reaches columns through the facade's `ColumnSource`.
+#[doc(hidden)]
+pub mod columns;
 /// The dispatch core (IP-04): the marker reader, the registry and the choice of an adapter. Internal: the facade's `open` is the contract.
 #[doc(hidden)]
 pub mod dispatch;

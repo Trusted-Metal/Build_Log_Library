@@ -17,8 +17,8 @@ use build_log_io::adapters::v17::{self, layout, values};
 use build_log_io::adapters::MarkerPlace;
 use build_log_io::dispatch::{open, production};
 use build_log_model::{
-    AttrShape, AttrValue, Capabilities, ChannelKey, ColumnRequest, ErrorKind, LaserKey, LayerId,
-    ReadContext, StoredClass,
+    AttrShape, AttrValue, Capabilities, ChannelKey, ColumnRequest, Direction, ErrorKind, Feature,
+    LaserKey, LayerId, ReadContext, StoredClass,
 };
 use build_log_testkit::{miniature, miniature_path};
 use common::{put_array, put_scalar, put_text, temp_h5, TempH5};
@@ -52,8 +52,17 @@ fn the_v17_adapter_is_registered_under_17() {
         set.marker(),
         &MarkerPlace::new(layout::MOUNT, layout::MARKER)
     );
-    // nothing is declared that the reader does not return yet (decision D13-7)
-    assert_eq!(set.capabilities(), &Capabilities::new());
+    // nothing is declared that the reader does not return yet (decision D13-7): the outcomes joined with phase 13J, the images with phase 13F, the events with 13K, the samples with 13L and the columns of the events with 6F and the regions of the frames with 6G
+    assert_eq!(
+        set.capabilities(),
+        &Capabilities::new()
+            .with(Direction::Read, Feature::Outcomes)
+            .with(Direction::Read, Feature::Images)
+            .with(Direction::Read, Feature::Events)
+            .with(Direction::Read, Feature::Samples)
+            .with(Direction::Read, Feature::EventColumns)
+            .with(Direction::Read, Feature::ImageRegions)
+    );
     assert!(set.reader().is_provided());
     let writer = set.writer().unsupported_reason().expect("a reason");
     assert!(writer.contains("IP-08"), "{writer}");
@@ -315,28 +324,28 @@ fn nothing_on_the_mount_is_dropped_by_the_build_level() {
     assert!(height.issue.is_none());
 }
 
-// ---------------------------------------------------------------- samples, until IP-06
+// ---------------------------------------------------------------- samples (phase 13L)
 
+/// Until phase 13L a request for samples was answered with a typed error (decision D13-8). It is answered with the samples now; `v17_columns.rs` holds the conformance of every
+/// column. This one request shows that the source of the first real file serves a laser channel, typed as it is stored, beside the metadata.
 #[test]
-fn a_sample_request_answers_unsupported_until_ip06() {
+fn a_sample_request_is_answered_with_the_samples_since_phase_13l() {
     let opened = open(production(), gate_path()).expect("the gate file opens");
     let request = ColumnRequest::new(
         LayerId(1),
         Some(LaserKey::new("Laser_1", 1)),
         ChannelKey::new(["Laser_Power"]),
     );
-    let error = opened
+    let column = opened
         .source()
         .read(&request, &ReadContext::new())
-        .expect_err("samples are not read yet");
-    // the data is in the file, so it is not `NotPresent`: the answer says what is missing and why
-    match error.kind() {
-        ErrorKind::UnsupportedInVersion { version, feature } => {
-            assert_eq!(version, "17");
-            assert!(feature.contains("IP-06"), "{feature}");
-        }
-        other => panic!("expected UnsupportedInVersion, got {other:?}"),
-    }
+        .expect("the samples are read");
+    // the power is stored as `float32`, and the gate file holds 25,000 values of it in the layer
+    assert!(
+        matches!(column, build_log_model::ColumnData::F32(_)),
+        "{column:?}"
+    );
+    assert_eq!(column.len(), 25_000);
     // and the metadata is still there
     assert!(opened.source().build().is_ok());
 }

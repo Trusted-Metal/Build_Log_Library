@@ -13,7 +13,7 @@ use std::collections::BTreeSet;
 use std::fs;
 
 use build_log_conformance::{check, expectations_dir, Expectation};
-use build_log_io::adapters::v17::layout;
+use build_log_io::adapters::v17::{layout, parameters};
 use build_log_io::dispatch::{open, open_at, production};
 use build_log_model::{BuildMeta, ChannelKind, ErrorKind, LayerId};
 use build_log_testkit::{miniature, miniature_path};
@@ -22,8 +22,16 @@ use common::{
 };
 use hdf5::Group;
 
-/// The files whose whole conformance is asserted. A file joins this list in the phase of the plan that gates it (13E, 13F, 13G).
-const GATED: [&str; 1] = [miniature::V17_TRIGGERED_2026_10_19];
+/// The files whose whole conformance is asserted. A file joins this list in the phase of the plan that gates it: the gate file in 13D, the mock capture, the
+/// 2026-10-15 build, the March build and the special-layer file in 13E, and the images file in 13F. **All six V17 miniatures are gated.**
+const GATED: [&str; 6] = [
+    miniature::V17_TRIGGERED_2026_10_19,
+    miniature::V17_MOCK,
+    miniature::V17_OCT15,
+    miniature::V17_MARCH,
+    miniature::V17_SPECIAL_LAYERS,
+    miniature::V17_2026_08_18_IMAGES,
+];
 
 /// Every V17 miniature, with its expectation file.
 const V17_FILES: [(&str, &str); 6] = [
@@ -138,8 +146,18 @@ fn walk(
 
 #[test]
 fn nothing_in_the_gate_file_is_dropped() {
-    let path = miniature_path(miniature::V17_TRIGGERED_2026_10_19);
-    let build = build_of(miniature::V17_TRIGGERED_2026_10_19);
+    nothing_in_a_file_is_dropped(miniature::V17_TRIGGERED_2026_10_19);
+}
+
+/// The file with the camera images and the events inside each layer: its images are typed channels, and everything else of them is kept.
+#[test]
+fn nothing_in_the_images_file_is_dropped() {
+    nothing_in_a_file_is_dropped(miniature::V17_2026_08_18_IMAGES);
+}
+
+fn nothing_in_a_file_is_dropped(file: &str) {
+    let path = miniature_path(file);
+    let build = build_of(file);
     let file = hdf5::File::open(&path).expect("the file");
     let root = file.group("/").expect("the root");
 
@@ -243,6 +261,137 @@ fn nothing_in_the_gate_file_is_dropped() {
         }
     }
 
+    // the image groups of a layer are typed where a frame was described: the group and its frame (what else they hold is kept in the layer's extra)
+    for channel in build
+        .sensors
+        .iter()
+        .filter(|c| c.kind == build_log_model::ChannelKind::Image)
+    {
+        for (id, _) in channel.presence.iter() {
+            let phase = format!(
+                "{monitoring_path}/{}{}/{}",
+                layout::LAYER_PREFIX,
+                id.0,
+                channel.key
+            );
+            typed_nodes.insert(format!("{phase}/{}", layout::RAW));
+            typed_nodes.insert(phase);
+        }
+    }
+
+    // the events: the group that holds them in each place, the events group of each kind, the groups on the way down to a series, the series and its columns are
+    // typed, and so are a series' declared type and height; what else they hold is kept, by a path
+    let global_sensors = format!("/{}", layout::GLOBAL_SENSORS);
+    let bucket = format!("{global_sensors}/{}", layout::UNASSIGNED);
+    let mut containers: Vec<String> = vec![global_sensors.clone(), bucket.clone()];
+    for id in build.layers.ids() {
+        containers.push(format!(
+            "{monitoring_path}/{}{}/{}",
+            layout::LAYER_PREFIX,
+            id.0,
+            layout::GLOBAL_SENSORS
+        ));
+    }
+    for container in containers {
+        if nodes.contains(&container) {
+            typed_nodes.insert(container.clone());
+            for events in [
+                layout::SENSOR_EVENTS,
+                layout::TASK_EVENTS,
+                layout::RUN_EVENTS,
+            ] {
+                let held = format!("{container}/{events}");
+                if nodes.contains(&held) {
+                    typed_nodes.insert(held);
+                }
+            }
+        }
+    }
+    for series in &build.events {
+        let holder = match series.kind {
+            build_log_model::EventKind::Sensor => layout::SENSOR_EVENTS,
+            build_log_model::EventKind::Task => layout::TASK_EVENTS,
+            build_log_model::EventKind::Run => layout::RUN_EVENTS,
+            ref other => panic!("not a kind the file has: {other:?}"),
+        };
+        let mut roots: Vec<String> = series
+            .layers
+            .ids()
+            .map(|id| {
+                format!(
+                    "{monitoring_path}/{}{}/{}",
+                    layout::LAYER_PREFIX,
+                    id.0,
+                    layout::GLOBAL_SENSORS
+                )
+            })
+            .collect();
+        if series.no_layer.is_some() {
+            roots.push(bucket.clone());
+        }
+        for root in roots {
+            let mut at = format!("{root}/{holder}");
+            for part in &series.path {
+                at = format!("{at}/{part}");
+                typed_nodes.insert(at.clone());
+            }
+            for column in [
+                layout::SOURCE_TS,
+                layout::EVENT_VALUE,
+                layout::START_NS,
+                layout::STOP_NS,
+            ] {
+                let held = format!("{at}/{column}");
+                if nodes.contains(&held) {
+                    typed_nodes.insert(held);
+                }
+            }
+            for name in [layout::EVENT_DATA_TYPE, layout::Z_HEIGHT] {
+                typed_attributes.insert((at.clone(), name.to_string()));
+            }
+        }
+    }
+
+    // the calibration group: the trains that became a laser's parameters are typed, with the groups below them that the parameters read; what the parameters did
+    // not type is kept in their `extra`, by a path below the train
+    let calibration_path = format!("{mount_path}/{}", layout::CALIBRATION_DATA);
+    typed_nodes.insert(calibration_path.clone());
+    for laser in build.lasers() {
+        let Some(parameters) = &laser.parameters else {
+            continue;
+        };
+        let train = format!(
+            "{calibration_path}/{}{}",
+            layout::OPTICAL_TRAIN_PREFIX,
+            laser.key.number
+        );
+        typed_nodes.insert(train.clone());
+        let mut groups: Vec<Vec<&str>> = vec![
+            vec![],
+            vec![layout::SCANNER],
+            vec![layout::SCANNER_CARD],
+            vec![layout::LIGHT_SOURCE],
+        ];
+        for galvo in [layout::GALVO_X, layout::GALVO_Y, layout::GALVO_Z] {
+            groups.push(vec![layout::SCANNER, galvo]);
+        }
+        for group in groups {
+            let at = if group.is_empty() {
+                train.clone()
+            } else {
+                format!("{train}/{}", group.join("/"))
+            };
+            if !group.is_empty() && !nodes.contains(&at) {
+                continue;
+            }
+            typed_nodes.insert(at.clone());
+            for name in parameters::typed_names(&group) {
+                typed_attributes.insert((at.clone(), name.to_string()));
+            }
+        }
+        keep(&parameters.extra, &train);
+    }
+
     // every node of the file is typed or kept, and every kept node is in the file
     let accounted: BTreeSet<String> = typed_nodes.union(&kept_nodes).cloned().collect();
     let missing: Vec<&String> = nodes.difference(&accounted).collect();
@@ -279,10 +428,15 @@ fn nothing_in_the_gate_file_is_dropped() {
         invented.is_empty(),
         "attributes the adapter holds that the file does not: {invented:?}"
     );
-    // the groups beside the mount are among what is kept, by a path that starts above the mount
+    // the groups beside the mount are among what is kept, by a path that starts above the mount; the events group is typed (its bucket of events is read) and only
+    // the rest of it is kept
     for beside in &besides {
         if at_the_root.contains(beside) {
-            assert!(kept_nodes.contains(beside), "{beside} is not kept");
+            if *beside == global_sensors {
+                assert!(typed_nodes.contains(beside), "{beside} is not typed");
+            } else {
+                assert!(kept_nodes.contains(beside), "{beside} is not kept");
+            }
         }
     }
 }

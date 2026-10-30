@@ -4,7 +4,8 @@
 mod common;
 
 use build_log_io::hdf5::{
-    keep_dataset_remainder, keep_group_remainder, keep_node, keep_other_nodes, MAX_DEPTH,
+    keep_dataset_remainder, keep_group_remainder, keep_group_remainder_named, keep_node,
+    keep_other_nodes, MAX_DEPTH,
 };
 use build_log_model::{AttrValue, Extra, NodeKind, StoredClass};
 use common::{put_scalar, put_text, temp_h5};
@@ -212,4 +213,43 @@ fn the_walk_stops_at_the_depth_limit_and_says_so() {
         "nothing below the limit was kept: {} nodes",
         extra.len()
     );
+}
+
+#[test]
+fn a_group_remainder_from_names_that_were_listed_is_the_one_that_lists_them() {
+    // IP-07 phase 7E: a laser in a layer lists each group of channels once, to find the channels, and keeps what the names hold besides them from the same listing
+    let (listing, listed, narrowed) = with_mount(
+        "nodes-remainder-named",
+        |mount| {
+            let holder = mount.create_group("Holder").unwrap();
+            for name in ["Typed_Column", "Spare_Column", "Another_Spare"] {
+                holder.new_dataset::<f32>().shape(2).create(name).unwrap();
+            }
+            put_scalar(&holder, "A_Count", 4i32);
+        },
+        |mount| {
+            let group = mount.group("Holder").unwrap();
+            let base = path(&["Holder"]);
+            let mut listing = Extra::new();
+            keep_group_remainder(&group, &["Typed_Column"], &[], &base, &mut listing).unwrap();
+            let names = group.member_names().unwrap();
+            let mut listed = Extra::new();
+            keep_group_remainder_named(&group, &names, &["Typed_Column"], &[], &base, &mut listed)
+                .unwrap();
+            // the names that are given are the names that are used: a name that is not given is not kept
+            let some = vec!["Typed_Column".to_string(), "Spare_Column".to_string()];
+            let mut narrowed = Extra::new();
+            keep_group_remainder_named(&group, &some, &["Typed_Column"], &[], &base, &mut narrowed)
+                .unwrap();
+            (listing, listed, narrowed)
+        },
+    );
+    assert_eq!(format!("{listing:?}"), format!("{listed:?}"));
+    let paths =
+        |extra: &Extra| -> Vec<String> { extra.nodes().map(|n| n.path.join("/")).collect() };
+    assert_eq!(
+        paths(&listed),
+        ["Holder", "Holder/Another_Spare", "Holder/Spare_Column"]
+    );
+    assert_eq!(paths(&narrowed), ["Holder", "Holder/Spare_Column"]);
 }

@@ -14,7 +14,7 @@
 //! | [`value`] | `Encoding` and `Value`, the vocabulary of every other part | 3C (here) |
 //! | [`attr`] | the attribute reader | 3D |
 //! | [`dataset`] | dataset descriptors, compound and string datasets | 3E |
-//! | [`range`] | ranged reads with cancel and progress | 3F |
+//! | [`range`] | ranged reads of numeric datasets in blocks, with cancel and progress | 3F (here) |
 //! | [`error`] | the mapping of the binding's errors into the library's taxonomy | 3G |
 //! | [`file`] | opening a file: the libhdf5 minimum first, then the open with its failures mapped | 3G |
 //! | [`extra`] | keeping what an adapter does not type: attributes with their stored form, and unmapped groups and datasets (IP-13) | 13B, 13D |
@@ -31,15 +31,19 @@ pub mod value;
 
 pub use attr::read_attribute;
 pub use dataset::{
-    describe_dataset, read_name_value_rows, read_strings, Allocation, DatasetDescriptor,
-    DatasetLayout, Fill, FillWhen, Filter, FilterKind, NameValue,
+    describe_dataset, describe_shape, has_null_dataspace, read_name_value_rows, read_strings,
+    Allocation, DatasetDescriptor, DatasetLayout, DatasetShape, Fill, FillWhen, Filter, FilterKind,
+    NameValue,
 };
 pub use error::from_binding;
 pub use extra::{
-    extra_attribute, keep_dataset_remainder, keep_group_remainder, keep_node,
-    keep_other_attributes, keep_other_nodes, unread_attribute, MAX_DEPTH,
+    extra_attribute, keep_dataset_remainder, keep_group_remainder, keep_group_remainder_named,
+    keep_node, keep_other_attributes, keep_other_nodes, unread_attribute, MAX_DEPTH,
 };
 pub use file::{open_file, open_file_with_minimum};
+pub use range::{block_rows, read_blocks, region_shape, Block, Element, Region};
+/// The same type as [`Value`], for the adapters, whose layout words include `Value` (the dataset of an event series).
+pub use value::Value as Held;
 pub use value::{
     strict_text, ByteOrder, Charset, Class, Encoding, Field, Padding, Shape, Stored, TextForm,
     TextLength, Value,

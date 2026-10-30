@@ -125,9 +125,10 @@ pub enum Value {
     /// The elements of a fixed-length string, each as its bytes up to the first zero byte, **never decoded as text**: whether they are text, or the eight
     /// bytes of a `float64` as V17 March stores `Power_Min`, is the adapter's knowledge ([`strict_text`] is a view, not a decision).
     ///
-    /// **A limit until question Q3-1 is answered for the March step:** the safe binding converts a fixed string on the way in, so the bytes after the
+    /// **A limit of the safe binding (question Q3-1 is closed: no shim, decision D13-16):** it converts a fixed string on the way in, so the bytes after the
     /// first zero byte are not seen, and the raw bytes of a number that has a zero byte inside (the bytes of 100.0) come back empty
-    /// (`tests/method_check.rs` pins this). Every fixed string of the eight miniatures is returned whole.
+    /// (`tests/method_check.rs` pins this with a made-up value). Every fixed string of the eight miniatures is returned whole: the March `Power_Min` has no zero
+    /// byte before its terminator, and its `Power_Max` is one byte in the file itself.
     Bytes(Vec<Vec<u8>>),
     /// The elements of a variable-length string.
     Text(Vec<String>),

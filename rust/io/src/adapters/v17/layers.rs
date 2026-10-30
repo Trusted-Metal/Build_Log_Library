@@ -6,16 +6,18 @@
 //! * **A layer has two thicknesses, the actual and the commanded, and each is reported on its own.** A value that V17 writes when it does not know (`0.0`) is
 //!   not a thickness: the field stays empty and the origin of that thickness keeps the raw value (decision J4). An attribute the file does not have says
 //!   nothing at all.
-//! * **Every other attribute of a layer's group is kept in the layer's `extra`**, and so is every child of it that is not a laser's group (phase 13D); the
-//!   lasers are read by [`super::lasers`]. A child of the layers' group that is not named for a layer is kept in the build's `extra`.
+//! * **Every other attribute of a layer's group is kept in the layer's `extra`**, and so is every child of it that is neither a laser's group, an image group nor the
+//!   events (phases 13D, 13F and 13K); the lasers are read by [`super::lasers`], the camera images by [`super::images`] and the OPC UA events by [`super::events`]. A child of the layers' group that is not named for a layer is kept in the build's `extra`.
 
 use build_log_model::{BuildMeta, Error, ErrorKind, LayerId, LayerMeta, Location, TimeValue};
 use hdf5::Group;
 
+use super::events::Events;
+use super::images::Images;
 use super::lasers::Lasers;
 use super::layout;
 use super::values::{optional_float, optional_integer};
-use crate::hdf5::{from_binding, keep_group_remainder, keep_other_attributes};
+use crate::hdf5::{from_binding, keep_group_remainder, keep_other_attributes, keep_other_nodes};
 
 /// What V17 writes for a thickness it does not know (decision J4). A thickness of `1.0` is a real one in V17.
 const THICKNESS_PLACEHOLDERS: [f64; 1] = [0.0];
@@ -44,8 +46,20 @@ fn layer_id_of(name: &str) -> Result<Option<LayerId>, Error> {
         })
 }
 
-/// Reads the layers that the mount holds into `build`. A mount without its layers' group is `Corrupt`.
+/// Reads the layers that the mount holds into `build`, and the events inside them. A mount without its layers' group is `Corrupt`.
 pub fn read_layers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
+    let mut events = Events::new();
+    read_layers_with(mount, build, &mut events)?;
+    events.finish(build);
+    Ok(())
+}
+
+/// The same, collecting the events into `events`, so that the caller can add the events that no layer owns before they are added to the build.
+pub fn read_layers_with(
+    mount: &Group,
+    build: &mut BuildMeta,
+    events: &mut Events,
+) -> Result<(), Error> {
     if !mount.link_exists(layout::MONITORING_DATA) {
         return Err(corrupt(format!(
             "the build has no `{}` group, which holds its layers",
@@ -59,6 +73,7 @@ pub fn read_layers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
         .member_names()
         .map_err(|e| from_binding("listing the layers", e))?;
     let mut lasers = Lasers::new(mount);
+    let mut images = Images::new();
     let mut layer_names: Vec<&str> = Vec::new();
     for name in &names {
         let Some(id) = layer_id_of(name)? else {
@@ -74,7 +89,12 @@ pub fn read_layers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
             .group(name)
             .map_err(|e| located(from_binding("opening a layer", e)))?;
         let mut layer = read_layer(&group, id).map_err(located)?;
-        lasers.read_layer(&group, &mut layer).map_err(located)?;
+        // the children of the layer that are typed: the lasers and the images. Whatever else the layer holds is kept.
+        let mut typed = lasers.read_layer(&group, &mut layer).map_err(located)?;
+        typed.extend(images.read_layer(&group, &mut layer).map_err(located)?);
+        typed.extend(events.read_layer(&group, &mut layer).map_err(located)?);
+        let typed: Vec<&str> = typed.iter().map(String::as_str).collect();
+        keep_other_nodes(&group, &typed, &[], &mut layer.extra).map_err(located)?;
         if build.layers.insert(id, layer).is_some() {
             return Err(located(corrupt(format!(
                 "two groups are named for the layer {id}"
@@ -82,6 +102,7 @@ pub fn read_layers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
         }
     }
     lasers.finish(build);
+    images.finish(build);
     // what the layers' group holds besides the layers: its own attributes and the children that are not named for a layer
     keep_group_remainder(
         &monitoring,

@@ -91,7 +91,10 @@ pub enum Allocation {
 pub struct DatasetDescriptor {
     /// What one element is. A dataset of a class this library does not read is [`Class::Other`].
     pub class: Class,
+    /// The extent of each dimension. **A dataset with a null dataspace has none**, and it is not a scalar: see `null`.
     pub shape: Vec<usize>,
+    /// Whether the dataspace is null (IP-07 phase 7A, D07-2): HDF5 allows a dataset with a type, no data and no dimension. It holds no value, which a scalar (it holds one) does not.
+    pub null: bool,
     /// The largest size of each dimension; `None` is unlimited.
     pub max_shape: Vec<Option<usize>>,
     pub layout: DatasetLayout,
@@ -104,17 +107,56 @@ pub struct DatasetDescriptor {
     pub allocation: Allocation,
 }
 
-/// Describes how a dataset is stored, without reading any of its values.
-pub fn describe_dataset(dataset: &Dataset) -> Result<DatasetDescriptor, Error> {
+/// How a dataset is typed and shaped, and nothing else: what a reader that only needs to know what a column holds asks (IP-07 phase 7E, decision D07-8).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetShape {
+    /// What one element is: the same [`Class`] that [`describe_dataset`] gives.
+    pub class: Class,
+    /// The extent of each dimension; none for a null dataspace and for a scalar.
+    pub shape: Vec<usize>,
+    /// Whether the dataspace is null (see [`DatasetDescriptor::null`]).
+    pub null: bool,
+}
+
+/// The class of a dataset's elements, as [`describe_dataset`] reports it.
+fn class_of_dataset(dataset: &Dataset) -> Result<Class, Error> {
     let datatype = dataset
         .dtype()
         .map_err(|e| from_binding("reading the datatype of a dataset", e))?;
-    let class = match datatype.to_descriptor() {
+    Ok(match datatype.to_descriptor() {
         Ok(descriptor) => {
             class_of(&datatype, &descriptor).unwrap_or_else(|e| Class::Other(e.to_string()))
         }
         Err(e) => Class::Other(e.to_string()),
-    };
+    })
+}
+
+/// How a dataset is typed and shaped: its class, its shape and whether its dataspace is null. **A few calls into the file**, where [`describe_dataset`] also asks for the layout, the
+/// chunks, the filters and the fill and allocation settings (about fifteen more, which a laser in a layer has no use for: there are sixteen channels in a layer of two lasers). Each field
+/// equals the field of the same name of [`describe_dataset`], which a test holds on every dataset of every miniature.
+pub fn describe_shape(dataset: &Dataset) -> Result<DatasetShape, Error> {
+    let class = class_of_dataset(dataset)?;
+    let space = dataset
+        .space()
+        .map_err(|e| from_binding("reading the dataspace of a dataset", e))?;
+    Ok(DatasetShape {
+        class,
+        shape: space.shape(),
+        null: space.is_null(),
+    })
+}
+
+/// Whether a dataset has a null dataspace (IP-07 phase 7A, D07-2): it has a type and holds no value, and it has no dimension, which a scalar has too (a scalar holds one value). Nothing is read.
+pub fn has_null_dataspace(dataset: &Dataset) -> Result<bool, Error> {
+    dataset
+        .space()
+        .map(|space| space.is_null())
+        .map_err(|e| from_binding("reading the dataspace of a dataset", e))
+}
+
+/// Describes how a dataset is stored, without reading any of its values.
+pub fn describe_dataset(dataset: &Dataset) -> Result<DatasetDescriptor, Error> {
+    let class = class_of_dataset(dataset)?;
     let space = dataset
         .space()
         .map_err(|e| from_binding("reading the dataspace of a dataset", e))?;
@@ -131,6 +173,7 @@ pub fn describe_dataset(dataset: &Dataset) -> Result<DatasetDescriptor, Error> {
     Ok(DatasetDescriptor {
         class,
         shape: space.shape(),
+        null: space.is_null(),
         max_shape: space.maxdims(),
         layout,
         chunks: dataset.chunk(),

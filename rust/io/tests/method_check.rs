@@ -7,7 +7,8 @@
 //! * the byte order and the "is it null-padded" question can be answered, but **no more of the padding**: the binding builds fixed-length strings null-padded
 //!   and has no call that says how an existing one is padded, so a null-terminated string and a space-padded one look the same;
 //! * **a null-terminated fixed-length string is cut at its first zero byte**: the binding converts it into its own null-padded type on the way in, so the bytes
-//!   after the first zero are lost, and a number stored as raw bytes (V17 March's `Power_Min`) that has a zero byte inside reads back empty. Reading the bytes
+//!   after the first zero are lost, and a number stored as raw bytes that has a zero byte inside (the bytes of 100.0, which the test below makes up; the real
+//!   March `Power_Min` values have none, and its `Power_Max` is one byte in the file) reads back empty. Reading the bytes
 //!   exactly needs a read in the file's own type, which the safe API does not offer: that is step 3 of the ladder.
 
 use std::path::PathBuf;

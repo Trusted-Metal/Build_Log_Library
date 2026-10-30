@@ -2,11 +2,15 @@
 //!
 //! * **A laser is a group named for it in a layer** (`Laser_` and a number). The lasers of a build are the lasers of all its layers, in numeric order; a layer
 //!   in which a laser has no group has no entry for it, which is "not recorded" (decision D13-4).
-//! * **Presence is the length of the laser's power**: a stream with samples is recorded, one whose power has none, or that has no power at all, is recorded and
-//!   empty (the second laser of the 2026-10-15 file; layers 2007 and 2008 of the special-layer miniature). No sample is read: the length comes from the
-//!   dataset's descriptor.
+//! * **A laser's stream is as long as its longest channel** (IP-07 phase 7A, decision D07-1): a stream with samples is recorded, one whose channels have none, or that
+//!   has no channel at all, is recorded and empty (the second laser of the 2026-10-15 file; layers 2007 and 2008 of the special-layer miniature). No one channel decides it:
+//!   the rule was the power's length, which hid every sample of a laser whose power was not written, and tauri's writer omits an empty channel. A channel that is not
+//!   there is not a difference; **where the channels that are there differ in length, the stored samples carry the origin `LongestChannel`**, and nothing is cut or padded:
+//!   each channel keeps its own count. No sample is read: the lengths come from the datasets' descriptors.
+//! * **A dataset with a null dataspace is a recorded, empty channel** (decision D07-2), and its origin on the laser's entry for the layer is `NullDataspace`. HDF5 allows a
+//!   dataset with a type, no data and no dimension; a dataset of length zero is empty too, with no origin. Neither removes the laser or the channel.
 //! * **The time axis is the laser's own**: its window is the start and end times of the laser **as written** (absent from the March files, so there is no
-//!   window), its stored samples are the length of the power, and its sample period is the scanner card's of the optical train **of the same number**, with no
+//!   window), its stored samples are those of the stream (above), and its sample period is the scanner card's of the optical train **of the same number**, with no
 //!   unit. The accuracy is nominal when there is a period and unknown when there is none (decisions D13-5 and D13-18).
 //! * **A channel is a dataset the adapter knows**: the power, the state and the six positions. Its type is the type it is stored as; the unit of the power
 //!   (volts) and of the positions (bits) is declared by the adapter (J7); the state is an enum whose labels nobody has declared. A channel is described once for
@@ -27,9 +31,9 @@ use build_log_model::{
 use hdf5::{Dataset, Group};
 
 use super::layout;
-use super::values::{optional_float, optional_integer};
+use super::values::optional_integer;
 use crate::hdf5::{
-    describe_dataset, from_binding, keep_dataset_remainder, keep_group_remainder, keep_node,
+    describe_shape, from_binding, keep_dataset_remainder, keep_group_remainder_named, keep_node,
     keep_other_attributes, keep_other_nodes, Class,
 };
 
@@ -38,7 +42,7 @@ fn corrupt(detail: String) -> Error {
 }
 
 /// Can this failure be reported on the laser or the channel it happened in? A file that is not what V17 says it is can; damage to the file itself cannot.
-fn is_about_the_content(error: &Error) -> bool {
+pub(super) fn is_about_the_content(error: &Error) -> bool {
     matches!(
         error.kind(),
         ErrorKind::Corrupt { .. }
@@ -66,16 +70,16 @@ fn laser_number_of(name: &str) -> Result<Option<u32>, Error> {
 // ---------------------------------------------------------------- the channels the adapter knows
 
 /// A channel dataset of V17: where it is under a laser's group, and what the adapter says it is.
-struct Spec {
-    group: &'static str,
-    dataset: &'static str,
+pub(super) struct Spec {
+    pub(super) group: &'static str,
+    pub(super) dataset: &'static str,
     kind: ChannelKind,
     /// The unit of the stored values, declared by the adapter because every V17 file says the same thing (J7).
     unit: Option<&'static str>,
 }
 
 /// The eight channels, in the order that a laser's channels are listed.
-fn specs() -> [Spec; 8] {
+pub(super) fn specs() -> [Spec; 8] {
     let position = |dataset, kind| Spec {
         group: layout::POSITION,
         dataset,
@@ -123,7 +127,7 @@ fn specs() -> [Spec; 8] {
 }
 
 /// The dataset of a channel under a laser's group, or `None` if the laser has no such group or dataset in this layer.
-fn channel_dataset(laser: &Group, spec: &Spec) -> Result<Option<Dataset>, Error> {
+pub(super) fn channel_dataset(laser: &Group, spec: &Spec) -> Result<Option<Dataset>, Error> {
     if !laser.link_exists(spec.group) {
         return Ok(None);
     }
@@ -139,8 +143,46 @@ fn channel_dataset(laser: &Group, spec: &Spec) -> Result<Option<Dataset>, Error>
         .map_err(|e| corrupt(format!("`{}` is not a dataset: {e}", spec.dataset)))
 }
 
+/// One of the two groups of channels of a laser in a layer, **opened once and its names listed once** (IP-07 phase 7E): a channel is there if its name is, so no lookup is made for a
+/// channel that is not (the base file of 2026-08-12 has no `Actual_Z`), and the remainder of the group is what its names hold besides the channels.
+struct Holder {
+    name: &'static str,
+    group: Group,
+    names: Vec<String>,
+}
+
+/// The group of channels called `name` under a laser, or `None` if the laser has none.
+fn open_holder(laser: &Group, name: &'static str) -> Result<Option<Holder>, Error> {
+    if !laser.link_exists(name) {
+        return Ok(None);
+    }
+    let group = laser
+        .group(name)
+        .map_err(|e| corrupt(format!("`{name}` is not a group: {e}")))?;
+    let names = group
+        .member_names()
+        .map_err(|e| from_binding("listing the members of a group", e))?;
+    Ok(Some(Holder { name, group, names }))
+}
+
+/// The dataset of a channel in the groups that were opened, or `None` if the laser has no such group or dataset in this layer. The same answer as [`channel_dataset`], from names that
+/// are already known.
+fn holder_dataset(holders: &[Option<Holder>], spec: &Spec) -> Result<Option<Dataset>, Error> {
+    let Some(holder) = holders.iter().flatten().find(|h| h.name == spec.group) else {
+        return Ok(None);
+    };
+    if !holder.names.iter().any(|name| name == spec.dataset) {
+        return Ok(None);
+    }
+    holder
+        .group
+        .dataset(spec.dataset)
+        .map(Some)
+        .map_err(|e| corrupt(format!("`{}` is not a dataset: {e}", spec.dataset)))
+}
+
 /// The numeric type that a class is, if it is one.
-fn numeric_type(class: &Class) -> Result<NumericType, Error> {
+pub(super) fn numeric_type(class: &Class) -> Result<NumericType, Error> {
     match class {
         Class::Float { bits: 32, .. } => Ok(NumericType::F32),
         Class::Float { bits: 64, .. } => Ok(NumericType::F64),
@@ -190,16 +232,24 @@ fn numeric_type(class: &Class) -> Result<NumericType, Error> {
     }
 }
 
-/// What a channel's dataset says: how it is typed and how many samples it holds. It has to be a one-dimensional dataset of numbers.
-fn channel_facts(dataset: &Dataset, spec: &Spec) -> Result<(ChannelDType, u64), Error> {
-    let descriptor = describe_dataset(dataset)?;
-    if descriptor.shape.len() != 1 {
+/// What a channel's dataset says: how it is typed, how many samples it holds, and whether its dataspace is null.
+struct Facts {
+    dtype: ChannelDType,
+    samples: u64,
+    null: bool,
+}
+
+/// What a channel's dataset says. It has to be a one-dimensional dataset of numbers, **or a dataset with a null dataspace, which holds no value** (D07-2).
+fn channel_facts(dataset: &Dataset, spec: &Spec) -> Result<Facts, Error> {
+    // only the class and the shape are needed: the full description of a dataset is for the datasets that are kept untyped
+    let descriptor = describe_shape(dataset)?;
+    if !descriptor.null && descriptor.shape.len() != 1 {
         return Err(corrupt(format!(
             "a channel of {} dimensions: a stream of samples has one",
             descriptor.shape.len()
         )));
     }
-    let samples = descriptor.shape[0] as u64;
+    let samples = descriptor.shape.first().map_or(0, |&n| n as u64);
     let dtype = if spec.kind == ChannelKind::LaserState {
         // an enum of whole numbers whose labels the file does not declare (Q2-2); the width is whatever it is stored as
         match descriptor.class {
@@ -215,7 +265,11 @@ fn channel_facts(dataset: &Dataset, spec: &Spec) -> Result<(ChannelDType, u64), 
     } else {
         ChannelDType::Numeric(numeric_type(&descriptor.class)?)
     };
-    Ok((dtype, samples))
+    Ok(Facts {
+        dtype,
+        samples,
+        null: descriptor.null,
+    })
 }
 
 fn descriptor_for(spec: &Spec, dtype: ChannelDType) -> ChannelDescriptor {
@@ -272,8 +326,8 @@ impl Lasers {
                 .group(part)
                 .map_err(|e| corrupt(format!("`{part}` is not a group: {e}")))?;
         }
-        Ok(optional_float(&group, layout::SAMPLE_PERIOD)?
-            .map(|value| Quantity::from_file(value, None)))
+        // a number with no unit, or text that has its unit in it: one quantity (decision D13-25)
+        super::parameters::sample_period(&group)
     }
 
     /// Makes sure laser `number` is known, and reads its period the first time.
@@ -287,7 +341,7 @@ impl Lasers {
             Err(error) if is_about_the_content(&error) => {
                 laser
                     .origins
-                    .record("sample_period", Origin::Other(format!("not read: {error}")));
+                    .record("sample_period", Origin::not_read(&error));
                 None
             }
             Err(error) => return Err(error),
@@ -297,8 +351,13 @@ impl Lasers {
         Ok(())
     }
 
-    /// Reads the lasers of one layer's group into the collection, and what else the layer's group holds into the layer's `extra`.
-    pub fn read_layer(&mut self, group: &Group, layer: &mut LayerMeta) -> Result<(), Error> {
+    /// Reads the lasers of one layer's group into the collection. Returns the names of the lasers' groups, so that the caller can keep what else the layer's group
+    /// holds (the images, the events) without keeping them again.
+    pub fn read_layer(
+        &mut self,
+        group: &Group,
+        layer: &mut LayerMeta,
+    ) -> Result<Vec<String>, Error> {
         let names = group
             .member_names()
             .map_err(|e| from_binding("listing the members of a layer", e))?;
@@ -326,9 +385,7 @@ impl Lasers {
                 Err(error) if is_about_the_content(&error) => {
                     // reported on itself: not recorded, with the reason, and what the group holds is kept
                     let mut entry = LaserLayerMeta::new(Presence::NotRecorded);
-                    entry
-                        .origins
-                        .record("laser", Origin::Other(format!("not read: {error}")));
+                    entry.origins.record("laser", Origin::not_read(&error));
                     keep_node(group, name, &[], &mut layer.extra)?;
                     entry
                 }
@@ -341,8 +398,7 @@ impl Lasers {
                 )));
             }
         }
-        let typed: Vec<&str> = here.iter().map(|(name, _)| name.as_str()).collect();
-        keep_other_nodes(group, &typed, &[], &mut layer.extra)
+        Ok(here.into_iter().map(|(name, _)| name).collect())
     }
 
     /// Adds the lasers to the build, in numeric order, with their channels in the order of the specification.
@@ -366,12 +422,31 @@ fn read_laser_in_layer(
 ) -> Result<LaserLayerMeta, Error> {
     let start = optional_integer(group, layout::START_LASER_TIME)?;
     let end = optional_integer(group, layout::END_LASER_TIME)?;
+    let flag = read_complete(group)?;
     let all = specs();
-    // the length of the stream is the length of the power; a stream without one is empty
-    let samples = match channel_dataset(group, &all[0])? {
-        Some(power) => channel_facts(&power, &all[0])?.1,
-        None => 0,
-    };
+    // what each channel says is read first, because no one channel decides the length of the stream (D07-1): it is that of the longest of them, and a stream with no channel is empty.
+    // A channel that cannot be read is left out of the length, with the reason (D13-21); a channel that is not there is not a difference.
+    let holders = [
+        open_holder(group, layout::LASER_DATA)?,
+        open_holder(group, layout::POSITION)?,
+    ];
+    let mut read: Vec<(&Spec, Dataset, Result<Facts, Error>)> = Vec::new();
+    for spec in &all {
+        let Some(dataset) = holder_dataset(&holders, spec)? else {
+            continue;
+        };
+        let facts = match channel_facts(&dataset, spec) {
+            Ok(facts) => Ok(facts),
+            Err(error) if is_about_the_content(&error) => Err(error),
+            Err(error) => return Err(error),
+        };
+        read.push((spec, dataset, facts));
+    }
+    let counts: Vec<u64> = read
+        .iter()
+        .filter_map(|(_, _, facts)| facts.as_ref().ok().map(|f| f.samples))
+        .collect();
+    let samples = counts.iter().copied().max().unwrap_or(0);
     let mut axis = TimeAxis::new()
         .with_accuracy(if period.is_some() {
             Accuracy::Nominal
@@ -388,24 +463,36 @@ fn read_laser_in_layer(
     if let Some(period) = period {
         axis = axis.with_period(period.clone());
     }
-    let mut entry = LaserLayerMeta::new(Presence::from_count(samples)).with_time_axis(axis);
+    let mut entry = LaserLayerMeta::new(Presence::from_count(samples))
+        .with_time_axis(axis)
+        .with_complete(flag);
+    // where the channels that are there differ in length, the stream's samples are those of the longest, and the origin says so (D07-1)
+    if counts.iter().any(|&count| count != samples) {
+        entry
+            .origins
+            .record("stored_samples", Origin::LongestChannel);
+    }
 
-    // what each channel says is collected first, and merged into the laser only when the whole group has been read, so that a laser that turns out to be
-    // unreadable leaves nothing of itself in the laser's channels
+    // what each channel says is merged into the laser only when the whole group has been read, so that a laser that turns out to be unreadable leaves nothing of itself in the
+    // laser's channels
     let mut found: Vec<(&Spec, ChannelDType, u64)> = Vec::new();
-    for spec in &all {
-        let Some(dataset) = channel_dataset(group, spec)? else {
-            continue;
-        };
-        match channel_facts(&dataset, spec) {
-            Ok((dtype, count)) => found.push((spec, dtype, count)),
-            Err(error) if is_about_the_content(&error) => {
+    for (spec, dataset, facts) in read {
+        match facts {
+            Ok(facts) => {
+                // a dataset with a null dataspace is recorded and empty, and says so (D07-2)
+                if facts.null {
+                    entry
+                        .origins
+                        .record(format!("channel {}", spec.dataset), Origin::NullDataspace);
+                }
+                found.push((spec, facts.dtype, facts.samples));
+            }
+            Err(error) => {
                 entry.origins.record(
                     format!("channel {}", spec.dataset),
-                    Origin::Other(format!("not read: {error}")),
+                    Origin::not_read(&error),
                 );
             }
-            Err(error) => return Err(error),
         }
         keep_dataset_remainder(
             &dataset,
@@ -424,18 +511,20 @@ fn read_laser_in_layer(
         &[],
         &mut entry.extra,
     )?;
-    for holder in [layout::LASER_DATA, layout::POSITION] {
-        if group.link_exists(holder) {
-            let typed: Vec<&str> = all
-                .iter()
-                .filter(|s| s.group == holder)
-                .map(|s| s.dataset)
-                .collect();
-            let inner = group
-                .group(holder)
-                .map_err(|e| corrupt(format!("`{holder}` is not a group: {e}")))?;
-            keep_group_remainder(&inner, &typed, &[], &[holder.to_string()], &mut entry.extra)?;
-        }
+    for holder in holders.iter().flatten() {
+        let typed: Vec<&str> = all
+            .iter()
+            .filter(|s| s.group == holder.name)
+            .map(|s| s.dataset)
+            .collect();
+        keep_group_remainder_named(
+            &holder.group,
+            &holder.names,
+            &typed,
+            &[],
+            &[holder.name.to_string()],
+            &mut entry.extra,
+        )?;
     }
     for (spec, dtype, count) in found {
         match merge(laser, spec, dtype, count, layer) {
@@ -443,13 +532,26 @@ fn read_laser_in_layer(
             Err(error) if is_about_the_content(&error) => {
                 entry.origins.record(
                     format!("channel {}", spec.dataset),
-                    Origin::Other(format!("not read: {error}")),
+                    Origin::not_read(&error),
                 );
             }
             Err(error) => return Err(error),
         }
     }
     Ok(entry)
+}
+
+/// The laser's `complete` flag in a layer, as written: 1 is true and 0 is false, and a laser without the attribute has none. It is never worked out from the
+/// samples (decision J9). Any other value is not a flag, and is not guessed at: it is a fault in the laser's group.
+fn read_complete(group: &Group) -> Result<Option<bool>, Error> {
+    match optional_integer(group, layout::COMPLETE)? {
+        None => Ok(None),
+        Some(0) => Ok(Some(false)),
+        Some(1) => Ok(Some(true)),
+        Some(other) => Err(corrupt(format!(
+            "the completeness flag of a laser holds {other}, and only 0 and 1 mean anything"
+        ))),
+    }
 }
 
 /// Adds a channel's presence in one layer to the laser's description of it, describing the channel the first time it is seen. A channel that is stored as

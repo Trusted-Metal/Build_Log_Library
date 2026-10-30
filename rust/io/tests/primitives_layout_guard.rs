@@ -163,25 +163,14 @@ fn source_files(dir: &Path) -> Vec<PathBuf> {
     files
 }
 
-#[test]
-fn no_layout_name_appears_in_the_primitives() {
-    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("src")
-        .join("hdf5");
-    let files = source_files(&dir);
-    // a guard that scanned nothing would pass for the wrong reason
+/// The violations in every source file of `dir`, after checking that the files that must be there are (a guard that scanned nothing would pass for the wrong reason).
+fn scan_folder(dir: &Path, must_have: &[&str]) -> Vec<String> {
+    let files = source_files(dir);
     let names: Vec<String> = files
         .iter()
         .map(|f| f.file_name().unwrap().to_string_lossy().to_string())
         .collect();
-    for expected in [
-        "mod.rs",
-        "value.rs",
-        "attr.rs",
-        "dataset.rs",
-        "range.rs",
-        "error.rs",
-    ] {
+    for expected in must_have {
         assert!(
             names.iter().any(|n| n == expected),
             "the guard did not find {expected} in {}",
@@ -192,14 +181,82 @@ fn no_layout_name_appears_in_the_primitives() {
     for file in &files {
         let text = fs::read_to_string(file).expect("a readable source");
         found.extend(violations(
-            &file.strip_prefix(&dir).unwrap().display().to_string(),
+            &file.strip_prefix(dir).unwrap().display().to_string(),
             &text,
         ));
     }
+    found
+}
+
+#[test]
+fn no_layout_name_appears_in_the_primitives() {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("src")
+        .join("hdf5");
+    let found = scan_folder(
+        &dir,
+        &[
+            "mod.rs",
+            "value.rs",
+            "attr.rs",
+            "dataset.rs",
+            "range.rs",
+            "error.rs",
+        ],
+    );
     assert!(
         found.is_empty(),
-        "layout names in the primitives:\n{}",
-        found.join("\n")
+        "layout names in the primitives:
+{}",
+        found.join(
+            "
+"
+        )
+    );
+}
+
+/// The column engine (IP-06 phase 6B, task T06.2) is the shared code of every version, so it is held to the same rule as the primitives: an adapter says where a column is
+/// stored, and the engine knows no name.
+#[test]
+fn the_engine_names_no_layout_word() {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("src")
+        .join("columns");
+    let found = scan_folder(&dir, &["mod.rs", "engine.rs", "convert.rs"]);
+    assert!(
+        found.is_empty(),
+        "layout names in the column engine:
+{}",
+        found.join(
+            "
+"
+        )
+    );
+}
+
+/// The scan of a folder, the one both guards above use, fails on a folder that holds a source made to break it.
+#[test]
+fn the_scan_of_a_folder_rejects_a_source_made_to_break_it() {
+    let dir = std::env::temp_dir().join(format!("build-log-io-guard-{}", std::process::id()));
+    fs::create_dir_all(&dir).expect("a folder");
+    fs::write(
+        dir.join("engine.rs"),
+        "pub fn dataset() -> &'static str { \"Laser_Power\" }
+// Actual_X in a comment is not code
+",
+    )
+    .expect("a file");
+    let found = scan_folder(&dir, &["engine.rs"]);
+    fs::remove_dir_all(&dir).ok();
+    assert!(
+        found
+            .iter()
+            .any(|f| f.contains("the layout name `Laser_Power`")),
+        "{found:?}"
+    );
+    assert!(
+        !found.iter().any(|f| f.contains("Actual_X")),
+        "a name in a comment is not code: {found:?}"
     );
 }
 

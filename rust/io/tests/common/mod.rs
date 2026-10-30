@@ -297,3 +297,121 @@ pub fn scanner_card(mount: &Group, train: u32, period: f32) {
         .expect("a scanner card");
     put_array(&card, layout::SAMPLE_PERIOD, &[period]);
 }
+
+// ---------------------------------------------------------------- a fixed-seed generator and ranges for the property tests (IP-03 phase 3F, IP-06 phase 6B)
+
+use std::ops::Range;
+
+/// A fixed-seed generator: the property test is the same on every run.
+pub struct Rng(pub u64);
+
+impl Rng {
+    pub fn next(&mut self) -> u64 {
+        self.0 ^= self.0 << 13;
+        self.0 ^= self.0 >> 7;
+        self.0 ^= self.0 << 17;
+        self.0
+    }
+
+    /// A number from 0 to `n`, both included.
+    pub fn up_to(&mut self, n: usize) -> usize {
+        (self.next() % (n as u64 + 1)) as usize
+    }
+}
+
+/// A range of rows that often starts or ends on, or next to, a block boundary.
+pub fn pick_rows(rng: &mut Rng, rows: usize, size: usize) -> Range<usize> {
+    let marks = [
+        0,
+        1,
+        size.saturating_sub(1),
+        size,
+        size + 1,
+        2 * size - 1,
+        2 * size,
+        2 * size + 1,
+        rows.saturating_sub(1),
+        rows,
+    ];
+    let one = |rng: &mut Rng| {
+        if rng.up_to(2) == 0 {
+            rng.up_to(rows)
+        } else {
+            marks[rng.up_to(marks.len() - 1)].min(rows)
+        }
+    };
+    let (a, b) = (one(rng), one(rng));
+    a.min(b)..a.max(b)
+}
+
+pub fn pick_any(rng: &mut Rng, length: usize) -> Range<usize> {
+    let (a, b) = (rng.up_to(length), rng.up_to(length));
+    a.min(b)..a.max(b)
+}
+
+// ---------------------------------------------------------------- a locator over one file, for the column engine and its cache (IP-06 phases 6B and 6C)
+
+/// The version a test locator names in its errors.
+pub const LOCATOR_VERSION: &str = "test-version";
+
+/// A locator over one file: the channel of a request is the path of a dataset in it, so that nothing of any version's layout is in the engine or in its tests.
+pub struct FileLocator {
+    pub file: File,
+    asked: std::sync::atomic::AtomicUsize,
+}
+
+impl FileLocator {
+    pub fn new(file: File) -> Self {
+        FileLocator {
+            file,
+            asked: std::sync::atomic::AtomicUsize::new(0),
+        }
+    }
+
+    /// How many times the engine asked this locator for a dataset.
+    pub fn asked(&self) -> usize {
+        self.asked.load(std::sync::atomic::Ordering::SeqCst)
+    }
+}
+
+impl build_log_io::columns::Locator for FileLocator {
+    fn version(&self) -> &str {
+        LOCATOR_VERSION
+    }
+
+    fn locate(
+        &self,
+        request: &build_log_model::ColumnRequest,
+    ) -> Result<build_log_io::columns::Located, build_log_model::Error> {
+        self.asked.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let path = request.channel.segments.join("/");
+        self.file
+            .dataset(&path)
+            .map(build_log_io::columns::Located::new)
+            .map_err(|_| {
+                build_log_model::Error::new(build_log_model::ErrorKind::NotPresent {
+                    what: format!("the dataset {path}"),
+                })
+            })
+    }
+}
+
+/// A file with the datasets that `write` makes in its one group, opened for reading through a locator.
+pub fn locator_over(label: &str, write: impl FnOnce(&hdf5::Group)) -> (TempH5, FileLocator) {
+    let on_disk = temp_h5(label, write);
+    let locator = FileLocator::new(File::open(&on_disk.0).expect("the file opens"));
+    (on_disk, locator)
+}
+
+/// A one-dimensional dataset of `values`, in chunks of `chunk` values with gzip if there is a chunk size, and in one piece if there is none.
+pub fn put<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, values: &[T], chunk: Option<usize>) {
+    let builder = group.new_dataset::<T>().shape(values.len());
+    let dataset = match chunk {
+        Some(c) => builder.chunk(c).deflate(6).create(name),
+        None => builder.create(name),
+    }
+    .expect("a dataset");
+    if !values.is_empty() {
+        dataset.write_raw(values).expect("its values");
+    }
+}

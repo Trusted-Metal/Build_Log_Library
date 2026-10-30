@@ -5,14 +5,17 @@
 //!   chunks, filters with their parameters, fill and allocation equal the oracle's.
 //! * `every_dataset_of_every_miniature_is_described`: all 736 datasets are described, and each description agrees with itself.
 //! * `compound_rows_equal_the_oracle_in_order` and `variable_length_strings_equal_the_oracle`: the two kinds that are not plain numbers.
+//! * `the_light_description_of_a_dataset_equals_the_full_one_where_they_overlap`: the class, the shape and whether the dataspace is null, asked of every dataset of every miniature, are what the
+//!   full description says (IP-07 phase 7E: a laser in a layer asks for these three only, which is a few calls into the file and not about eighteen).
+//! * `a_dataset_with_a_null_dataspace_is_described_as_null_and_a_scalar_is_not`: HDF5 allows a type with no data and no dimension (IP-07 phase 7A, D07-2); a scalar has no dimension either and holds one value.
 //!
 //! The values of numeric datasets are read in blocks by phase 3F, which holds them to the first values of the oracle.
 
 mod common;
 
 use build_log_io::hdf5::{
-    describe_dataset, read_name_value_rows, read_strings, Allocation, DatasetDescriptor,
-    DatasetLayout, Fill, FillWhen, Filter, FilterKind,
+    describe_dataset, describe_shape, has_null_dataspace, read_name_value_rows, read_strings,
+    Allocation, DatasetDescriptor, DatasetLayout, Fill, FillWhen, Filter, FilterKind,
 };
 use build_log_model::ErrorKind;
 use build_log_testkit::miniature_path;
@@ -33,6 +36,8 @@ fn expected(d: &Json) -> DatasetDescriptor {
     DatasetDescriptor {
         class: class_of(&d["type"]),
         shape: sizes(&d["shape"]),
+        // none of the datasets of the miniatures has a null dataspace (IP-07 phase 7A: a made file has one, below)
+        null: false,
         max_shape: d["max_shape"]
             .as_array()
             .expect("the maximum shape")
@@ -285,4 +290,115 @@ fn a_dataset_that_is_not_what_a_reader_reads_is_named_not_guessed() {
             "{err}"
         );
     }
+}
+
+#[test]
+fn a_dataset_with_a_null_dataspace_is_described_as_null_and_a_scalar_is_not() {
+    // a dataset of each kind of dataspace, made at test time: null (a type, no data, no dimension), scalar (no dimension, one value), one-dimensional with values, and one-dimensional with none
+    let path =
+        std::env::temp_dir().join(format!("build-log-io-null-space-{}.h5", std::process::id()));
+    {
+        let file = File::create(&path).expect("a file");
+        file.new_dataset_builder()
+            .empty::<f32>()
+            .shape(hdf5::Extents::Null)
+            .create("null")
+            .expect("a null dataspace");
+        file.new_dataset::<f32>()
+            .create("scalar")
+            .expect("a scalar");
+        file.new_dataset::<f32>()
+            .shape(3)
+            .create("three")
+            .expect("a dataset of three");
+        file.new_dataset::<f32>()
+            .shape(0)
+            .create("zero")
+            .expect("a dataset of none");
+    }
+    let file = File::open(&path).expect("it opens");
+    let described = |name: &str| {
+        let dataset = file.dataset(name).expect("a dataset");
+        let descriptor = describe_dataset(&dataset).expect("it is described");
+        // the primitive that asks the one question says the same as the descriptor
+        assert_eq!(
+            has_null_dataspace(&dataset).expect("the question"),
+            descriptor.null,
+            "{name}"
+        );
+        descriptor
+    };
+    let null = described("null");
+    assert!(null.null && null.shape.is_empty(), "{null:?}");
+    // the type is there, though no value is
+    assert!(
+        matches!(
+            null.class,
+            build_log_io::hdf5::Class::Float { bits: 32, .. }
+        ),
+        "{:?}",
+        null.class
+    );
+    // a scalar has no dimension too, and is not null; a dataset of three or of none is neither
+    let scalar = described("scalar");
+    assert!(!scalar.null && scalar.shape.is_empty(), "{scalar:?}");
+    let three = described("three");
+    assert!(!three.null && three.shape == [3], "{three:?}");
+    let zero = described("zero");
+    assert!(!zero.null && zero.shape == [0], "{zero:?}");
+    drop(file);
+    let _ = std::fs::remove_file(&path);
+}
+
+#[test]
+fn the_light_description_of_a_dataset_equals_the_full_one_where_they_overlap() {
+    // every dataset of the eight miniatures (736 of them)
+    let mut checked = 0;
+    for name in MINIATURES {
+        let file = File::open(miniature_path(name)).expect("a miniature opens");
+        for (path, dataset) in datasets(&file) {
+            let full = describe_dataset(&dataset).expect("the full description");
+            let light = describe_shape(&dataset).expect("the light description");
+            assert_eq!(light.class, full.class, "{name} {path}");
+            assert_eq!(light.shape, full.shape, "{name} {path}");
+            assert_eq!(light.null, full.null, "{name} {path}");
+            checked += 1;
+        }
+    }
+    assert_eq!(checked, 736);
+    // the kinds of dataspace that no miniature holds, made at test time: null, scalar, and one-dimensional with none
+    let path = std::env::temp_dir().join(format!(
+        "build-log-io-light-space-{}.h5",
+        std::process::id()
+    ));
+    {
+        let file = File::create(&path).expect("a file");
+        file.new_dataset_builder()
+            .empty::<f32>()
+            .shape(hdf5::Extents::Null)
+            .create("null")
+            .expect("a null dataspace");
+        file.new_dataset::<u8>().create("scalar").expect("a scalar");
+        file.new_dataset::<i16>()
+            .shape(0)
+            .create("zero")
+            .expect("a dataset of none");
+        file.new_dataset::<f64>()
+            .shape([2, 3])
+            .create("table")
+            .expect("a table");
+    }
+    let file = File::open(&path).expect("it opens");
+    for name in ["null", "scalar", "zero", "table"] {
+        let dataset = file.dataset(name).expect("a dataset");
+        let full = describe_dataset(&dataset).expect("the full description");
+        let light = describe_shape(&dataset).expect("the light description");
+        assert_eq!(
+            (light.class, light.shape, light.null),
+            (full.class, full.shape, full.null),
+            "{name}"
+        );
+    }
+    drop(file);
+    let _ = std::fs::remove_file(&path);
 }

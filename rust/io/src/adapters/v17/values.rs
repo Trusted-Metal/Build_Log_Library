@@ -15,7 +15,7 @@
 use build_log_model::{Error, ErrorKind};
 use hdf5::Location;
 
-use crate::hdf5::{read_attribute, strict_text, Stored, Value};
+use crate::hdf5::{read_attribute, strict_text, Held, Stored};
 
 fn corrupt(detail: String) -> Error {
     Error::new(ErrorKind::Corrupt { detail })
@@ -30,36 +30,36 @@ fn stored(location: &Location, name: &str) -> Result<Option<Stored>, Error> {
     }
 }
 
-fn count(value: &Value) -> usize {
+fn count(value: &Held) -> usize {
     match value {
-        Value::I8(v) => v.len(),
-        Value::I16(v) => v.len(),
-        Value::I32(v) => v.len(),
-        Value::I64(v) => v.len(),
-        Value::U8(v) => v.len(),
-        Value::U16(v) => v.len(),
-        Value::U32(v) => v.len(),
-        Value::U64(v) => v.len(),
-        Value::F32(v) => v.len(),
-        Value::F64(v) => v.len(),
-        Value::Bytes(v) => v.len(),
-        Value::Text(v) => v.len(),
+        Held::I8(v) => v.len(),
+        Held::I16(v) => v.len(),
+        Held::I32(v) => v.len(),
+        Held::I64(v) => v.len(),
+        Held::U8(v) => v.len(),
+        Held::U16(v) => v.len(),
+        Held::U32(v) => v.len(),
+        Held::U64(v) => v.len(),
+        Held::F32(v) => v.len(),
+        Held::F64(v) => v.len(),
+        Held::Bytes(v) => v.len(),
+        Held::Text(v) => v.len(),
     }
 }
 
-fn describe(value: &Value) -> &'static str {
+fn describe(value: &Held) -> &'static str {
     match value {
-        Value::I8(_)
-        | Value::I16(_)
-        | Value::I32(_)
-        | Value::I64(_)
-        | Value::U8(_)
-        | Value::U16(_)
-        | Value::U32(_)
-        | Value::U64(_) => "a whole number",
-        Value::F32(_) | Value::F64(_) => "a floating-point number",
-        Value::Bytes(_) => "fixed-length bytes",
-        Value::Text(_) => "text",
+        Held::I8(_)
+        | Held::I16(_)
+        | Held::I32(_)
+        | Held::I64(_)
+        | Held::U8(_)
+        | Held::U16(_)
+        | Held::U32(_)
+        | Held::U64(_) => "a whole number",
+        Held::F32(_) | Held::F64(_) => "a floating-point number",
+        Held::Bytes(_) => "fixed-length bytes",
+        Held::Text(_) => "text",
     }
 }
 
@@ -77,7 +77,7 @@ fn single(location: &Location, name: &str) -> Result<Option<Stored>, Error> {
     }
 }
 
-fn wrong_kind(name: &str, found: &Value, wanted: &str) -> Error {
+fn wrong_kind(name: &str, found: &Held, wanted: &str) -> Error {
     corrupt(format!(
         "the attribute `{name}` holds {} where {wanted} belongs",
         describe(found)
@@ -90,14 +90,14 @@ pub fn optional_integer(location: &Location, name: &str) -> Result<Option<i64>, 
         return Ok(None);
     };
     match &stored.value {
-        Value::I8(v) => Ok(Some(i64::from(v[0]))),
-        Value::I16(v) => Ok(Some(i64::from(v[0]))),
-        Value::I32(v) => Ok(Some(i64::from(v[0]))),
-        Value::I64(v) => Ok(Some(v[0])),
-        Value::U8(v) => Ok(Some(i64::from(v[0]))),
-        Value::U16(v) => Ok(Some(i64::from(v[0]))),
-        Value::U32(v) => Ok(Some(i64::from(v[0]))),
-        Value::U64(v) => i64::try_from(v[0]).map(Some).map_err(|_| {
+        Held::I8(v) => Ok(Some(i64::from(v[0]))),
+        Held::I16(v) => Ok(Some(i64::from(v[0]))),
+        Held::I32(v) => Ok(Some(i64::from(v[0]))),
+        Held::I64(v) => Ok(Some(v[0])),
+        Held::U8(v) => Ok(Some(i64::from(v[0]))),
+        Held::U16(v) => Ok(Some(i64::from(v[0]))),
+        Held::U32(v) => Ok(Some(i64::from(v[0]))),
+        Held::U64(v) => i64::try_from(v[0]).map(Some).map_err(|_| {
             Error::new(ErrorKind::OutOfWidth {
                 value: v[0].to_string(),
                 stored_as: "a signed 64-bit integer".to_string(),
@@ -113,9 +113,61 @@ pub fn optional_float(location: &Location, name: &str) -> Result<Option<f64>, Er
         return Ok(None);
     };
     match &stored.value {
-        Value::F32(v) => Ok(Some(f64::from(v[0]))),
-        Value::F64(v) => Ok(Some(v[0])),
+        Held::F32(v) => Ok(Some(f64::from(v[0]))),
+        Held::F64(v) => Ok(Some(v[0])),
         other => Err(wrong_kind(name, other, "a floating-point number")),
+    }
+}
+
+/// A number, whether the file stored it as an integer or as a float (`float32` is widened exactly): the 2026-10-15 file has `int32` where the current output has
+/// `float32` for the same value. A whole number that a `float64` cannot hold exactly is `OutOfWidth`, because it would not be the number the file holds.
+pub fn optional_number(location: &Location, name: &str) -> Result<Option<f64>, Error> {
+    let Some(stored) = single(location, name)? else {
+        return Ok(None);
+    };
+    let out_of_width = |shown: String| {
+        Error::new(ErrorKind::OutOfWidth {
+            value: shown,
+            stored_as: "a 64-bit floating-point number".to_string(),
+        })
+    };
+    let whole = |value: i128| {
+        let number = value as f64;
+        if number as i128 == value && value.unsigned_abs() <= (1u128 << 53) {
+            Ok(Some(number))
+        } else {
+            Err(out_of_width(value.to_string()))
+        }
+    };
+    match &stored.value {
+        Held::F32(v) => Ok(Some(f64::from(v[0]))),
+        Held::F64(v) => Ok(Some(v[0])),
+        Held::I8(v) => whole(i128::from(v[0])),
+        Held::I16(v) => whole(i128::from(v[0])),
+        Held::I32(v) => whole(i128::from(v[0])),
+        Held::I64(v) => whole(i128::from(v[0])),
+        Held::U8(v) => whole(i128::from(v[0])),
+        Held::U16(v) => whole(i128::from(v[0])),
+        Held::U32(v) => whole(i128::from(v[0])),
+        Held::U64(v) => whole(i128::from(v[0])),
+        other => Err(wrong_kind(name, other, "a number")),
+    }
+}
+
+/// What an attribute holds that may be a number or text: a number as a number and text as text. Nothing is decided from the text.
+pub enum Written {
+    Number(f64),
+    Text(String),
+}
+
+/// An attribute that is either a number or text, as it is written.
+pub fn optional_written(location: &Location, name: &str) -> Result<Option<Written>, Error> {
+    let Some(stored) = single(location, name)? else {
+        return Ok(None);
+    };
+    match &stored.value {
+        Held::Text(_) | Held::Bytes(_) => Ok(optional_text(location, name)?.map(Written::Text)),
+        _ => Ok(optional_number(location, name)?.map(Written::Number)),
     }
 }
 
@@ -125,8 +177,8 @@ pub fn optional_text(location: &Location, name: &str) -> Result<Option<String>, 
         return Ok(None);
     };
     match &stored.value {
-        Value::Text(v) => Ok(Some(v[0].clone())),
-        Value::Bytes(v) => strict_text(&v[0])
+        Held::Text(v) => Ok(Some(v[0].clone())),
+        Held::Bytes(v) => strict_text(&v[0])
             .map(|text| Some(text.to_string()))
             .ok_or_else(|| {
                 corrupt(format!(
