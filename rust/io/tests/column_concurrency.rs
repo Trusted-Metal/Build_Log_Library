@@ -238,59 +238,44 @@ fn a_block_that_two_readers_need_is_decoded_once() {
 #[test]
 fn cancelling_one_reader_does_not_fail_the_other() {
     let expected = big_values();
-    // a reader that waits for another's decode and is cancelled while it waits returns `Cancelled`; the decode goes on, and the reader that does it is not failed. The waiter must
-    // arrive while the block is being decoded, which takes some milliseconds, so the attempt is made again (with a cache that is empty) if it arrived too late
-    let mut waited_and_was_cancelled = false;
-    for attempt in 0..6 {
-        let (_disk, reader) = big_reader(&format!("concurrency-cancel-{attempt}"));
-        let context = ReadContext::new().with_cache_budget(64 << 20);
-        let token = CancelToken::new();
-        let waiter_context = ReadContext::new()
-            .with_cache_budget(64 << 20)
-            .with_cancel(token.clone());
-        let (filler_result, waiter_result) = thread::scope(|scope| {
-            let filler = scope.spawn(|| reader.read(&indices("Mount/big", 1_000..1_500), &context));
-            // the decode has begun by now, and takes tens of milliseconds
-            thread::sleep(Duration::from_millis(15));
-            let waiter =
-                scope.spawn(|| reader.read(&indices("Mount/big", 2_000..2_500), &waiter_context));
-            thread::sleep(Duration::from_millis(15));
-            token.cancel();
-            (
-                filler.join().expect("the filler"),
-                waiter.join().expect("the waiter"),
-            )
-        });
-        // the reader that decodes is never failed by the other's cancellation, and what it returns is right
-        let filler = filler_result.expect("the reader that decodes the block is not failed");
-        assert_eq!(floats(&filler), &expected[1_000..1_500]);
-        match waiter_result {
-            Err(error) => {
-                assert!(matches!(error.kind(), ErrorKind::Cancelled), "{error}");
-                waited_and_was_cancelled = true;
-            }
-            // it came after the block was kept: it was served, and what it returns is right
-            Ok(got) => assert_eq!(floats(&got), &expected[2_000..2_500]),
-        }
-        // the block was decoded once whatever happened, and a reader that comes later is served from the cache
-        let later = reader
-            .read(&indices("Mount/big", 3_000..3_500), &context)
-            .expect("a later reader");
-        assert_eq!(floats(&later), &expected[3_000..3_500]);
-        assert_eq!(
-            reader.stats().misses,
-            1,
-            "attempt {attempt}: {:?}",
-            reader.stats()
-        );
-        if waited_and_was_cancelled {
-            break;
-        }
+    // a reader that waits for another's decode and is cancelled while it waits returns `Cancelled`; the decode goes on, and the reader that does it is not failed. Whether the waiter is
+    // still waiting when it is cancelled depends on how long the machine takes to decode the block (tens of milliseconds on a laptop, fewer on a CI runner: the first version of this test
+    // asked for a waiter that was cancelled while it waited, and failed on two runners), **so this test asserts only what holds in every order**: the reader that decodes is not failed and
+    // returns the right values, the waiter is cancelled or served the right values and nothing else, and the block was decoded once. That a waiter that is waiting is woken, returns
+    // `Cancelled` and leaves the fill alone is held by the cache's own hand-driven test, `a_cancelled_waiter_returns_cancelled_and_the_fill_goes_on`, which does not depend on time.
+    let (_disk, reader) = big_reader("concurrency-cancel");
+    let context = ReadContext::new().with_cache_budget(64 << 20);
+    let token = CancelToken::new();
+    let waiter_context = ReadContext::new()
+        .with_cache_budget(64 << 20)
+        .with_cancel(token.clone());
+    let (filler_result, waiter_result) = thread::scope(|scope| {
+        let filler = scope.spawn(|| reader.read(&indices("Mount/big", 1_000..1_500), &context));
+        // the decode has begun by now (on a slow machine it is still going when the waiter is cancelled, which is the case this arrangement is for)
+        thread::sleep(Duration::from_millis(15));
+        let waiter =
+            scope.spawn(|| reader.read(&indices("Mount/big", 2_000..2_500), &waiter_context));
+        thread::sleep(Duration::from_millis(15));
+        token.cancel();
+        (
+            filler.join().expect("the filler"),
+            waiter.join().expect("the waiter"),
+        )
+    });
+    // the reader that decodes is never failed by the other's cancellation, and what it returns is right
+    let filler = filler_result.expect("the reader that decodes the block is not failed");
+    assert_eq!(floats(&filler), &expected[1_000..1_500]);
+    match waiter_result {
+        Err(error) => assert!(matches!(error.kind(), ErrorKind::Cancelled), "{error}"),
+        // it came after the block was kept, or the decode ended before it was cancelled: it was served, and what it returns is right
+        Ok(got) => assert_eq!(floats(&got), &expected[2_000..2_500]),
     }
-    assert!(
-        waited_and_was_cancelled,
-        "no attempt had a reader waiting for the decode when it was cancelled"
-    );
+    // the block was decoded once whatever happened, and a reader that comes later is served from the cache
+    let later = reader
+        .read(&indices("Mount/big", 3_000..3_500), &context)
+        .expect("a later reader");
+    assert_eq!(floats(&later), &expected[3_000..3_500]);
+    assert_eq!(reader.stats().misses, 1, "{:?}", reader.stats());
 
     // the other way round: the reader that is decoding is cancelled, and the reader that waits for it is not failed (the decode is one call into the file and is not cut short,
     // so the block is kept and the waiter is served)
