@@ -21,9 +21,12 @@
 //!   so they do not change what is written here.
 
 use crate::channel::ChannelDescriptor;
+use crate::events::EventSeries;
 use crate::extra::Extra;
 use crate::identity::{ByLayer, LaserKey, LayerId, Presence};
-use crate::provenance::{Origin, Origins};
+use crate::params::LaserParameters;
+use crate::provenance::{Origin, Origins, Provenance};
+use crate::quality::QualityRecord;
 use crate::time::{TimeAxis, TimeValue};
 use crate::units::Quantity;
 
@@ -141,6 +144,10 @@ fn thickness_from_file(
 pub struct LaserLayerMeta {
     pub presence: Presence,
     pub time_axis: TimeAxis,
+    /// The `complete` flag the file holds for this laser in this layer, as written: `Some(true)` for 1 and `Some(false)` for 0, and `None` for a file that has
+    /// no flag (which is not the same as false). **It is never derived from a sample count** (decision J9). What it means is the writer's: tauri writes
+    /// true when the laser received any point in the layer and false when it received none, so a laser that did not fire is false there.
+    pub complete: Option<bool>,
     pub origins: Origins,
     /// What the adapter did not type of this laser in this layer.
     pub extra: Extra,
@@ -151,6 +158,7 @@ impl LaserLayerMeta {
         LaserLayerMeta {
             presence,
             time_axis: TimeAxis::new(),
+            complete: None,
             origins: Origins::new(),
             extra: Extra::new(),
         }
@@ -158,6 +166,12 @@ impl LaserLayerMeta {
 
     pub fn with_time_axis(mut self, time_axis: TimeAxis) -> Self {
         self.time_axis = time_axis;
+        self
+    }
+
+    /// The same, with the `complete` flag the file holds (`None` for a file that has none).
+    pub fn with_complete(mut self, flag: Option<bool>) -> Self {
+        self.complete = flag;
         self
     }
 }
@@ -170,6 +184,8 @@ pub struct LaserMeta {
     pub key: LaserKey,
     pub channels: Vec<ChannelDescriptor>,
     pub layers: ByLayer<LaserLayerMeta>,
+    /// The parameters of the laser, as its file holds them (decision D13-18). `None` for a laser with no calibration in the file.
+    pub parameters: Option<LaserParameters>,
     pub origins: Origins,
     /// What the adapter did not type of this laser.
     pub extra: Extra,
@@ -181,6 +197,7 @@ impl LaserMeta {
             key,
             channels: Vec::new(),
             layers: ByLayer::new(),
+            parameters: None,
             origins: Origins::new(),
             extra: Extra::new(),
         }
@@ -199,8 +216,14 @@ pub struct BuildMeta {
     pub layer_thickness: Option<Quantity>,
     /// The layers the file holds, by the file's own ids. Gaps are allowed.
     pub layers: ByLayer<LayerMeta>,
-    /// Build-level channels: the sensors. Provisional (decision D02-16).
+    /// Build-level channels: the sensors and the camera images. Provisional (decision D02-16).
     pub sensors: Vec<ChannelDescriptor>,
+    /// The OPC UA event series of the build, described, in kind and path order: where each was recorded and how many records it holds there (IP-13 phase 13K).
+    pub events: Vec<EventSeries>,
+    /// How the build ended, as its file says (decision J14). `NotRecorded` for a file with no status.
+    pub quality: QualityRecord,
+    /// What was done to the data after capture, as its file says: the OPC UA join (decision J14).
+    pub provenance: Provenance,
     pub origins: Origins,
     /// What the adapter did not type of the build.
     pub extra: Extra,
@@ -215,6 +238,9 @@ impl BuildMeta {
             layer_thickness: None,
             layers: ByLayer::new(),
             sensors: Vec::new(),
+            events: Vec::new(),
+            quality: QualityRecord::new(),
+            provenance: Provenance::new(),
             origins: Origins::new(),
             extra: Extra::new(),
             lasers: Vec::new(),
@@ -228,6 +254,11 @@ impl BuildMeta {
 
     pub fn laser(&self, key: &LaserKey) -> Option<&LaserMeta> {
         self.lasers.iter().find(|laser| &laser.key == key)
+    }
+
+    /// The laser of this key, to change it in place.
+    pub fn laser_mut(&mut self, key: &LaserKey) -> Option<&mut LaserMeta> {
+        self.lasers.iter_mut().find(|laser| &laser.key == key)
     }
 
     /// Adds a laser, keeping the lasers in numeric order. A laser with the same key replaces the old one, which is returned.

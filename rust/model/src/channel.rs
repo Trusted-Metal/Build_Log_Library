@@ -99,6 +99,30 @@ pub enum EnumLabels {
     Unknown,
 }
 
+/// The format of one frame of a camera channel: how many rows and columns it has and the type of each pixel. A frame is bulk data and is reached through a column
+/// accessor; this says what it is, so that a consumer can allocate for it and draw it (IP-13 phase 13F).
+///
+/// Only a frame of two dimensions, one value for each pixel, is described so far: that is what the files we hold have. A colour frame (a third extent) adds
+/// a field when a file brings one.
+// constructed-by: library
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub struct ImageFormat {
+    pub rows: u64,
+    pub columns: u64,
+    pub pixel: NumericType,
+}
+
+impl ImageFormat {
+    pub fn new(rows: u64, columns: u64, pixel: NumericType) -> Self {
+        ImageFormat {
+            rows,
+            columns,
+            pixel,
+        }
+    }
+}
+
 /// The type of a channel's values.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[non_exhaustive]
@@ -110,6 +134,8 @@ pub enum ChannelDType {
         labels: EnumLabels,
     },
     Text,
+    /// A camera frame: each sample of the channel is one image of this format.
+    Image(ImageFormat),
 }
 
 impl ChannelDType {
@@ -224,6 +250,17 @@ impl ChannelDescriptor {
         )
     }
 
+    /// A camera channel: each sample is one frame of this format, taken once in a layer (before or after the exposure), so its clock class is the image's. The unit
+    /// of its pixels is unknown until someone says.
+    pub fn image(key: ChannelKey, format: ImageFormat) -> Self {
+        ChannelDescriptor::new(
+            key,
+            ChannelKind::Image,
+            ClockClass::Image,
+            ChannelDType::Image(format),
+        )
+    }
+
     pub fn with_unit(mut self, unit: Unit, source: UnitSource) -> Self {
         self.unit = unit;
         self.unit_source = source;
@@ -295,6 +332,34 @@ mod tests {
 
     fn key(name: &str) -> ChannelKey {
         ChannelKey::new([name])
+    }
+
+    #[test]
+    fn a_camera_channel_says_its_frame_and_is_clocked_as_an_image() {
+        let camera = ChannelDescriptor::image(
+            key("before the exposure"),
+            ImageFormat::new(128, 256, NumericType::U8),
+        );
+        assert_eq!(camera.kind, ChannelKind::Image);
+        assert_eq!(camera.clock_class, ClockClass::Image);
+        assert_eq!(camera.renderability, Renderability::Renderable);
+        match &camera.dtype {
+            ChannelDType::Image(format) => {
+                assert_eq!(
+                    (format.rows, format.columns, format.pixel),
+                    (128, 256, NumericType::U8)
+                );
+            }
+            other => panic!("expected an image, got {other:?}"),
+        }
+        // the pixel unit is not known until someone says, and the frame is not an enum
+        assert_eq!(camera.unit_source, UnitSource::Unknown);
+        assert!(camera.dtype.labels().is_none());
+        // two frames of different formats are different types
+        assert_ne!(
+            ChannelDType::Image(ImageFormat::new(2, 3, NumericType::U8)),
+            ChannelDType::Image(ImageFormat::new(3, 2, NumericType::U8))
+        );
     }
 
     #[test]

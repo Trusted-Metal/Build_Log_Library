@@ -28,11 +28,16 @@ use std::ops::Range;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
+use crate::availability::{availability_of, AvailabilityReport};
 use crate::channel::ChannelDescriptor;
 use crate::error::{Error, ErrorKind, Location};
+use crate::event_columns::{EventColumns, EventPlace, EventRequest};
+use crate::events::EventKind;
 use crate::identity::{ChannelKey, LaserKey, LayerId};
+use crate::image_regions::{ImageData, ImageRegion, ImageRequest};
 use crate::meta::BuildMeta;
 use crate::time::{index_range, Segment, TimeValue};
+use crate::validation::{validate_build, ValidationReport};
 
 /// A long read checks its cancel token, and reports its progress, at least this often: every 10,000 values.
 pub const CANCEL_CHECK_INTERVAL: usize = 10_000;
@@ -171,6 +176,17 @@ impl ColumnData {
     /// The values `range`, sharing this column's allocation. `None` if the range is outside the column.
     pub fn slice(&self, range: Range<usize>) -> Option<ColumnData> {
         Some(rewrap!(self, v => v.slice(range.clone())?))
+    }
+
+    /// The values of `ranges`, in order, as a new buffer (a copy): the rows of a rectangle of a frame are such ranges. `None` if a range is outside the column.
+    pub(crate) fn gather(&self, ranges: &[Range<usize>]) -> Option<ColumnData> {
+        Some(rewrap!(self, v => {
+            let mut out = Vec::with_capacity(ranges.iter().map(|r| r.len()).sum());
+            for range in ranges {
+                out.extend_from_slice(v.as_slice().get(range.clone())?);
+            }
+            Shared::new(out)
+        }))
     }
 
     pub fn as_i32(&self) -> Option<&[i32]> {
@@ -318,7 +334,8 @@ impl ColumnRequest {
         self
     }
 
-    fn location(&self) -> Location {
+    /// Where this request points, for an error that must say which column it was about: the layer, the laser if there is one, the channel and the operation `read`.
+    pub fn location(&self) -> Location {
         let mut location = Location::new()
             .with_layer(self.layer)
             .with_channel(self.channel.clone())
@@ -392,22 +409,38 @@ where
     }
 }
 
-/// What a read is given besides the request: the token that can stop it, and where to report progress.
+/// What a read is given besides the request: the token that can stop it, where to report progress, and how much memory the source may keep for later reads.
 // constructed-by: caller-options
 #[derive(Clone)]
 #[non_exhaustive]
 pub struct ReadContext {
     pub cancel: CancelToken,
     pub progress: Option<Arc<dyn ProgressSink>>,
+    cache_budget: u64,
 }
 
 impl ReadContext {
-    /// A context that never cancels and reports nowhere.
+    /// A context that never cancels, reports nowhere and **lets the source keep nothing**: a library that is not told how much memory it may hold holds none (decision
+    /// D06-6, PS-07).
     pub fn new() -> Self {
         ReadContext {
             cancel: CancelToken::never(),
             progress: None,
+            cache_budget: 0,
         }
+    }
+
+    /// How many bytes of decoded columns the source may keep, after this read, for later reads (decisions G17 and D06-6). **It bounds what is retained and not what is
+    /// returned**: a read is served in full whatever the budget. A source that keeps nothing (memory, or one that has no cache) ignores it. A source applies the budget of
+    /// each read as that read finishes, so readers that share a source should share a budget.
+    pub fn with_cache_budget(mut self, bytes: u64) -> Self {
+        self.cache_budget = bytes;
+        self
+    }
+
+    /// The budget of this read: `0`, the default, keeps nothing.
+    pub fn cache_budget(&self) -> u64 {
+        self.cache_budget
     }
 
     pub fn with_cancel(mut self, cancel: CancelToken) -> Self {
@@ -448,6 +481,7 @@ impl fmt::Debug for ReadContext {
         f.debug_struct("ReadContext")
             .field("cancel", &self.cancel)
             .field("progress", &self.progress.as_ref().map(|_| "a sink"))
+            .field("cache_budget", &self.cache_budget)
             .finish()
     }
 }
@@ -463,6 +497,68 @@ pub trait ColumnSource: Send + Sync {
     /// Errors: `NotPresent` for a column the source does not have, `InvalidIndex` for a range outside it or a precision it cannot give, `Cancelled`
     /// when the token fires. Every error carries the layer, laser, channel and the operation.
     fn read(&self, request: &ColumnRequest, context: &ReadContext) -> Result<ColumnData, Error>;
+
+    /// Reads the columns of one place of an OPC UA event series: the source times, the values as stored (text) with the typed view of them when the series declares a type this
+    /// library names, and for a task its start and its stop, for the records the request names (decision D06-12). **Bulk data stays behind this one door**: a source is
+    /// opened once and read through here.
+    ///
+    /// Defaulted: a source that holds no event columns answers `UnsupportedInVersion`, so that a source written before events were readable still compiles and says so; one that
+    /// has them declares `Feature::EventColumns`. Errors: `NotPresent` for a series or a place that the source does not have, `InvalidIndex` for a range outside the records,
+    /// `UnsupportedInVersion` for a time range, `Cancelled` when the token fires. Every error carries the layer, the series as a channel and the operation `read_events`.
+    fn read_events(
+        &self,
+        request: &EventRequest,
+        context: &ReadContext,
+    ) -> Result<EventColumns, Error> {
+        let _ = context;
+        Err(Error::new(ErrorKind::UnsupportedInVersion {
+            version: "this source".to_string(),
+            feature: "reading the columns of event series".to_string(),
+        })
+        .at(request.location()))
+    }
+
+    /// Reads the pixels of a region of one camera frame, as stored: the layer, the phase and the rectangle of rows and columns (the whole frame if the request names none), row-major
+    /// (decision D06-13). **Bulk data stays behind this one door.**
+    ///
+    /// Defaulted: a source that holds no frames answers `UnsupportedInVersion`, so that a source written before frames were readable still compiles and says so; one that has them declares
+    /// `Feature::ImageRegions`. Errors: `NotPresent` for a phase or a layer that the source has no frame for, `InvalidIndex` for a region outside the frame (the error says the frame's dimensions),
+    /// `Cancelled` when the token fires. Every error carries the layer, the phase as a channel and the operation `read_image`.
+    fn read_image(
+        &self,
+        request: &ImageRequest,
+        context: &ReadContext,
+    ) -> Result<ImageData, Error> {
+        let _ = context;
+        Err(Error::new(ErrorKind::UnsupportedInVersion {
+            version: "this source".to_string(),
+            feature: "reading regions of camera frames".to_string(),
+        })
+        .at(request.location()))
+    }
+
+    /// What the source's cache of decoded columns has done so far, or `None` if it has none (PS-12). A source that keeps nothing answers `None`; a caller that wants to
+    /// know whether a budget helps reads it before and after.
+    fn cache_stats(&self) -> Option<CacheStats> {
+        None
+    }
+}
+
+/// What a source's cache of decoded columns has done since the source was opened, and what it holds now.
+// constructed-by: library
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[non_exhaustive]
+pub struct CacheStats {
+    /// Blocks that a read found in the cache.
+    pub hits: u64,
+    /// Blocks that a read looked for and did not find.
+    pub misses: u64,
+    /// Blocks that were dropped to make room for another.
+    pub evictions: u64,
+    /// The bytes of decoded values that the cache holds now.
+    pub bytes_held: u64,
+    /// The budget of the read that last changed the cache.
+    pub budget: u64,
 }
 
 /// A token that changes when a source grows: two equal tokens mean that nothing was added in between, and a later token is never smaller. A live capture
@@ -522,6 +618,23 @@ pub trait BuildSource: ColumnSource {
             .collect())
     }
 
+    /// What is wrong or odd about the build, found from its metadata **without reading a sample** (IP-07 phase 7C): findings with a code, a severity and the layer, laser and channel they are
+    /// about, and counts of each severity. It is the same function of the metadata for every source (`validate_build`), so a source that is not a file has it with nothing of its own; a source
+    /// that keeps its build still may keep the report too, to give the same one each time.
+    fn validate(&self) -> Result<Arc<ValidationReport>, Error> {
+        let build = self.build()?;
+        Ok(Arc::new(validate_build(&build)))
+    }
+
+    /// What can be done with each layer, laser in a layer and channel in a layer, **without reading a sample** (IP-07 phase 7D): one of the five states of BL-FA-09 for any item, and counts of each
+    /// state for each kind of item. **This default says that everything can be read**; a source that cannot read some kind of channel overrides it and says which (`availability_of`, whose last
+    /// argument is what the source cannot read).
+    fn availability(&self) -> Result<Arc<AvailabilityReport>, Error> {
+        let build = self.build()?;
+        let validation = self.validate()?;
+        Ok(Arc::new(availability_of(&build, &validation, &|_| None)))
+    }
+
     /// The channels of a laser, described: what each is, how it is clocked, its unit, and in which layers it was recorded. A laser the build does not have
     /// is an `InvalidIndex` error.
     fn channels(&self, laser: &LaserKey) -> Result<Vec<ChannelDescriptor>, Error> {
@@ -546,6 +659,8 @@ pub trait BuildSource: ColumnSource {
 pub struct InMemorySource {
     columns: BTreeMap<(LayerId, Option<LaserKey>, ChannelKey), ColumnData>,
     segment_tables: BTreeMap<(LayerId, LaserKey), ChannelKey>,
+    events: BTreeMap<(EventKind, Vec<String>, EventPlace), EventColumns>,
+    images: BTreeMap<(LayerId, ChannelKey), ImageData>,
     build: Option<Arc<BuildMeta>>,
     revision: Revision,
 }
@@ -565,6 +680,29 @@ impl InMemorySource {
     ) -> Option<ColumnData> {
         self.revision = self.revision.next();
         self.columns.insert((layer, laser, channel), data)
+    }
+
+    /// Adds the columns of one place of an event series, and returns the ones it replaced.
+    pub fn insert_events(
+        &mut self,
+        kind: EventKind,
+        path: Vec<String>,
+        place: EventPlace,
+        columns: EventColumns,
+    ) -> Option<EventColumns> {
+        self.revision = self.revision.next();
+        self.events.insert((kind, path, place), columns)
+    }
+
+    /// Adds the whole frame of a phase in a layer (`frame.region` is the whole frame, from its first row and column), and returns the one it replaced. A region of it is cropped from it.
+    pub fn insert_image(
+        &mut self,
+        layer: LayerId,
+        channel: ChannelKey,
+        frame: ImageData,
+    ) -> Option<ImageData> {
+        self.revision = self.revision.next();
+        self.images.insert((layer, channel), frame)
     }
 
     /// Sets the metadata of the build, which discovery reports. The source has grown, so its revision changes.
@@ -660,6 +798,92 @@ impl ColumnSource for InMemorySource {
             .and_then(|copied| copied.with_precision(request.precision))
             .map_err(located)
     }
+
+    fn read_events(
+        &self,
+        request: &EventRequest,
+        context: &ReadContext,
+    ) -> Result<EventColumns, Error> {
+        let located = |error: Error| error.at(request.location());
+        context.check_cancelled().map_err(located)?;
+        let columns = self
+            .events
+            .get(&(request.kind.clone(), request.path.clone(), request.place))
+            .ok_or_else(|| {
+                located(Error::new(ErrorKind::NotPresent {
+                    what: "the series in this place".to_string(),
+                }))
+            })?;
+        let range = self
+            .resolve_events(request, columns.len())
+            .map_err(located)?;
+        context.report(columns.len() as u64, columns.len() as u64);
+        columns.range(range).ok_or_else(|| {
+            located(Error::new(ErrorKind::InvalidIndex {
+                what: "the records are outside the series".to_string(),
+            }))
+        })
+    }
+
+    fn read_image(
+        &self,
+        request: &ImageRequest,
+        context: &ReadContext,
+    ) -> Result<ImageData, Error> {
+        let located = |error: Error| error.at(request.location());
+        context.check_cancelled().map_err(located)?;
+        let frame = self
+            .images
+            .get(&(request.layer, request.channel.clone()))
+            .ok_or_else(|| {
+                located(Error::new(ErrorKind::NotPresent {
+                    what: "the frame".to_string(),
+                }))
+            })?;
+        let wanted: ImageRegion = request
+            .region
+            .clone()
+            .unwrap_or_else(|| frame.region.clone());
+        let pixels = frame.pixels.len() as u64;
+        context.report(pixels, pixels);
+        frame.crop(&wanted).ok_or_else(|| {
+            located(Error::new(ErrorKind::InvalidIndex {
+                what: format!(
+                    "the region of rows {}..{} and columns {}..{} is outside a frame of {} rows by {} columns",
+                    wanted.rows.start,
+                    wanted.rows.end,
+                    wanted.columns.start,
+                    wanted.columns.end,
+                    frame.region.rows.end,
+                    frame.region.columns.end
+                ),
+            }))
+        })
+    }
+}
+
+impl InMemorySource {
+    /// The records an event request selects among `len`.
+    fn resolve_events(&self, request: &EventRequest, len: usize) -> Result<Range<usize>, Error> {
+        match &request.range {
+            ColumnRange::All => Ok(0..len),
+            ColumnRange::Indices(range) => {
+                if range.start > range.end || range.end > len as u64 {
+                    return Err(Error::new(ErrorKind::InvalidIndex {
+                        what: format!(
+                            "the indices {}..{} are outside a series of {len} records",
+                            range.start, range.end
+                        ),
+                    }));
+                }
+                Ok(range.start as usize..range.end as usize)
+            }
+            _ => Err(Error::new(ErrorKind::UnsupportedInVersion {
+                version: "the in-memory source".to_string(),
+                feature: "a time range of event records".to_string(),
+            })),
+        }
+    }
 }
 
 impl BuildSource for InMemorySource {
@@ -689,6 +913,26 @@ mod tests {
     use crate::meta::{BuildIdentity, LaserLayerMeta, LaserMeta};
 
     const LAYER: LayerId = LayerId(1);
+
+    #[test]
+    fn a_context_keeps_nothing_until_it_is_given_a_budget() {
+        assert_eq!(ReadContext::new().cache_budget(), 0);
+        assert_eq!(ReadContext::default().cache_budget(), 0);
+        let context = ReadContext::new().with_cache_budget(64 << 20);
+        assert_eq!(context.cache_budget(), 64 << 20);
+        // the budget travels with a clone, and shows in the debug text
+        assert_eq!(context.clone().cache_budget(), 64 << 20);
+        assert!(format!("{context:?}").contains("cache_budget: 67108864"));
+    }
+
+    #[test]
+    fn a_source_with_no_cache_has_no_stats() {
+        assert_eq!(InMemorySource::new().cache_stats(), None);
+        assert_eq!(
+            CacheStats::default().hits + CacheStats::default().bytes_held,
+            0
+        );
+    }
 
     fn laser() -> LaserKey {
         LaserKey::new("1", 1)

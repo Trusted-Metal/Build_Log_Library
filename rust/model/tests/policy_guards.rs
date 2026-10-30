@@ -20,14 +20,17 @@ use std::fs;
 use std::path::PathBuf;
 
 /// The modules of the Common Data Model (IP-02 Appendix A). Each is a file in `src/`, and each is scanned.
-const CDM_MODULES: [&str; 14] = [
+const CDM_MODULES: [&str; 18] = [
+    "availability",
     "capabilities",
     "channel",
     "column",
     "error",
+    "event_columns",
     "events",
     "extra",
     "identity",
+    "image_regions",
     "json",
     "meta",
     "params",
@@ -35,6 +38,7 @@ const CDM_MODULES: [&str; 14] = [
     "quality",
     "time",
     "units",
+    "validation",
 ];
 
 /// The pre-cleanup types: shaped like the V18 file, holding whole `Vec`s. They leave in phase 2T (task T02.23), and these guards do not apply to them.

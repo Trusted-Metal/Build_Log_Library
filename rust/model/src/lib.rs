@@ -15,13 +15,16 @@
 // The Common Data Model (IP-02): one module per concept, in the layout of the plan's Appendix A. They are empty until the phases that fill them; consumers
 // never name a module, because every public type is re-exported from the crate root (BL-AR-03). The policy guards in `tests/policy_guards.rs` read each of
 // these files.
+mod availability;
 mod capabilities;
 mod channel;
 mod column;
 mod error;
+mod event_columns;
 mod events;
 mod extra;
 mod identity;
+mod image_regions;
 mod json;
 mod meta;
 mod params;
@@ -29,6 +32,7 @@ mod provenance;
 mod quality;
 mod time;
 mod units;
+mod validation;
 
 // The pre-cleanup types, shaped like the V18 file and holding whole `Vec`s. They leave in IP-02 phase 2T; the policy guards skip these five files, and the
 // list of them in the guards may only get shorter.
@@ -39,28 +43,43 @@ mod laser;
 mod sensor;
 
 // The Common Data Model, re-exported from the root: consumers never name a module (BL-AR-03).
+pub use availability::{
+    availability_of, AvailabilityCounts, AvailabilityReport, Item, ItemAvailability, ItemKind,
+};
 pub use capabilities::{Capabilities, Direction, Feature, VersionReport, CDM_VERSION};
 pub use channel::{
     Axis, CapturedEncoding, CapturedWidth, ChannelDType, ChannelDescriptor, ChannelKind,
-    ClockClass, EnumLabel, EnumLabels, NumericType, Renderability,
+    ClockClass, EnumLabel, EnumLabels, ImageFormat, NumericType, Renderability,
 };
 pub use column::{
-    BuildSource, CancelToken, ColumnData, ColumnRange, ColumnRequest, ColumnSource, InMemorySource,
-    Precision, ProgressSink, ReadContext, Revision, Shared, CANCEL_CHECK_INTERVAL,
+    BuildSource, CacheStats, CancelToken, ColumnData, ColumnRange, ColumnRequest, ColumnSource,
+    InMemorySource, Precision, ProgressSink, ReadContext, Revision, Shared, CANCEL_CHECK_INTERVAL,
 };
 pub use error::{Error, ErrorClass, ErrorKind, Location, Violation};
+pub use event_columns::{EventColumns, EventPlace, EventRequest, TypedValues};
+pub use events::{EventDataType, EventKind, EventPart, EventSeries};
 pub use extra::{
     AttrShape, AttrValue, Dims, Extra, ExtraAttribute, NodeKind, StoredAs, StoredClass,
     TextCharset, TextPadding, UnknownNode, MAX_ATTRIBUTE_BYTES, MAX_DIMS,
 };
 pub use identity::{Availability, ByLayer, ChannelKey, LaserKey, LayerId, Presence};
+pub use image_regions::{ImageData, ImageRegion, ImageRequest};
 pub use meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
-pub use provenance::{Origin, Origins};
+pub use params::{
+    Equation, EquationKind, GalvoParameters, GalvoProtocol, LaserParameters, LightSourceParameters,
+    NamedConstant, OpticalTrainParameters, ParameterValue, ScannerCardParameters,
+    ScannerParameters,
+};
+pub use provenance::{JoinStatus, NotReadCause, Origin, Origins, Provenance};
+pub use quality::{Outcome, QualityRecord};
 pub use time::{
     check_segments, index_range, Accuracy, Instant, Segment, StartMeaning, TimeAnchor, TimeAxis,
     TimeAxisSummary, TimeValue, TimeWindow,
 };
 pub use units::{parse_embedded, Dimension, Quantity, Unit, UnitSource};
+pub use validation::{
+    validate_build, Finding, FindingCode, Severity, ValidationCounts, ValidationReport,
+};
 
 // The pre-cleanup types (see above). Their `ByLayer` keeps its old name inside the crate and is exported as `LegacyByLayer` until phase 2T, because the CDM's
 // `ByLayer` (keyed by `LayerId`) has the root name.

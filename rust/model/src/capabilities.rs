@@ -33,6 +33,12 @@ pub enum Feature {
     Images,
     /// The quality outcomes of a layer or a laser (including whether a laser completed).
     Outcomes,
+    /// The sample columns of the lasers, read by ranges (IP-06): the power, the state and the positions of each laser in each layer.
+    Samples,
+    /// The times and the values of the OPC UA event series, read by range (IP-06 phase 6F): `ColumnSource::read_events`. The series themselves are described under `Events`.
+    EventColumns,
+    /// Regions of the camera frames, read as stored (IP-06 phase 6G): `ColumnSource::read_image`. The frames themselves are described under `Images`.
+    ImageRegions,
     /// Sensor series.
     Sensors,
     /// The integrity digests of the data.
