@@ -11,7 +11,10 @@ use std::path::{Path, PathBuf};
 use build_log::testing::{mock_registry, mount_for, write_mock_file, write_mock_group};
 use build_log::{
     hdf5, library_versions, open, open_at, open_at_with, open_with, supported_versions,
-    Capabilities, ErrorKind, LayerId, CDM_VERSION, PACKAGE_VERSION,
+    Availability, Capabilities, ChannelDType, ChannelKind, ColumnData, ColumnRange, ColumnRequest,
+    Direction, ErrorKind, EventDataType, EventKind, EventPlace, EventRequest, Feature, FindingCode,
+    ImageRegion, ImageRequest, Item, ItemKind, LayerId, Precision, ReadContext, TypedValues,
+    CDM_VERSION, PACKAGE_VERSION,
 };
 use build_log_testkit::scan::code_of;
 use build_log_testkit::{miniature, miniature_path};
@@ -106,8 +109,17 @@ fn the_facade_opens_the_gate_file_and_reports_schema_17() {
     assert_eq!(report.cdm_version, CDM_VERSION);
     assert_eq!(report.package_version, PACKAGE_VERSION);
     assert_eq!(opened.key().as_str(), "17");
-    // what the library says V17 can do is what its reader returns so far: the metadata, and no feature beyond it
-    assert_eq!(*opened.capabilities(), Capabilities::new());
+    // what the library says V17 can do is what its reader returns so far: the metadata, the outcomes (13J), the images (13F), the events (13K), the samples of the lasers (13L), the columns of the events (6F) and the regions of the frames (6G), and no feature beyond them
+    assert_eq!(
+        *opened.capabilities(),
+        Capabilities::new()
+            .with(Direction::Read, Feature::Outcomes)
+            .with(Direction::Read, Feature::Images)
+            .with(Direction::Read, Feature::Events)
+            .with(Direction::Read, Feature::Samples)
+            .with(Direction::Read, Feature::EventColumns)
+            .with(Direction::Read, Feature::ImageRegions)
+    );
 
     // the build, as the Model's own types: its layers, its lasers in each layer, and the channels of each laser
     let source = opened.source();
@@ -133,6 +145,218 @@ fn the_facade_opens_the_gate_file_and_reports_schema_17() {
         }
         kind => panic!("expected UnsupportedVersion, got {kind:?}"),
     }
+}
+
+#[test]
+fn an_event_place_of_the_gate_file_reads_through_the_facade_alone() {
+    // the events of the first real file (IP-06 phase 6F), asked for with the facade's own types: discovery says which series there are, and one request reads a place of one
+    let opened =
+        open(miniature_path(miniature::V17_TRIGGERED_2026_10_19)).expect("the gate file opens");
+    assert!(opened
+        .capabilities()
+        .supports(Direction::Read, Feature::EventColumns));
+    let source = opened.source();
+    let build = source.build().expect("the metadata");
+    let series = build
+        .events
+        .iter()
+        .find(|s| s.kind == EventKind::Sensor && s.data_type == Some(EventDataType::Double))
+        .expect("a series of numbers");
+    let place = series.no_layer.as_ref().expect("recorded in the bucket");
+    let asked = EventRequest::new(
+        series.kind.clone(),
+        series.path.clone(),
+        EventPlace::NoLayer,
+    );
+    let columns = source
+        .read_events(&asked, &ReadContext::new())
+        .expect("the place");
+    // the times and the text as stored, with as many of each as the metadata said, and the numbers beside the text
+    assert_eq!(columns.len() as u64, place.records);
+    assert!(columns.is_aligned());
+    assert_eq!(
+        columns.values.as_ref().expect("values").len(),
+        columns.len()
+    );
+    let Some(TypedValues::Doubles { valid, .. }) = &columns.typed else {
+        panic!(
+            "a series that declares Double has numbers: {:?}",
+            columns.typed
+        );
+    };
+    assert!(valid.as_slice().iter().all(|v| *v));
+    // a range of the records is the same records, and a place that was not recorded is `NotPresent`
+    let part = source
+        .read_events(
+            &asked.clone().with_range(ColumnRange::Indices(2..5)),
+            &ReadContext::new(),
+        )
+        .expect("a range");
+    assert_eq!(part, columns.range(2..5).expect("a slice"));
+    let missing = source
+        .read_events(
+            &EventRequest::new(
+                series.kind.clone(),
+                series.path.clone(),
+                EventPlace::Layer(LayerId(7)),
+            ),
+            &ReadContext::new(),
+        )
+        .expect_err("no such place");
+    assert!(matches!(missing.kind(), ErrorKind::NotPresent { .. }));
+}
+
+#[test]
+fn availability_and_findings_through_the_facade_alone() {
+    // the two reports of IP-07 (phases 7C and 7D), asked for with the facade's own types and no sample read: what a consumer sees of the special-layer file, which holds seven of the layers
+    // it declares and has an idle laser in two of them
+    let opened =
+        open(miniature_path(miniature::V17_SPECIAL_LAYERS)).expect("the special-layer file opens");
+    let source = opened.source();
+    let build = source.build().expect("the metadata");
+    // the findings: one note, and the counts say so
+    let findings = source.validate().expect("the findings");
+    assert_eq!(findings.findings.len(), 1);
+    assert_eq!(findings.findings[0].code, FindingCode::LayerCountDiffers);
+    assert_eq!(
+        (
+            findings.counts.notes,
+            findings.counts.warnings,
+            findings.counts.faults
+        ),
+        (1, 0, 0)
+    );
+    // the availability: every layer is present, every laser is recorded in every layer (an idle laser is recorded and empty), and the counts are of every item
+    let availability = source.availability().expect("the availability");
+    let layers = build.layers.len() as u64;
+    assert_eq!(availability.counts_for(ItemKind::Layer).present, layers);
+    assert_eq!(
+        availability.counts_for(ItemKind::Laser).total(),
+        layers * build.lasers().len() as u64
+    );
+    assert!(availability.exceptions().is_empty());
+    // any item can be asked about: a laser in a layer is present, and a layer the file does not hold is not recorded
+    let laser = build.lasers().first().expect("a laser").key.clone();
+    let layer = build.layers.ids().next().expect("a layer");
+    assert!(matches!(
+        availability.status(&Item::Laser { layer, laser }),
+        Availability::Present
+    ));
+    assert!(matches!(
+        availability.status(&Item::Layer(LayerId(999_999))),
+        Availability::NotRecorded
+    ));
+    // the capabilities and the availability say the same thing: the version reads samples, and nothing is unsupported
+    assert!(opened
+        .capabilities()
+        .supports(Direction::Read, Feature::Samples));
+    assert_eq!(availability.counts().unsupported, 0);
+    // asked again, it is the same report and not another one made
+    assert!(std::sync::Arc::ptr_eq(
+        &availability,
+        &source.availability().expect("again")
+    ));
+}
+
+#[test]
+fn a_frame_region_of_the_images_file_reads_through_the_facade_alone() {
+    // the camera frames of a real file (IP-06 phase 6G), asked for with the facade's own types: discovery says which image channel there is, its format and its layers, and one request reads a rectangle
+    let opened =
+        open(miniature_path(miniature::V17_2026_08_18_IMAGES)).expect("the images file opens");
+    assert!(opened
+        .capabilities()
+        .supports(Direction::Read, Feature::ImageRegions));
+    let source = opened.source();
+    let build = source.build().expect("the metadata");
+    let channel = build
+        .sensors
+        .iter()
+        .find(|c| c.kind == ChannelKind::Image)
+        .expect("an image channel");
+    let ChannelDType::Image(format) = &channel.dtype else {
+        panic!("an image channel has a frame format: {:?}", channel.dtype);
+    };
+    let layer = channel.presence.ids().next().expect("a layer with a frame");
+    let asked = ImageRequest::new(layer, channel.key.clone());
+    let whole = source
+        .read_image(&asked, &ReadContext::new())
+        .expect("the whole frame");
+    // the frame is as big as the format says, and a region is the same rectangle of it
+    assert_eq!(
+        whole.region,
+        ImageRegion::whole(format.rows, format.columns)
+    );
+    assert_eq!(whole.pixels.len() as u64, format.rows * format.columns);
+    let wanted = ImageRegion::new(
+        format.rows / 4..format.rows / 2,
+        format.columns / 8..format.columns / 2,
+    );
+    let part = source
+        .read_image(
+            &asked.clone().with_region(wanted.clone()),
+            &ReadContext::new(),
+        )
+        .expect("a region");
+    assert_eq!(part, whole.crop(&wanted).expect("a crop"));
+    // a region past the frame says its dimensions, and a layer that has no frame is `NotPresent`
+    let past = source
+        .read_image(
+            &asked.with_region(ImageRegion::new(0..format.rows + 1, 0..1)),
+            &ReadContext::new(),
+        )
+        .expect_err("outside the frame");
+    assert!(matches!(past.kind(), ErrorKind::InvalidIndex { .. }));
+    assert!(
+        past.to_string().contains(&format!(
+            "{} rows by {} columns",
+            format.rows, format.columns
+        )),
+        "{past}"
+    );
+    let missing = source
+        .read_image(
+            &ImageRequest::new(LayerId(99), channel.key.clone()),
+            &ReadContext::new(),
+        )
+        .expect_err("no such layer");
+    assert!(matches!(missing.kind(), ErrorKind::NotPresent { .. }));
+}
+
+#[test]
+fn a_column_of_the_gate_file_reads_through_the_facade_alone() {
+    // the samples of the first real file (IP-13 phase 13L), asked for with the facade's own types: discovery says which channel, and one request reads it
+    let opened =
+        open(miniature_path(miniature::V17_TRIGGERED_2026_10_19)).expect("the gate file opens");
+    let source = opened.source();
+    let laser = source
+        .lasers_in_layer(LayerId(1))
+        .expect("the lasers of the layer")
+        .remove(0);
+    let channels = source.channels(&laser).expect("the channels");
+    let power = channels
+        .iter()
+        .find(|channel| channel.kind == ChannelKind::LaserPower)
+        .expect("the laser has a power channel");
+    let asked = ColumnRequest::new(LayerId(1), Some(laser), power.key.clone());
+    let context = ReadContext::new();
+
+    // the whole column, as stored: the power is a `float32`
+    let whole = source.read(&asked, &context).expect("the whole column");
+    assert!(matches!(whole, ColumnData::F32(_)));
+    assert_eq!(whole.len(), 25_000);
+    // a range is the same values, and shares the buffer's type; at another precision it is converted
+    let range = ColumnRange::Indices(9_990..10_010);
+    let part = source
+        .read(&asked.clone().with_range(range.clone()), &context)
+        .expect("a range");
+    assert_eq!(part, whole.slice(9_990..10_010).expect("a slice"));
+    let doubles = source
+        .read(
+            &asked.with_range(range).with_precision(Precision::F64),
+            &context,
+        )
+        .expect("a range as f64");
+    assert!(matches!(doubles, ColumnData::F64(_)) && doubles.len() == 20);
 }
 
 #[test]
