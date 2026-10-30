@@ -11,7 +11,9 @@ use build_log_conformance::{
 };
 use build_log_model::{
     Accuracy, BuildMeta, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind, ClockClass,
-    NumericType, Presence, Quantity, TimeValue, TimeWindow, UnitSource,
+    EquationKind, EventDataType, EventKind, EventPart, EventSeries, GalvoProtocol, ImageFormat,
+    JoinStatus, LaserParameters, LayerId, NumericType, Outcome, Presence, Quantity, TimeValue,
+    TimeWindow, UnitSource,
 };
 
 fn testdata() -> std::path::PathBuf {
@@ -73,6 +75,8 @@ fn without_last_laser(meta: &BuildMeta) -> Option<BuildMeta> {
     let mut copy = BuildMeta::new(meta.identity.clone());
     copy.layers_declared = meta.layers_declared;
     copy.layer_thickness = meta.layer_thickness.clone();
+    copy.quality = meta.quality.clone();
+    copy.provenance = meta.provenance.clone();
     copy.layers = meta.layers.clone();
     copy.sensors = meta.sensors.clone();
     copy.origins = meta.origins.clone();
@@ -365,7 +369,456 @@ fn mutations() -> Vec<Mutation> {
                 None => false,
             }
         }),
+        ("the build's outcome is lost", |m| {
+            let had = m.quality.outcome != Outcome::NotRecorded;
+            m.quality.outcome = Outcome::NotRecorded;
+            had
+        }),
+        ("an outcome the file does not have is invented", |m| {
+            let had_none = m.quality.outcome == Outcome::NotRecorded;
+            if had_none {
+                m.quality.outcome = Outcome::Complete;
+            }
+            had_none
+        }),
+        ("a status is read as another outcome", |m| {
+            let changed = m.quality.outcome != Outcome::NotRecorded;
+            if changed {
+                m.quality.outcome = Outcome::InProgress;
+            }
+            changed && m.quality.outcome != Outcome::Complete
+        }),
+        ("the status of the OPC UA join is lost", |m| {
+            m.provenance.opcua_join_status.take().is_some()
+        }),
+        (
+            "the status of the OPC UA join is read as another one",
+            |m| {
+                if m.provenance.opcua_join_status.is_some() {
+                    m.provenance.opcua_join_status = Some(JoinStatus::Other("Partial".into()));
+                    true
+                } else {
+                    false
+                }
+            },
+        ),
+        (
+            "the version of the OPC UA join is read as a number",
+            |m| match m.provenance.opcua_join_version.as_mut() {
+                Some(version) => {
+                    version.push_str(".0");
+                    true
+                }
+                None => false,
+            },
+        ),
+        ("a laser's complete flag is lost", |m| {
+            edit_laser(m, 0, |laser| {
+                let mut changed = false;
+                let ids: Vec<_> = laser.layers.ids().collect();
+                for id in ids {
+                    let layer = laser.layers.get_mut(id).expect("a layer");
+                    changed |= layer.complete.take().is_some();
+                }
+                changed
+            })
+        }),
+        ("a laser's complete flag is turned over", |m| {
+            edit_laser(m, 1, |laser| {
+                let mut changed = false;
+                let ids: Vec<_> = laser.layers.ids().collect();
+                for id in ids {
+                    let layer = laser.layers.get_mut(id).expect("a layer");
+                    if let Some(flag) = layer.complete {
+                        layer.complete = Some(!flag);
+                        changed = true;
+                    }
+                }
+                changed
+            })
+        }),
+        ("a complete flag the file does not have is invented", |m| {
+            edit_laser(m, 0, |laser| {
+                let mut changed = false;
+                let ids: Vec<_> = laser.layers.ids().collect();
+                for id in ids {
+                    let layer = laser.layers.get_mut(id).expect("a layer");
+                    if layer.complete.is_none() {
+                        layer.complete = Some(true);
+                        changed = true;
+                    }
+                }
+                changed
+            })
+        }),
+        ("a laser's parameters are lost", |m| {
+            edit_laser(m, 0, |laser| laser.parameters.take().is_some())
+        }),
+        ("parameters are invented for a laser that has none", |m| {
+            edit_laser(m, 0, |laser| {
+                let none = laser.parameters.is_none();
+                if none {
+                    laser.parameters = Some(LaserParameters::new());
+                }
+                none
+            })
+        }),
+        ("the optical train of a laser is another one", |m| {
+            edit_laser(m, 0, |laser| match laser.parameters.as_mut() {
+                Some(parameters) => {
+                    parameters.optical_train_number =
+                        parameters.optical_train_number.map(|n| n + 1);
+                    true
+                }
+                None => false,
+            })
+        }),
+        ("a value of the snapshot changes", |m| {
+            edit_laser(m, 1, |laser| {
+                let Some(q) = laser
+                    .parameters
+                    .as_mut()
+                    .and_then(|p| p.scanner.field_size_x.as_mut())
+                else {
+                    return false;
+                };
+                q.value += 1.0;
+                true
+            })
+        }),
+        ("a unit is guessed where the file states none", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(q) = laser
+                    .parameters
+                    .as_mut()
+                    .and_then(|p| p.scanner.rotation.as_ref())
+                else {
+                    return false;
+                };
+                let guessed = Quantity::from_file(q.value, Some("deg"));
+                laser.parameters.as_mut().unwrap().scanner.rotation = Some(guessed);
+                true
+            })
+        }),
+        ("a value of the snapshot is dropped", |m| {
+            edit_laser(m, 0, |laser| {
+                laser
+                    .parameters
+                    .as_mut()
+                    .is_some_and(|p| p.scanner.model.take().is_some())
+            })
+        }),
+        ("a value that the file does not have is invented", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                let none = p.light_source.power_min_actual.is_none();
+                if none {
+                    p.light_source.power_min_actual = Some(Quantity::from_file(100.0, None));
+                }
+                none
+            })
+        }),
+        ("a galvo's protocol is read as another one", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                let had = p.galvo_x.protocol.is_some();
+                if had {
+                    p.galvo_x.protocol = Some(GalvoProtocol::Other("SL2-100".into()));
+                }
+                had
+            })
+        }),
+        ("the constants of the equation are given other names", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(equation) = laser
+                    .parameters
+                    .as_mut()
+                    .and_then(|p| p.light_source.volts_to_watts.as_mut())
+                else {
+                    return false;
+                };
+                // the same numbers, the other way round
+                for constant in &mut equation.constants {
+                    constant.name = format!("{}x", constant.name);
+                }
+                true
+            })
+        }),
+        ("the equation is read as another kind", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(equation) = laser
+                    .parameters
+                    .as_mut()
+                    .and_then(|p| p.light_source.volts_to_watts.as_mut())
+                else {
+                    return false;
+                };
+                equation.kind = EquationKind::Other("LINEAR".into());
+                true
+            })
+        }),
+        ("the equation is lost", |m| {
+            edit_laser(m, 1, |laser| {
+                laser
+                    .parameters
+                    .as_mut()
+                    .is_some_and(|p| p.light_source.volts_to_watts.take().is_some())
+            })
+        }),
+        (
+            "text that stands for a number is decoded as the number",
+            |m| {
+                edit_laser(m, 0, |laser| {
+                    let Some(p) = laser.parameters.as_mut() else {
+                        return false;
+                    };
+                    let had = p.origins.get("light_source.power_limits").is_some();
+                    if had {
+                        p.origins = build_log_model::Origins::new();
+                        p.light_source.power_min_actual = Some(Quantity::from_file(100.6, None));
+                    }
+                    had
+                })
+            },
+        ),
+        ("the dimensions of an image change", |m| {
+            m.sensors
+                .iter_mut()
+                .any(|channel| match &mut channel.dtype {
+                    ChannelDType::Image(format) => {
+                        *format = ImageFormat::new(format.rows + 1, format.columns, format.pixel);
+                        true
+                    }
+                    _ => false,
+                })
+        }),
+        ("the pixel type of an image changes", |m| {
+            m.sensors
+                .iter_mut()
+                .any(|channel| match &mut channel.dtype {
+                    ChannelDType::Image(format) => {
+                        *format = ImageFormat::new(format.rows, format.columns, NumericType::U16);
+                        true
+                    }
+                    _ => false,
+                })
+        }),
+        ("an image channel is read as a plain sensor", |m| {
+            m.sensors.iter_mut().any(|channel| {
+                let was = matches!(channel.dtype, ChannelDType::Image(_));
+                if was {
+                    channel.kind = ChannelKind::Sensor;
+                    channel.dtype = ChannelDType::Numeric(NumericType::F64);
+                }
+                was
+            })
+        }),
+        ("an image channel is lost", |m| {
+            let before = m.sensors.len();
+            m.sensors
+                .retain(|c| !matches!(c.dtype, ChannelDType::Image(_)));
+            m.sensors.len() != before
+        }),
+        ("an image is lost in one layer", |m| {
+            m.sensors.iter_mut().any(|channel| {
+                if !matches!(channel.dtype, ChannelDType::Image(_)) {
+                    return false;
+                }
+                let Some(id) = channel.presence.ids().next() else {
+                    return false;
+                };
+                channel.presence = channel
+                    .presence
+                    .iter()
+                    .filter(|(layer, _)| *layer != id)
+                    .map(|(layer, p)| (layer, *p))
+                    .collect();
+                true
+            })
+        }),
+        ("an event series is lost", |m| {
+            if m.events.is_empty() {
+                return false;
+            }
+            m.events.remove(0);
+            true
+        }),
+        ("an event series is invented", |m| {
+            m.events.push(EventSeries::new(
+                EventKind::Sensor,
+                vec!["not".into(), "there".into()],
+            ));
+            true
+        }),
+        ("the records of an event in one place change", |m| {
+            m.events.iter_mut().any(|series| {
+                if let Some(part) = series.no_layer.as_mut() {
+                    part.records += 1;
+                    return true;
+                }
+                let first = series.layers.ids().next();
+                match first {
+                    Some(id) => {
+                        series.layers.get_mut(id).expect("a place").records += 1;
+                        true
+                    }
+                    None => false,
+                }
+            })
+        }),
+        ("the type an event declares changes", |m| {
+            m.events.iter_mut().any(|series| match &series.data_type {
+                Some(_) => {
+                    series.data_type = Some(EventDataType::Other("Float".into()));
+                    true
+                }
+                None => false,
+            })
+        }),
+        ("a type is declared for an event that declares none", |m| {
+            m.events.iter_mut().any(|series| {
+                let none = series.data_type.is_none();
+                if none {
+                    series.data_type = Some(EventDataType::Double);
+                }
+                none
+            })
+        }),
+        ("an event is read as another kind", |m| {
+            m.events.iter_mut().any(|series| {
+                let was = series.kind == EventKind::Sensor;
+                if was {
+                    series.kind = EventKind::Task;
+                }
+                was
+            })
+        }),
+        ("a task is read as having no interval", |m| {
+            m.events.iter_mut().any(|series| {
+                let was = series.interval;
+                series.interval = false;
+                was
+            })
+        }),
+        ("the bucket that no layer owns is read as a layer", |m| {
+            m.events
+                .iter_mut()
+                .any(|series| match series.no_layer.take() {
+                    Some(part) => {
+                        series.layers.insert(LayerId(0), part);
+                        true
+                    }
+                    None => false,
+                })
+        }),
+        ("the height of a task is lost", |m| {
+            m.events.iter_mut().any(|series| {
+                let ids: Vec<LayerId> = series.layers.ids().collect();
+                let mut lost = false;
+                for id in ids {
+                    let part = series.layers.get_mut(id).expect("a place");
+                    lost |= part.height.take().is_some();
+                }
+                lost
+            })
+        }),
+        ("an event is lost in one layer", |m| {
+            m.events.iter_mut().any(|series| {
+                let Some(id) = series.layers.ids().next() else {
+                    return false;
+                };
+                series.layers = series
+                    .layers
+                    .iter()
+                    .filter(|(layer, _)| *layer != id)
+                    .map(|(layer, part)| (layer, part.clone()))
+                    .collect();
+                true
+            })
+        }),
     ]
+}
+
+#[test]
+fn the_synthetic_cdm_with_images_passes_and_a_changed_one_fails() {
+    let all = load_all().expect("the expectation files can be read");
+    let images = all
+        .iter()
+        .find(|e| e.miniature() == "v17_2026_08_18_images.h5")
+        .expect("the images file");
+    let meta = synthesise(images).expect("a synthetic CDM");
+    // two camera channels, one for each phase, each with the frame the expectation names
+    let formats: Vec<_> = meta
+        .sensors
+        .iter()
+        .filter_map(|c| match &c.dtype {
+            ChannelDType::Image(format) => Some(format.clone()),
+            _ => None,
+        })
+        .collect();
+    let wanted = ImageFormat::new(128, 128, NumericType::U8);
+    assert_eq!(formats, [wanted.clone(), wanted]);
+    assert!(check(&meta, images).is_empty());
+    // the same CDM with a frame one row taller does not pass
+    let mut taller = meta.clone();
+    taller.sensors[0].dtype = ChannelDType::Image(ImageFormat::new(129, 128, NumericType::U8));
+    assert!(!check(&taller, images).is_empty());
+    // and the other files hold no image at all
+    for expectation in all
+        .iter()
+        .filter(|e| e.miniature() != "v17_2026_08_18_images.h5")
+    {
+        let other = synthesise(expectation).expect("a synthetic CDM");
+        assert!(
+            other
+                .sensors
+                .iter()
+                .all(|c| !matches!(c.dtype, ChannelDType::Image(_))),
+            "{}",
+            expectation.miniature()
+        );
+    }
+}
+
+#[test]
+fn the_synthetic_cdm_with_events_passes_and_a_changed_one_fails() {
+    let all = load_all().expect("the expectation files can be read");
+    let images = all
+        .iter()
+        .find(|e| e.miniature() == "v17_2026_08_18_images.h5")
+        .expect("the file with events at the top and inside each layer");
+    let meta = synthesise(images).expect("a synthetic CDM");
+    assert_eq!(meta.events.len(), 40);
+    // a series recorded in the bucket that no layer owns and in each layer, a task with an interval and a height, and the run state
+    let velocity = meta
+        .events
+        .iter()
+        .find(|s| s.path.last().map(String::as_str) == Some("current_velocity"))
+        .expect("a sensor series");
+    assert!(velocity.no_layer.is_some() && velocity.layers.len() == 3);
+    assert!(meta
+        .events
+        .iter()
+        .any(|s| s.kind == EventKind::Task && s.interval));
+    assert!(meta.events.iter().any(|s| s.kind == EventKind::Run));
+    assert!(check(&meta, images).is_empty());
+    // the same CDM with one record more in one place does not pass
+    let mut changed = meta.clone();
+    changed.events[0]
+        .no_layer
+        .get_or_insert_with(|| EventPart::new(0))
+        .records += 1;
+    assert!(!check(&changed, images).is_empty());
+    // the files that have no event say so
+    for expectation in all.iter().filter(|e| {
+        !["v17_2026_08_18_images.h5", "v17_triggered_2026_10_19.h5"].contains(&e.miniature())
+    }) {
+        assert!(synthesise(expectation).expect("a CDM").events.is_empty());
+    }
 }
 
 #[test]
@@ -430,7 +883,14 @@ fn the_parts_together_equal_the_whole() {
                 check_parts(
                     &meta,
                     expectation,
-                    &[Part::Sensors, Part::Lasers, Part::Layers, Part::Build]
+                    &[
+                        Part::Events,
+                        Part::Sensors,
+                        Part::Parameters,
+                        Part::Lasers,
+                        Part::Layers,
+                        Part::Build
+                    ]
                 ),
                 whole
             );

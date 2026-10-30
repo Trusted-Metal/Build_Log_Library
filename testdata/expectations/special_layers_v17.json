@@ -18,7 +18,12 @@
       "source_mcf_hash": null
     },
     "layers_declared": 2110,
-    "layer_thickness": null
+    "layer_thickness": null,
+    "outcome": null,
+    "provenance": {
+      "opcua_join_status": null,
+      "opcua_join_version": null
+    }
   },
   "layers": [
     {
@@ -187,37 +192,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.007326126098633,
+                "max": 2.058608055114746,
+                "first": [
+                  2.0244200229644775,
+                  2.019536018371582,
+                  2.0244200229644775
+                ],
+                "last": [
+                  2.0341880321502686,
+                  2.0317461490631104,
+                  2.036630153656006
+                ],
+                "sha256": "c443c5e7f1277fffdab602bdfaed4b60b6ce2c62ac951b810e0d95de3b370fa4"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.007326126098633,
+                "max": 2.0610501766204834,
+                "first": [
+                  2.029304027557373,
+                  2.026862144470215,
+                  2.0341880321502686
+                ],
+                "last": [
+                  2.039072036743164,
+                  2.0415141582489014,
+                  2.039072036743164
+                ],
+                "sha256": "cf04577363a5f6517f456aabaebed8dd228a83f5ea73182eb7d25d463a8197b7"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.046398162841797,
+                "max": 2.095238208770752,
+                "first": [
+                  2.068376064300537,
+                  2.0708181858062744,
+                  2.0634920597076416
+                ],
+                "last": [
+                  2.068376064300537,
+                  2.065934181213379,
+                  2.068376064300537
+                ],
+                "sha256": "f56dd71ace78469c836ee620795ba2b212d9729af95d893ed18caafd9ddfca7f"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.048840045928955,
+                "max": 2.0830280780792236,
+                "first": [
+                  2.068376064300537,
+                  2.0732600688934326,
+                  2.068376064300537
+                ],
+                "last": [
+                  2.0634920597076416,
+                  2.0610501766204834,
+                  2.0708181858062744
+                ],
+                "sha256": "d84f9fc0c72e6d8950770d7d455fd802c27deb0e2bf328ed5f00f35dcf5869f8"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.048840045928955,
+                "max": 2.085470199584961,
+                "first": [
+                  2.058608055114746,
+                  2.065934181213379,
+                  2.0634920597076416
+                ],
+                "last": [
+                  2.068376064300537,
+                  2.065934181213379,
+                  2.0634920597076416
+                ],
+                "sha256": "327eb8b4b0fac46418765fed65e2de962512569872905c6c377f8fa0131e2186"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.0512821674346924,
+                "max": 2.0830280780792236,
+                "first": [
+                  2.0732600688934326,
+                  2.068376064300537,
+                  2.0708181858062744
+                ],
+                "last": [
+                  2.0708181858062744,
+                  2.0732600688934326,
+                  2.068376064300537
+                ],
+                "sha256": "122ad3922f1703655bd965582db04ee094cdaa6062e8c643f54a8f9e25f0dce4"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.014652015641331673,
+                "max": 2.0805861949920654,
+                "first": [
+                  0.02442002482712269,
+                  0.02442002482712269,
+                  0.02442002482712269
+                ],
+                "last": [
+                  2.058608055114746,
+                  2.068376064300537,
+                  2.065934181213379
+                ],
+                "sha256": "249a124fc8497e637f4b25bbbd14413f2900b7a61a9eab660198a525de8ce00e"
+              }
             }
           ]
         },
@@ -235,37 +359,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "8b5d6d8657b646866d35a1d893e411c50215a9247fe2d8880f3c06fc94d2e767"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "201b792c014f5c3c4affbb625aba1faaa2b55db80b06aafb6ae9e2e71bcee49a"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "49400280768e1901605cb5c82121f52c82b42a126c4033711325217dc8818d50"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "f673e39c15b63ad0e756e71620c4ef6ac01706a299dedb3892f9e41473641b86"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "370438954c3c204906ac84dde08463ab4f7669a483598517ed39db31b89d2ec5"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "b4a59d32a33a91ab25c34dc0e955d88d21f4031619cc2be3e0256c96f858d44d"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "da937a9a0df70eee140ffb6622690aa9a6bd0399704b7cdc14488a8565fbd3a3"
+              }
             }
           ]
         },
@@ -289,37 +532,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -178501,
+                "max": 23014,
+                "first": [
+                  -178501,
+                  -178409,
+                  -178326
+                ],
+                "last": [
+                  21708,
+                  21690,
+                  21676
+                ],
+                "sha256": "c5b9eb45194182f994b5f3d589c28b29a0438d0f0d02478187c0c29fd9685c87"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -165052,
+                "max": 43261,
+                "first": [
+                  -165052,
+                  -164960,
+                  -164867
+                ],
+                "last": [
+                  43076,
+                  43075,
+                  43065
+                ],
+                "sha256": "e77f8fbcc24161060a47116bc4e0e9c78163b6266c76b8021b0ad1afe5e8a3e8"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -222261,
+                "max": -2151,
+                "first": [
+                  -222261,
+                  -222175,
+                  -222083
+                ],
+                "last": [
+                  -8515,
+                  -8500,
+                  -8484
+                ],
+                "sha256": "e126cd0baf4b898fd2311a337dd26c34f7c1c73beef8ec182eb64a347aab83c6"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -226400,
+                "max": -47758,
+                "first": [
+                  -226400,
+                  -226328,
+                  -226268
+                ],
+                "last": [
+                  -51231,
+                  -51225,
+                  -51230
+                ],
+                "sha256": "a149700de68acf73473177fea682957720e1c6f19f0b05688e80cb6cbca7894c"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -223256,
+                "max": -2159,
+                "first": [
+                  -223256,
+                  -223165,
+                  -223083
+                ],
+                "last": [
+                  -8506,
+                  -8495,
+                  -8478
+                ],
+                "sha256": "2613b05c2bb8b5c19c286f5ea5f895f0449bb6aecca08f56e6408a7e39bcaa6c"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -235427,
+                "max": -47759,
+                "first": [
+                  -235427,
+                  -235374,
+                  -235307
+                ],
+                "last": [
+                  -51223,
+                  -51233,
+                  -51238
+                ],
+                "sha256": "c9962b44c39cb2c374c3f06789f45f0ffaf9d6a0cbc42d89a7b240206ca5a85c"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -27860,
+                "max": 23016,
+                "first": [
+                  -27841,
+                  -27846,
+                  -27841
+                ],
+                "last": [
+                  21717,
+                  21710,
+                  21685
+                ],
+                "sha256": "1cca9048ae6ab9511a581c7bc9122587da6a3ddb89a9f89ec657ec2e0cced3f5"
+              }
             }
           ]
         },
@@ -343,37 +705,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -224997,
+                "max": -137043,
+                "first": [
+                  -137043,
+                  -137073,
+                  -137118
+                ],
+                "last": [
+                  -211819,
+                  -211817,
+                  -211826
+                ],
+                "sha256": "ce23206cf742b034d88124a8329f255f3c2463c37f54df7b9987e3b833f79f51"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -182634,
+                "max": -118827,
+                "first": [
+                  -118827,
+                  -118844,
+                  -118862
+                ],
+                "last": [
+                  -181504,
+                  -181483,
+                  -181462
+                ],
+                "sha256": "63040e9b377697a135132b31b028d8df8e7e1cc6b4c0dc021321b2d5058204ca"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -122853,
+                "max": -90746,
+                "first": [
+                  -90746,
+                  -90762,
+                  -90775
+                ],
+                "last": [
+                  -117529,
+                  -117512,
+                  -117502
+                ],
+                "sha256": "cc9d0a5b510f85a768d1e1fa6d4972777e22dcfd8707607cc6b70a0172e69d57"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -218385,
+                "max": -93467,
+                "first": [
+                  -93467,
+                  -93513,
+                  -93566
+                ],
+                "last": [
+                  -202971,
+                  -202955,
+                  -202947
+                ],
+                "sha256": "86037169520432938b14d0d9a5ac15eaf75dee554a5eece0efa358b8128f064a"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -122855,
+                "max": -107366,
+                "first": [
+                  -107366,
+                  -107373,
+                  -107376
+                ],
+                "last": [
+                  -117520,
+                  -117521,
+                  -117511
+                ],
+                "sha256": "f1d84e733c909ff96910d8aa15aca367a1b0c20c82f39f780bfd8b10c69d5a11"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -218387,
+                "max": -107166,
+                "first": [
+                  -107166,
+                  -107199,
+                  -107227
+                ],
+                "last": [
+                  -202992,
+                  -202979,
+                  -202949
+                ],
+                "sha256": "868864e49871a961359a2443369a9b01f7bd49abdfa0adcb1277fac0c79be616"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -224992,
+                "max": -190564,
+                "first": [
+                  -190577,
+                  -190572,
+                  -190577
+                ],
+                "last": [
+                  -211800,
+                  -211812,
+                  -211822
+                ],
+                "sha256": "75d78a611f3289ef5d03aa44bd49adfa6dd354ef1b91d00e5a3a8f03ca29fcf1"
+              }
             }
           ]
         },
@@ -397,37 +878,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -102092,
+                "max": -90407,
+                "first": [
+                  -92960,
+                  -92976,
+                  -92994
+                ],
+                "last": [
+                  -95666,
+                  -95664,
+                  -95662
+                ],
+                "sha256": "24365558aa049d2b6e91bd09391297963461ef3fc0ee1d8af1e83df5084ea439"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -123567,
+                "max": -102910,
+                "first": [
+                  -102910,
+                  -102938,
+                  -102963
+                ],
+                "last": [
+                  -107460,
+                  -107467,
+                  -107474
+                ],
+                "sha256": "a0fd74c20a83ec4e094e2855a60c14e317d5acbb2ed1e843b3ed2cee4b661063"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -130232,
+                "max": -87174,
+                "first": [
+                  -87174,
+                  -87208,
+                  -87244
+                ],
+                "last": [
+                  -129232,
+                  -129232,
+                  -129232
+                ],
+                "sha256": "2e0ffc1f31dac528fbd3296d9bdb06c4b78ecb9044703995f5b94f58c6ef5675"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99838,
+                "max": -83908,
+                "first": [
+                  -83908,
+                  -83927,
+                  -83947
+                ],
+                "last": [
+                  -97582,
+                  -97583,
+                  -97587
+                ],
+                "sha256": "db05adcda64a94fb40e45f5dc6378f58daa2d059a7a0bfc0f758615dd332a216"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -130228,
+                "max": -83376,
+                "first": [
+                  -83376,
+                  -83415,
+                  -83454
+                ],
+                "last": [
+                  -129242,
+                  -129244,
+                  -129245
+                ],
+                "sha256": "105808152916e2fc50506084e56301ffbc71651df1678d6186826850c076ca2d"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -97607,
+                "max": -77286,
+                "first": [
+                  -77286,
+                  -77306,
+                  -77326
+                ],
+                "last": [
+                  -97600,
+                  -97606,
+                  -97607
+                ],
+                "sha256": "9295a46a7f5d773b1035f5bac8580bda3a46e5c6fb5bf63dd368d20e8fab5d6a"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -104702,
+                "max": -90369,
+                "first": [
+                  -104693,
+                  -104693,
+                  -104692
+                ],
+                "last": [
+                  -95700,
+                  -95701,
+                  -95704
+                ],
+                "sha256": "d98e403c6349bd21a25ea890cd08a7677c6aa0208597bc211ad5426595cd4039"
+              }
             }
           ]
         },
@@ -451,37 +1051,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -173765,
+                "max": 23491,
+                "first": [
+                  -173765,
+                  -173683,
+                  -173601
+                ],
+                "last": [
+                  20768,
+                  20752,
+                  20736
+                ],
+                "sha256": "b8e326e15b3d063fe00b3b9e9e19434a0afd2f973bfea25b47c35e7c6af41b67"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -159822,
+                "max": 43271,
+                "first": [
+                  -159822,
+                  -159732,
+                  -159641
+                ],
+                "last": [
+                  42959,
+                  42957,
+                  42955
+                ],
+                "sha256": "59f85db3c8e76831cc9053d881c00f46b01394a8a98c477444f4469c7ad47416"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -216967,
+                "max": -1731,
+                "first": [
+                  -216967,
+                  -216878,
+                  -216788
+                ],
+                "last": [
+                  -7620,
+                  -7605,
+                  -7591
+                ],
+                "sha256": "5cf5d85515e48a114767bdeb8b90a4f553e197e3f7469293cfa6bdc1fa6f7e9d"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -222077,
+                "max": -47612,
+                "first": [
+                  -222077,
+                  -222004,
+                  -221930
+                ],
+                "last": [
+                  -51452,
+                  -51456,
+                  -51460
+                ],
+                "sha256": "a0eb04c4f0785de507d0ccebf2546db1d82ae455cbc2af65c3f3ad90fdd56a50"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -217960,
+                "max": -1727,
+                "first": [
+                  -217960,
+                  -217870,
+                  -217780
+                ],
+                "last": [
+                  -7613,
+                  -7598,
+                  -7582
+                ],
+                "sha256": "f191b76b2f0ce5e5ac9eaee4083fba9b7962d30c444015eddae36dd3e8d8ead8"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -231217,
+                "max": -47613,
+                "first": [
+                  -231217,
+                  -231140,
+                  -231063
+                ],
+                "last": [
+                  -51449,
+                  -51453,
+                  -51457
+                ],
+                "sha256": "eebcd798afd0bb8906ae3a368228ba1c5f3a62de7c66596e9f2eb5266709a7e6"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -27843,
+                "max": 23492,
+                "first": [
+                  -27843,
+                  -27843,
+                  -27843
+                ],
+                "last": [
+                  20773,
+                  20757,
+                  20740
+                ],
+                "sha256": "2aae95b7485e84f251a4296bbb233227303f84d8195b11f604544bec5980b802"
+              }
             }
           ]
         },
@@ -505,37 +1224,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -224992,
+                "max": -139272,
+                "first": [
+                  -139272,
+                  -139311,
+                  -139349
+                ],
+                "last": [
+                  -212304,
+                  -212312,
+                  -212321
+                ],
+                "sha256": "db580d982c81084bdf3e67a1978687115c23edcb659a81008456e4f6aaa2cc4d"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -183275,
+                "max": -119520,
+                "first": [
+                  -119520,
+                  -119532,
+                  -119544
+                ],
+                "last": [
+                  -180503,
+                  -180486,
+                  -180469
+                ],
+                "sha256": "c4868db823007501bc98d2d2b0baddecb52d4e656f88a4d72eefc4421bad86e5"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -123136,
+                "max": -91344,
+                "first": [
+                  -91344,
+                  -91354,
+                  -91364
+                ],
+                "last": [
+                  -116939,
+                  -116929,
+                  -116919
+                ],
+                "sha256": "ce1cea276ea4a9dd6a76d2d214cf780e31604522c03b00b1249392cfbd54bfe3"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -218799,
+                "max": -96482,
+                "first": [
+                  -96482,
+                  -96533,
+                  -96584
+                ],
+                "last": [
+                  -201980,
+                  -201964,
+                  -201947
+                ],
+                "sha256": "3fa11fc27d81cc079b33089731f588503d38ee826be50d9199b23d719ca3aa34"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -123132,
+                "max": -107544,
+                "first": [
+                  -107544,
+                  -107547,
+                  -107550
+                ],
+                "last": [
+                  -116934,
+                  -116924,
+                  -116914
+                ],
+                "sha256": "a97f497a11b7fe34acb6b773661a31ef06d2447c69c17bab1d5f30ce6c0a32a5"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -218795,
+                "max": -109650,
+                "first": [
+                  -109650,
+                  -109695,
+                  -109740
+                ],
+                "last": [
+                  -201992,
+                  -201976,
+                  -201959
+                ],
+                "sha256": "d54a060d33f345e6d2d64c205ea835c76231f7533b2c0cfa750a11bed76aa7db"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -224992,
+                "max": -190580,
+                "first": [
+                  -190580,
+                  -190580,
+                  -190580
+                ],
+                "last": [
+                  -212302,
+                  -212310,
+                  -212319
+                ],
+                "sha256": "73bf58287bb254a2f972dc90d066a5ad6e995d7be9e195e210097f74b151d526"
+              }
             }
           ]
         },
@@ -559,37 +1397,156 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -102182,
+                "max": -90276,
+                "first": [
+                  -95624,
+                  -95639,
+                  -95653
+                ],
+                "last": [
+                  -95262,
+                  -95259,
+                  -95256
+                ],
+                "sha256": "f729410bd5b3e89ab27e3428f29c4c47c403f91321fefd17b9ea6ee3e9dec541"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -123626,
+                "max": -106490,
+                "first": [
+                  -107099,
+                  -107122,
+                  -107145
+                ],
+                "last": [
+                  -108653,
+                  -108660,
+                  -108666
+                ],
+                "sha256": "ca8a88700393e799959a6484515e9714971d9767e0e57cef3e6837e26f6be33b"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -130515,
+                "max": -93482,
+                "first": [
+                  -93482,
+                  -93518,
+                  -93552
+                ],
+                "last": [
+                  -129876,
+                  -129879,
+                  -129881
+                ],
+                "sha256": "daed8bd9ab935e14702d091f39dd2e7f7959753f0a054008fe84c953a919ac95"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99897,
+                "max": -87820,
+                "first": [
+                  -87820,
+                  -87840,
+                  -87861
+                ],
+                "last": [
+                  -97705,
+                  -97698,
+                  -97691
+                ],
+                "sha256": "fb174367a241b11e07e3d525342fde40ef143d140e5252c54bf251c3ac3337ea"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -130515,
+                "max": -89917,
+                "first": [
+                  -89917,
+                  -89954,
+                  -89990
+                ],
+                "last": [
+                  -129877,
+                  -129880,
+                  -129883
+                ],
+                "sha256": "a154650aa4483b235222098f005f21ebcfc6e419720d5fc33575a73deb0734e0"
+              }
             },
             {
               "layer": 2007,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -98470,
+                "max": -81306,
+                "first": [
+                  -81306,
+                  -81329,
+                  -81353
+                ],
+                "last": [
+                  -97710,
+                  -97703,
+                  -97696
+                ],
+                "sha256": "d1faa3f6e2ba5f285f6101d31b1561fd2fee6132f4389838c16f068f279ad7cb"
+              }
             },
             {
               "layer": 2008,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -104691,
+                "max": -90276,
+                "first": [
+                  -104691,
+                  -104691,
+                  -104691
+                ],
+                "last": [
+                  -95263,
+                  -95260,
+                  -95257
+                ],
+                "sha256": "653cc6dc402b6199e22d348b0daa19850d523c391aa6190e08879e979172a041"
+              }
             }
           ]
         }
@@ -614,7 +1571,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1965,
@@ -635,7 +1593,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1966,
@@ -656,7 +1615,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1967,
@@ -677,7 +1637,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2006,
@@ -698,7 +1659,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2007,
@@ -719,7 +1681,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2008,
@@ -740,9 +1703,436 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": {
+        "optical_train": 1,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 12
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": 0.216544,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 0.6975933333333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.default_position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.minor_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.moveable",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.nominal_working_distance",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.13428,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.144416666666666,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 1.178387083333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": -87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": 23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": " 00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 50.5
+            },
+            {
+              "name": "a",
+              "value": 107.5
+            }
+          ]
+        },
+        "power_limits_not_recorded": true
+      }
     },
     {
       "key": "Laser_2",
@@ -768,27 +2158,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.058608055114746,
+                "max": 2.1098902225494385,
+                "first": [
+                  2.085470199584961,
+                  2.0830280780792236,
+                  2.085470199584961
+                ],
+                "last": [
+                  2.0927960872650146,
+                  2.085470199584961,
+                  2.0830280780792236
+                ],
+                "sha256": "15b435d87349b158696e2cfc98e96d2e145f8a548285420a591b9b5490e0b909"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.058608055114746,
+                "max": 2.114774227142334,
+                "first": [
+                  2.078144073486328,
+                  2.07570219039917,
+                  2.0805861949920654
+                ],
+                "last": [
+                  2.078144073486328,
+                  2.078144073486328,
+                  2.0830280780792236
+                ],
+                "sha256": "e3ecec29d2ad3d18e2959e50800a54bf30b80442e227eff0ea27c65f2ff536f2"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.0903542041778564,
+                "max": 2.134310245513916,
+                "first": [
+                  2.1098902225494385,
+                  2.1025640964508057,
+                  2.1098902225494385
+                ],
+                "last": [
+                  2.1098902225494385,
+                  2.1098902225494385,
+                  2.1123321056365967
+                ],
+                "sha256": "2093e3b487bd1cd679d34a91de38e831a0b0e38fd10c60a0ef8b5cb5adad5cdf"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.078144073486328,
+                "max": 2.134310245513916,
+                "first": [
+                  2.105006217956543,
+                  2.1098902225494385,
+                  2.1123321056365967
+                ],
+                "last": [
+                  2.105006217956543,
+                  2.1098902225494385,
+                  2.114774227142334
+                ],
+                "sha256": "0967f3c07d3aa3d42386e2e18019a62d14083715a6d88fc8540aa6b3a5995bc6"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.0903542041778564,
+                "max": 2.124542236328125,
+                "first": [
+                  2.117216110229492,
+                  2.114774227142334,
+                  2.1123321056365967
+                ],
+                "last": [
+                  2.1098902225494385,
+                  2.107448101043701,
+                  2.114774227142334
+                ],
+                "sha256": "112d998ffd2074863570f10597c742e6bea76d3b4074dd2304f8800b12a428a8"
+              }
             }
           ]
         },
@@ -806,27 +2281,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "a6d5ec5215220c547a59844d57471574b0aae6526e72cb6124d1d8eb6c572254"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "a0da4cfda4111f11921de5aedc6a65ef013f5724dc47c46183f018804b4c4187"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "642aea6d7bdfc56ae0074bfc2833a46310aa33e0c94d3c67f59dec2752dc97bc"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "162b1d8aff2770a882bbf5c285db32eef3acbb9cc179b658e91d75cfdc340414"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  0,
+                  0,
+                  0
+                ],
+                "sha256": "df6c9b10ae25744285c4debdba045c8c029dec1d056e87a6d74f67172a9cf3de"
+              }
             }
           ]
         },
@@ -850,27 +2410,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -247152,
+                "max": -38027,
+                "first": [
+                  -38027,
+                  -38112,
+                  -38204
+                ],
+                "last": [
+                  -236839,
+                  -236823,
+                  -236803
+                ],
+                "sha256": "25fdb037f3f44a00f2ffa42509eb4936a6129e72d6eabbadcdb24b4eb2b39468"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -246607,
+                "max": -47553,
+                "first": [
+                  -47553,
+                  -47644,
+                  -47724
+                ],
+                "last": [
+                  -241357,
+                  -241353,
+                  -241356
+                ],
+                "sha256": "0ad955434acf8d671081809f9dd67514eca2a46cab54a30114aed59716e7f108"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -240826,
+                "max": -24607,
+                "first": [
+                  -24607,
+                  -24688,
+                  -24779
+                ],
+                "last": [
+                  -238828,
+                  -238820,
+                  -238802
+                ],
+                "sha256": "2ed90613101fb296027c3c32bc9e0720b8acd8f2805abfdc73ebe285f49a9cc0"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -232197,
+                "max": -21322,
+                "first": [
+                  -21322,
+                  -21408,
+                  -21501
+                ],
+                "last": [
+                  -231689,
+                  -231679,
+                  -231673
+                ],
+                "sha256": "2e69e888c4579abdc8f0e6057d9fa8cdf953b21f76dd0db9dc35a67c24e6e458"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -244457,
+                "max": -38334,
+                "first": [
+                  -38334,
+                  -38424,
+                  -38514
+                ],
+                "last": [
+                  -234581,
+                  -234576,
+                  -234568
+                ],
+                "sha256": "17445f54ce91d2fe5c1551d770ccb1ed5e9e9469353084ba222cd89245c11d68"
+              }
             }
           ]
         },
@@ -894,27 +2539,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -88026,
+                "max": -31735,
+                "first": [
+                  -31735,
+                  -31755,
+                  -31781
+                ],
+                "last": [
+                  -82615,
+                  -82611,
+                  -82599
+                ],
+                "sha256": "0297ce063b243309f0730ebeb9f048dc7f3d4553b8c0c4ec6499eb718726cce2"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -98675,
+                "max": -36078,
+                "first": [
+                  -36078,
+                  -36103,
+                  -36120
+                ],
+                "last": [
+                  -87461,
+                  -87473,
+                  -87490
+                ],
+                "sha256": "244b3fb53c328cca84dd9881ef641a2f508c799fb05658d2045055d554e36ee2"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99563,
+                "max": -49108,
+                "first": [
+                  -49108,
+                  -49130,
+                  -49150
+                ],
+                "last": [
+                  -97106,
+                  -97094,
+                  -97088
+                ],
+                "sha256": "29a0f9798558322128ac16aef7b183f2118031607b92a296dc127bc363895572"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -96937,
+                "max": -44999,
+                "first": [
+                  -44999,
+                  -45023,
+                  -45036
+                ],
+                "last": [
+                  -80021,
+                  -80038,
+                  -80059
+                ],
+                "sha256": "f8af5c9ba194238a211748bdb654463dfdbde7358734c401f36b75cb451db712"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -88684,
+                "max": -38415,
+                "first": [
+                  -38415,
+                  -38443,
+                  -38460
+                ],
+                "last": [
+                  -81656,
+                  -81657,
+                  -81657
+                ],
+                "sha256": "254d81b642b4b7120b1470cd84d5696cccd3eadb76f5483dcc730f29ec261c9b"
+              }
             }
           ]
         },
@@ -938,27 +2668,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141555,
+                "max": -74903,
+                "first": [
+                  -141555,
+                  -141547,
+                  -141539
+                ],
+                "last": [
+                  -80678,
+                  -80688,
+                  -80697
+                ],
+                "sha256": "ddf31ca700ba42e9a2790cb27e443d769a1a790195740c2de4a20d2552796700"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -140408,
+                "max": -74213,
+                "first": [
+                  -140408,
+                  -140398,
+                  -140387
+                ],
+                "last": [
+                  -77391,
+                  -77388,
+                  -77387
+                ],
+                "sha256": "4b9a42af8affa46e6d980b32a766a9597ec0439e22d6e59d4e8529c55c02ffe6"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -140942,
+                "max": -75911,
+                "first": [
+                  -140942,
+                  -140935,
+                  -140928
+                ],
+                "last": [
+                  -77202,
+                  -77209,
+                  -77217
+                ],
+                "sha256": "0c8e1d081dd735e49708bdc0b240d8679444889b995734df6bf4d2f118f7189a"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141517,
+                "max": -82208,
+                "first": [
+                  -141517,
+                  -141512,
+                  -141507
+                ],
+                "last": [
+                  -83256,
+                  -83254,
+                  -83255
+                ],
+                "sha256": "4f98302b603b5823b2ec1a97b0c632e795b46a9551f32e8a32881818e7d5af8c"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141035,
+                "max": -76116,
+                "first": [
+                  -141035,
+                  -141024,
+                  -141013
+                ],
+                "last": [
+                  -81205,
+                  -81199,
+                  -81194
+                ],
+                "sha256": "e65731461bbd0fdb22dc78408858f75d4c29671792ad2ed53c79bb540385f65c"
+              }
             }
           ]
         },
@@ -982,27 +2797,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -247446,
+                "max": -43205,
+                "first": [
+                  -43205,
+                  -43295,
+                  -43384
+                ],
+                "last": [
+                  -235937,
+                  -235922,
+                  -235907
+                ],
+                "sha256": "d336714786b9e09714d0e1b026f14c49b2224cd26db6a55681bc7a8f290a36d1"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -246588,
+                "max": -52653,
+                "first": [
+                  -52653,
+                  -52741,
+                  -52830
+                ],
+                "last": [
+                  -241258,
+                  -241256,
+                  -241254
+                ],
+                "sha256": "6fe898c46759eeb6539177fdf7ba9784852a0403b64606c84e2a87485e6f0d84"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -241195,
+                "max": -29883,
+                "first": [
+                  -29883,
+                  -29972,
+                  -30062
+                ],
+                "last": [
+                  -237961,
+                  -237946,
+                  -237932
+                ],
+                "sha256": "9c50d7238c49a5e1fc19ca1118ceed1cbeaf73654128cb6fc79bb3d7f7563353"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -232331,
+                "max": -26611,
+                "first": [
+                  -26611,
+                  -26700,
+                  -26790
+                ],
+                "last": [
+                  -231468,
+                  -231464,
+                  -231461
+                ],
+                "sha256": "3bd2c746c858d738bd073e76e93ced9312ff152a7cc21158b3e92114b9f2316a"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -244451,
+                "max": -43597,
+                "first": [
+                  -43597,
+                  -43687,
+                  -43776
+                ],
+                "last": [
+                  -235356,
+                  -235395,
+                  -235409
+                ],
+                "sha256": "93b77ebf43caabb3af5e52287dd2d14530d5bc370274c38f2f688f2fb6ac45f3"
+              }
             }
           ]
         },
@@ -1026,27 +2926,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -88254,
+                "max": -32946,
+                "first": [
+                  -32946,
+                  -32967,
+                  -32987
+                ],
+                "last": [
+                  -82133,
+                  -82124,
+                  -82116
+                ],
+                "sha256": "4e9d001765819be352d8d55657d50db04eef59af706c34757b49d34755788083"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99038,
+                "max": -37510,
+                "first": [
+                  -37510,
+                  -37535,
+                  -37560
+                ],
+                "last": [
+                  -88455,
+                  -88473,
+                  -88490
+                ],
+                "sha256": "cb9ac7777c3c017d59dcc973b44fbe8715a8cb317b54d2ab1804c0742e031add"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99735,
+                "max": -50339,
+                "first": [
+                  -50339,
+                  -50360,
+                  -50381
+                ],
+                "last": [
+                  -96536,
+                  -96527,
+                  -96517
+                ],
+                "sha256": "6e34293f3ee0eb54e2e5049ff6d358ec2adbd2a9fdb0717c4eda991d50fd9100"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -97317,
+                "max": -46171,
+                "first": [
+                  -46171,
+                  -46191,
+                  -46211
+                ],
+                "last": [
+                  -81020,
+                  -81037,
+                  -81054
+                ],
+                "sha256": "e9d6bdb16f0bddecaa9e6216bba7c62a191f7a4d129a818787875a2518e43a65"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -88668,
+                "max": -39700,
+                "first": [
+                  -39700,
+                  -39721,
+                  -39743
+                ],
+                "last": [
+                  -81926,
+                  -81942,
+                  -81952
+                ],
+                "sha256": "da9cc5bab29d63d56bf3157425574ab598bc0b2283f3db9c0abf4d592e149986"
+              }
             }
           ]
         },
@@ -1070,27 +3055,112 @@
             {
               "layer": 1964,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139491,
+                "max": -74255,
+                "first": [
+                  -139491,
+                  -139479,
+                  -139467
+                ],
+                "last": [
+                  -82344,
+                  -82352,
+                  -82361
+                ],
+                "sha256": "d25241dd569ec6d225331f60af01daa07ce8bfeca0c890dd4c91e08d91360fda"
+              }
             },
             {
               "layer": 1965,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -137896,
+                "max": -74152,
+                "first": [
+                  -137896,
+                  -137882,
+                  -137867
+                ],
+                "last": [
+                  -76860,
+                  -76858,
+                  -76856
+                ],
+                "sha256": "4728cbfdaa76b26b158e3bdf3cdef39e81b663852ab277c7ff515b03ffd0735d"
+              }
             },
             {
               "layer": 1966,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139201,
+                "max": -75273,
+                "first": [
+                  -139201,
+                  -139190,
+                  -139180
+                ],
+                "last": [
+                  -78704,
+                  -78714,
+                  -78722
+                ],
+                "sha256": "87c3357cfd8f469c8bed6d5bd662bb110fc11910e933fee63feeb679df5ad3fa"
+              }
             },
             {
               "layer": 1967,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139954,
+                "max": -81945,
+                "first": [
+                  -139954,
+                  -139945,
+                  -139935
+                ],
+                "last": [
+                  -83036,
+                  -83035,
+                  -83034
+                ],
+                "sha256": "90deb1e9fa89f1ceed24d878209b677b4918db37cc077c01e2e1f25ba97a2206"
+              }
             },
             {
               "layer": 2006,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -138865,
+                "max": -76001,
+                "first": [
+                  -138865,
+                  -138852,
+                  -138840
+                ],
+                "last": [
+                  -79860,
+                  -79860,
+                  -79860
+                ],
+                "sha256": "85b79f129c5777c80ff2173de0976bc1e8e306e0b4e0ecbb826513b19cc4de7b"
+              }
             }
           ]
         }
@@ -1115,7 +3185,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1965,
@@ -1136,7 +3207,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1966,
@@ -1157,7 +3229,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 1967,
@@ -1178,7 +3251,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2006,
@@ -1199,7 +3273,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2007,
@@ -1220,7 +3295,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2008,
@@ -1241,16 +3317,491 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": {
+        "optical_train": 2,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 12
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": -0.3946656666666666,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 1.512821666666667,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.default_position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.minor_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.moveable",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.nominal_working_distance",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.259905,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.187398333333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 0.1906766666666668,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 86.074,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -21.695,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": "00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 48.5
+            },
+            {
+              "name": "a",
+              "value": 105.0
+            }
+          ]
+        },
+        "power_limits_not_recorded": true
+      }
     }
   ],
   "sensors": [],
+  "events": [],
+  "validation": {
+    "findings": [
+      {
+        "code": "LayerCountDiffers",
+        "severity": "Note",
+        "layer": null,
+        "laser": null,
+        "channel": null
+      }
+    ],
+    "counts": {
+      "notes": 1,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 7,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 14,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 96,
+      "not_recorded": 16,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
   "notes": [
     "Times are the integers the file holds, in no unit the file states (decision D02-19).",
     "The build date is the string as written (phase 2E was dropped).",
     "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
-    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
+    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16)."
   ]
 }

@@ -18,7 +18,12 @@
       "source_mcf_hash": null
     },
     "layers_declared": 2,
-    "layer_thickness": null
+    "layer_thickness": null,
+    "outcome": null,
+    "provenance": {
+      "opcua_join_status": null,
+      "opcua_join_version": null
+    }
   },
   "layers": [
     {
@@ -87,12 +92,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.014652015641331673,
+                "max": 2.0610501766204834,
+                "first": [
+                  0.01953602023422718,
+                  0.01953602023422718,
+                  0.017094017937779427
+                ],
+                "last": [
+                  2.029304027557373,
+                  2.026862144470215,
+                  2.0244200229644775
+                ],
+                "sha256": "3f6037d172879a6306ca6bf448ca4e9c1a38c1424bf977734d511295274cb879"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.007326126098633,
+                "max": 2.0610501766204834,
+                "first": [
+                  2.0415141582489014,
+                  2.036630153656006,
+                  2.039072036743164
+                ],
+                "last": [
+                  2.026862144470215,
+                  2.0244200229644775,
+                  2.0244200229644775
+                ],
+                "sha256": "d39c98e6826a4d7baa78e5e376437f6eac04fa2cd60618886c85b168add40ccd"
+              }
             }
           ]
         },
@@ -110,12 +149,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  0,
+                  0,
+                  0
+                ],
+                "sha256": "6a961edc1cbcd45e6dda189920c00b89f4dc9da3a711214bbbddfa87a3b63da8"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "1f3bc0c247b372912c6087833f134dc0f9d3f24d3df52d0942498f6d7993072c"
+              }
             }
           ]
         },
@@ -139,12 +212,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -43295,
+                "max": 50287,
+                "first": [
+                  -43264,
+                  -43273,
+                  -43267
+                ],
+                "last": [
+                  42263,
+                  42254,
+                  42259
+                ],
+                "sha256": "8b9d7ab0f3327290736e59da3951bb9fd5697475ad1a6b35a30c382e814a94ed"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -224686,
+                "max": -3099,
+                "first": [
+                  -224686,
+                  -224623,
+                  -224550
+                ],
+                "last": [
+                  -15349,
+                  -15362,
+                  -15379
+                ],
+                "sha256": "289f6b46ac19924c6b1c383be2928f82b0157f3c54d69c78c54b7c955b4ebbb5"
+              }
             }
           ]
         },
@@ -168,12 +275,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -158150,
+                "max": -135527,
+                "first": [
+                  -152650,
+                  -152653,
+                  -152649
+                ],
+                "last": [
+                  -135547,
+                  -135541,
+                  -135541
+                ],
+                "sha256": "8f52de5dc347aa16bd04e1366f7bd9b715b95b0c014b4f54afc44f977340af3d"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -115299,
+                "max": -94424,
+                "first": [
+                  -94424,
+                  -94425,
+                  -94432
+                ],
+                "last": [
+                  -114629,
+                  -114648,
+                  -114661
+                ],
+                "sha256": "0094b1ecb92229780ad7cac46e4d85d91d4064263322b024988194a1aff17a29"
+              }
             }
           ]
         },
@@ -197,12 +338,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -127499,
+                "max": -115075,
+                "first": [
+                  -127473,
+                  -127471,
+                  -127472
+                ],
+                "last": [
+                  -122631,
+                  -122630,
+                  -122629
+                ],
+                "sha256": "f66c171945f1bce307d847b52298226db0113a1d5d71acfad1e8c0b7ec586a4b"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -131804,
+                "max": -85772,
+                "first": [
+                  -85772,
+                  -85803,
+                  -85835
+                ],
+                "last": [
+                  -129982,
+                  -129980,
+                  -129979
+                ],
+                "sha256": "5e1fffeafd70d7b9de399e951c7d9bc7371a416bcda89b358b54682b90cc07ce"
+              }
             }
           ]
         },
@@ -226,12 +401,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -43276,
+                "max": 50275,
+                "first": [
+                  -43276,
+                  -43276,
+                  -43276
+                ],
+                "last": [
+                  42105,
+                  42111,
+                  42116
+                ],
+                "sha256": "7b1714dc67ba1d29bacfd5afc38fea78390ed1cfe6d1e18f8e0613772c3f9ac6"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -219835,
+                "max": -2816,
+                "first": [
+                  -219835,
+                  -219745,
+                  -219656
+                ],
+                "last": [
+                  -16224,
+                  -16239,
+                  -16254
+                ],
+                "sha256": "f068ab3e45ffd5e6d6008398fe95d2bbf1141f14b542b9cb8429e424d3d3f310"
+              }
             }
           ]
         },
@@ -255,12 +464,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -158587,
+                "max": -135263,
+                "first": [
+                  -152651,
+                  -152651,
+                  -152651
+                ],
+                "last": [
+                  -135642,
+                  -135658,
+                  -135675
+                ],
+                "sha256": "c7eb424f70920d3b8efdebfe604b7f9b1f0110514e4ae06d87d7337f5e45447a"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -115499,
+                "max": -94773,
+                "first": [
+                  -94773,
+                  -94780,
+                  -94786
+                ],
+                "last": [
+                  -115216,
+                  -115225,
+                  -115235
+                ],
+                "sha256": "6737c1b976da32c0fd66bba87940f5f54b117c2dbf7a2ad0dde6cf7745f084d5"
+              }
             }
           ]
         },
@@ -284,12 +527,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -127513,
+                "max": -114777,
+                "first": [
+                  -127478,
+                  -127478,
+                  -127478
+                ],
+                "last": [
+                  -121858,
+                  -121853,
+                  -121847
+                ],
+                "sha256": "c750a30354306b9a272bdcb1583cb48c12ad9f6302edd01dbba85844b7037a97"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -132013,
+                "max": -91756,
+                "first": [
+                  -91756,
+                  -91792,
+                  -91828
+                ],
+                "last": [
+                  -129507,
+                  -129507,
+                  -129507
+                ],
+                "sha256": "f2dd08d7128c732959bcb0167120299dba1192cf26ac958a21ab183d24986427"
+              }
             }
           ]
         }
@@ -314,7 +591,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2,
@@ -335,9 +613,436 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": {
+        "optical_train": 1,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 12
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": 0.216544,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 0.6975933333333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.default_position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.minor_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.moveable",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.nominal_working_distance",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.13428,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.144416666666666,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 1.178387083333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": -87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": 23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": " 00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 50.5
+            },
+            {
+              "name": "a",
+              "value": 107.5
+            }
+          ]
+        },
+        "power_limits_not_recorded": true
+      }
     },
     {
       "key": "Laser_2",
@@ -363,12 +1068,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.056166172027588,
+                "max": 2.1123321056365967,
+                "first": [
+                  2.0805861949920654,
+                  2.078144073486328,
+                  2.07570219039917
+                ],
+                "last": [
+                  2.0903542041778564,
+                  2.085470199584961,
+                  2.0805861949920654
+                ],
+                "sha256": "e548c457b48e4466add9a52321eb97dbf58053a3a7f124db2840eedd8484e279"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.058608055114746,
+                "max": 2.114774227142334,
+                "first": [
+                  2.078144073486328,
+                  2.0805861949920654,
+                  2.0708181858062744
+                ],
+                "last": [
+                  2.07570219039917,
+                  2.068376064300537,
+                  2.0732600688934326
+                ],
+                "sha256": "aad42a21fcd0244cbda0e9c663abdaa3074f223fbcf88c25c61f5661d6537dd5"
+              }
             }
           ]
         },
@@ -386,12 +1125,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "41f82ef5235ac50d344576048d8caa7fda150c2ff8b5d26ebb0a8bc1a8bce491"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "dea72f4556cc6c34c9c0a73392e6e4ea0d3adf460bf4c3eca9fd6c3383f9ac93"
+              }
             }
           ]
         },
@@ -415,12 +1188,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -246833,
+                "max": -44445,
+                "first": [
+                  -44445,
+                  -44528,
+                  -44619
+                ],
+                "last": [
+                  -240733,
+                  -240731,
+                  -240735
+                ],
+                "sha256": "86637f2164bdc21973539b71e3f79c2f7c9cf66f27eb55d885ccd5c66a76007e"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -240047,
+                "max": -26589,
+                "first": [
+                  -26589,
+                  -26671,
+                  -26760
+                ],
+                "last": [
+                  -228817,
+                  -228824,
+                  -228839
+                ],
+                "sha256": "ab6ef4acd93af72c75d106dfb1ba50dbdf8af7af1f552a0ba197fb2705fd3d3d"
+              }
             }
           ]
         },
@@ -444,12 +1251,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99416,
+                "max": -45392,
+                "first": [
+                  -45392,
+                  -45411,
+                  -45428
+                ],
+                "last": [
+                  -94289,
+                  -94267,
+                  -94251
+                ],
+                "sha256": "3d50d3bcde082a30bd939c9c5c171b8e1a8c47712e51a6d026595df4058cb9b5"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99746,
+                "max": -42365,
+                "first": [
+                  -42365,
+                  -42390,
+                  -42411
+                ],
+                "last": [
+                  -91223,
+                  -91228,
+                  -91245
+                ],
+                "sha256": "cc66d997a1e1f4e5f22e24c4cebd27d215832edc6504db127cc6ec0152651ef8"
+              }
             }
           ]
         },
@@ -473,12 +1314,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139809,
+                "max": -74266,
+                "first": [
+                  -139809,
+                  -139798,
+                  -139786
+                ],
+                "last": [
+                  -76313,
+                  -76311,
+                  -76309
+                ],
+                "sha256": "12c9376db1fc057ad7f2f71df5e6dbdc69ff935595793e405b168991fce8c301"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141440,
+                "max": -75925,
+                "first": [
+                  -141440,
+                  -141432,
+                  -141422
+                ],
+                "last": [
+                  -82323,
+                  -82314,
+                  -82308
+                ],
+                "sha256": "0ec0f443b315922f1aa280eea68506738b3592d63a390d2126830f0d13e2817c"
+              }
             }
           ]
         },
@@ -502,12 +1377,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -246818,
+                "max": -49605,
+                "first": [
+                  -49605,
+                  -49694,
+                  -49784
+                ],
+                "last": [
+                  -241034,
+                  -241039,
+                  -241044
+                ],
+                "sha256": "ef23e1cf711e22fcaa06af93331023dc5a990c74636f0804647d585ffeb6e07d"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -240255,
+                "max": -31732,
+                "first": [
+                  -31732,
+                  -31821,
+                  -31909
+                ],
+                "last": [
+                  -229669,
+                  -229683,
+                  -229697
+                ],
+                "sha256": "167490a42e154ddc90ccdefdfe040afb38178e739d9476afce7029f31df67d32"
+              }
             }
           ]
         },
@@ -531,12 +1440,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99487,
+                "max": -46642,
+                "first": [
+                  -46642,
+                  -46664,
+                  -46686
+                ],
+                "last": [
+                  -93327,
+                  -93310,
+                  -93294
+                ],
+                "sha256": "35c4fc4b1883baca65404b58828049c424829796d643d4631041f473741c621e"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -99735,
+                "max": -43749,
+                "first": [
+                  -43749,
+                  -43772,
+                  -43796
+                ],
+                "last": [
+                  -91792,
+                  -91801,
+                  -91811
+                ],
+                "sha256": "d17de02b08a472177e5e6bf3294246e99f6a29dbfcea905b3f526bb5f3fbcf1e"
+              }
             }
           ]
         },
@@ -560,12 +1503,46 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -137441,
+                "max": -74276,
+                "first": [
+                  -137441,
+                  -137427,
+                  -137414
+                ],
+                "last": [
+                  -76533,
+                  -76534,
+                  -76534
+                ],
+                "sha256": "3b8a10640e5d42830a056be787d4d1ffe1df57608f4a57b1361d23ab3f9f80aa"
+              }
             },
             {
               "layer": 2,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139698,
+                "max": -75649,
+                "first": [
+                  -139698,
+                  -139687,
+                  -139677
+                ],
+                "last": [
+                  -80716,
+                  -80707,
+                  -80698
+                ],
+                "sha256": "5718b38c48b34d7177f92be285aeb3a5b18cbb3a6ee7b9c8cfa6160404283ee2"
+              }
             }
           ]
         }
@@ -590,7 +1567,8 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         },
         {
           "layer": 2,
@@ -611,16 +1589,483 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": {
+        "optical_train": 2,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 12
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": -0.3946656666666666,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 1.512821666666667,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.default_position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.major_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.minor_waist_d4sigma",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.moveable",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.nominal_working_distance",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.position",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Undefine"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.259905,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.187398333333333,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 0.1906766666666668,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 86.074,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -21.695,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": "00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 48.5
+            },
+            {
+              "name": "a",
+              "value": 105.0
+            }
+          ]
+        },
+        "power_limits_not_recorded": true
+      }
     }
   ],
   "sensors": [],
+  "events": [],
+  "validation": {
+    "findings": [],
+    "counts": {
+      "notes": 0,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 2,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 4,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 32,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
   "notes": [
     "Times are the integers the file holds, in no unit the file states (decision D02-19).",
     "The build date is the string as written (phase 2E was dropped).",
     "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
-    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
+    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16)."
   ]
 }

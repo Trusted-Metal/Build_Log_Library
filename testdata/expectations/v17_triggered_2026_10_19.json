@@ -25,6 +25,19 @@
         "unit_id": null,
         "source": "Unknown"
       }
+    },
+    "outcome": {
+      "text": "complete",
+      "named": "Complete",
+      "other": null
+    },
+    "provenance": {
+      "opcua_join_status": {
+        "text": "complete",
+        "named": "Complete",
+        "other": null
+      },
+      "opcua_join_version": "2"
     }
   },
   "layers": [
@@ -74,7 +87,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.00976801011711359,
+                "max": 0.026862027123570442,
+                "first": [
+                  0.017094017937779427,
+                  0.014652014710009098,
+                  0.017094017937779427
+                ],
+                "last": [
+                  0.021978022530674934,
+                  0.012210012413561344,
+                  0.021978022530674934
+                ],
+                "sha256": "5e14946242e94814b6738e7b0c20188c49618d463c8c62cd78b6a59029a39e70"
+              }
             }
           ]
         },
@@ -92,7 +122,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "ca9f3c8831d4d0b8cf7da8537df5a3e25e70f4bcaecf81a1230747debe10f519"
+              }
             }
           ]
         },
@@ -116,7 +163,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -54405,
+                "max": -25926,
+                "first": [
+                  -26440,
+                  -26433,
+                  -26442
+                ],
+                "last": [
+                  -50010,
+                  -50000,
+                  -49986
+                ],
+                "sha256": "b92a59afe99d18a6ab9bfc9f9304eff3c82d3b63f890f6e76e6a898945db52c8"
+              }
             }
           ]
         },
@@ -140,7 +204,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -49242,
+                "max": -30566,
+                "first": [
+                  -48469,
+                  -48472,
+                  -48472
+                ],
+                "last": [
+                  -32567,
+                  -32575,
+                  -32585
+                ],
+                "sha256": "65a2a4df0955aaf1ebbb5c4b70086f02b4de179fc81f07f79e7a466b5d00a6cc"
+              }
             }
           ]
         },
@@ -164,7 +245,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -142106,
+                "max": -138819,
+                "first": [
+                  -140844,
+                  -140844,
+                  -140845
+                ],
+                "last": [
+                  -140456,
+                  -140453,
+                  -140452
+                ],
+                "sha256": "03121d45ed3286254dc19ea068c4177954f8e718240a3f70f33be1b08e03421b"
+              }
             }
           ]
         },
@@ -188,7 +286,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -55061,
+                "max": -25271,
+                "first": [
+                  -26437,
+                  -26437,
+                  -26437
+                ],
+                "last": [
+                  -49028,
+                  -49011,
+                  -48994
+                ],
+                "sha256": "54387a9f48f5cf92dbb5d05657eed51ee317ac8d483277e63dec6cc71d389b98"
+              }
             }
           ]
         },
@@ -212,7 +327,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -49884,
+                "max": -29941,
+                "first": [
+                  -48476,
+                  -48476,
+                  -48476
+                ],
+                "last": [
+                  -33343,
+                  -33356,
+                  -33370
+                ],
+                "sha256": "c7f61ce758eb81e4b28b5c36dc6bedfaebb2af5ae580dac83072c5c75f90f496"
+              }
             }
           ]
         },
@@ -236,7 +368,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -142372,
+                "max": -138486,
+                "first": [
+                  -140843,
+                  -140843,
+                  -140843
+                ],
+                "last": [
+                  -140534,
+                  -140535,
+                  -140535
+                ],
+                "sha256": "684ec5cd126a9fb54f4d83fa878f0ffaec87cc2fb34bf118ba2a9f2b5f395a21"
+              }
             }
           ]
         }
@@ -261,9 +410,516 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": true
         }
-      ]
+      ],
+      "parameters": {
+        "optical_train": 1,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLIGHT NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 0
+          },
+          {
+            "name": "light_source.power_max_actual",
+            "kind": "quantity",
+            "value": 1033.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_max_nominal",
+            "kind": "quantity",
+            "value": 1000.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_actual",
+            "kind": "quantity",
+            "value": 101.69999694824219,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_nominal",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": "nm",
+              "unit_id": "nm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": 0.2165440022945404,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 0.6975933313369751,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.collimator_focal_length",
+            "kind": "quantity",
+            "value": 120.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.id",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.m2_major",
+            "kind": "plain",
+            "value": 1.0428166389465332
+          },
+          {
+            "name": "optics.m2_minor",
+            "kind": "plain",
+            "value": 1.0833899974822998
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "degrees",
+              "unit_id": "deg",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "metadata"
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Gaussian"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.13427996635437,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.144416570663452,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.scanner_number",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 1.1783870458602905,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_test_passed",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.thermal_lensing_threshold",
+            "kind": "quantity",
+            "value": 0.7848370671272278,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_definition",
+            "kind": "text",
+            "value": "knife-edge"
+          },
+          {
+            "name": "optics.waist_major",
+            "kind": "quantity",
+            "value": 66.72965240478516,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_minor",
+            "kind": "quantity",
+            "value": 68.12519836425781,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_offset_z",
+            "kind": "quantity",
+            "value": 0.45706865191459656,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "Aconity3D AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": -87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": 23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": "00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 50.5
+            },
+            {
+              "name": "a",
+              "value": 107.5
+            }
+          ]
+        },
+        "power_limits_not_recorded": false
+      }
     },
     {
       "key": "Laser_2",
@@ -289,7 +945,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.00976801011711359,
+                "max": 0.0317460335791111,
+                "first": [
+                  0.01953602023422718,
+                  0.021978022530674934,
+                  0.021978022530674934
+                ],
+                "last": [
+                  0.021978022530674934,
+                  0.021978022530674934,
+                  0.01953602023422718
+                ],
+                "sha256": "178ad13230c7b412217824031c2eb12c90392a0d22385824761e2908b115d0bb"
+              }
             }
           ]
         },
@@ -307,7 +980,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "ca9f3c8831d4d0b8cf7da8537df5a3e25e70f4bcaecf81a1230747debe10f519"
+              }
             }
           ]
         },
@@ -331,7 +1021,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -62894,
+                "max": -34392,
+                "first": [
+                  -62372,
+                  -62371,
+                  -62375
+                ],
+                "last": [
+                  -38813,
+                  -38820,
+                  -38841
+                ],
+                "sha256": "f98642dbeb42da2271657bbfc235621f0363941d4c464fdd1c19cd56ee2636e3"
+              }
             }
           ]
         },
@@ -355,7 +1062,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -44464,
+                "max": -25716,
+                "first": [
+                  -26501,
+                  -26500,
+                  -26501
+                ],
+                "last": [
+                  -42459,
+                  -42449,
+                  -42432
+                ],
+                "sha256": "445cbe7d9b85c8f26984338b4b98c6b1e9b35de398541fb4a4d82b4401c3a078"
+              }
             }
           ]
         },
@@ -379,7 +1103,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -142236,
+                "max": -138351,
+                "first": [
+                  -139557,
+                  -139557,
+                  -139556
+                ],
+                "last": [
+                  -140790,
+                  -140792,
+                  -140792
+                ],
+                "sha256": "2766507358536478f1b097d60e0d678117193af29254fe4186f6fc2815da944b"
+              }
             }
           ]
         },
@@ -403,7 +1144,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -63547,
+                "max": -33741,
+                "first": [
+                  -62375,
+                  -62375,
+                  -62375
+                ],
+                "last": [
+                  -39789,
+                  -39806,
+                  -39822
+                ],
+                "sha256": "659f8f98e9ba296707ce24e29dc44b717734e00935a2c66d24c241c62f59304e"
+              }
             }
           ]
         },
@@ -427,7 +1185,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -45080,
+                "max": -25082,
+                "first": [
+                  -26496,
+                  -26496,
+                  -26496
+                ],
+                "last": [
+                  -41669,
+                  -41655,
+                  -41642
+                ],
+                "sha256": "b5874d577981f8a7892a60ef0a0b1e237a42e6ebf51990efd24ca95d0d4ab514"
+              }
             }
           ]
         },
@@ -451,7 +1226,24 @@
             {
               "layer": 1,
               "state": "recorded",
-              "samples": 25000
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -142343,
+                "max": -138134,
+                "first": [
+                  -139557,
+                  -139557,
+                  -139557
+                ],
+                "last": [
+                  -140758,
+                  -140757,
+                  -140757
+                ],
+                "sha256": "25fcd2b4dd8dd516e8337da96290db014d914aea76b252651e8260e2076c67dc"
+              }
             }
           ]
         }
@@ -476,16 +1268,852 @@
               }
             }
           },
-          "expected_accuracy": "nominal"
+          "expected_accuracy": "nominal",
+          "complete": true
+        }
+      ],
+      "parameters": {
+        "optical_train": 2,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_x.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_y.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_z.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLIGHT NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 0
+          },
+          {
+            "name": "light_source.power_max_actual",
+            "kind": "quantity",
+            "value": 1015.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_max_nominal",
+            "kind": "quantity",
+            "value": 1000.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_actual",
+            "kind": "quantity",
+            "value": 100.5999984741211,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_nominal",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": "nm",
+              "unit_id": "nm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": -0.3946656584739685,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 1.5128216743469238,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.collimator_focal_length",
+            "kind": "quantity",
+            "value": 120.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.id",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.m2_major",
+            "kind": "plain",
+            "value": 1.045366644859314
+          },
+          {
+            "name": "optics.m2_minor",
+            "kind": "plain",
+            "value": 1.0698466300964355
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "degrees",
+              "unit_id": "deg",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "metadata"
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": "Gaussian"
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.2599050998687744,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.1873984336853027,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.scanner_number",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 0.19067665934562683,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_test_passed",
+            "kind": "flag",
+            "value": true
+          },
+          {
+            "name": "optics.thermal_lensing_threshold",
+            "kind": "quantity",
+            "value": 0.8059129118919373,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_definition",
+            "kind": "text",
+            "value": "knife-edge"
+          },
+          {
+            "name": "optics.waist_major",
+            "kind": "quantity",
+            "value": 68.13666534423828,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_minor",
+            "kind": "quantity",
+            "value": 68.15921783447266,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_offset_z",
+            "kind": "quantity",
+            "value": 0.5590779781341553,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "Aconity3D AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 86.0739974975586,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -21.69499969482422,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 180.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": "00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Polynomial",
+          "other": null,
+          "constants": [
+            {
+              "name": "c0",
+              "value": 10.0
+            },
+            {
+              "name": "c1",
+              "value": 5.0
+            },
+            {
+              "name": "c2",
+              "value": 0.5
+            }
+          ]
+        },
+        "power_limits_not_recorded": false
+      }
+    }
+  ],
+  "sensors": [],
+  "events": [
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "optical_axis::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 45,
+          "height": null,
+          "columns": {
+            "count": 45,
+            "first": 1792441907943842200,
+            "last": 1792441926963266200,
+            "timestamps_sha256": "54f28ec31deda1953b09ed2b328a7d5c5b99f12a2b34275e690a48269a41de65",
+            "values_sha256": "6c81020c0451a1f2633f5a4f92b68db628749e5f92a70d2f8077104ac248c608",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "platform::1::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 33,
+          "height": null,
+          "columns": {
+            "count": 33,
+            "first": 1792441908190951300,
+            "last": 1792441926963233800,
+            "timestamps_sha256": "f0143910e1fcf8c54eb732130cd9a2ff91fbffd2d413d1e06dcf6dc9de0ac045",
+            "values_sha256": "1d22a712075d247d7a23a81cb3a5388d41b4c9c42a06094626cf9c853946fed9",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Chamber",
+        "spare::analog_input::1",
+        "current_signal"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 60,
+          "height": null,
+          "columns": {
+            "count": 60,
+            "first": 1792441907703997000,
+            "last": 1792441926963803500,
+            "timestamps_sha256": "24695fd2b3b2454b59d93b3ad84456d25e7f5632442bf364ed972b6757b2e240",
+            "values_sha256": "a9608996fdf5c641e1c9c3ca9bca023ee43bc4c3d19227873f5ed6fcb7a90a07",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Chamber",
+        "weighing_scale",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 30,
+          "height": null,
+          "columns": {
+            "count": 30,
+            "first": 1792441907943739800,
+            "last": 1792441926963177600,
+            "timestamps_sha256": "e947861ba6975e7b7bd90069d2d267597fa8fcc129c81cb27df1ce3ed6720062",
+            "values_sha256": "8ac4c0a147260f3dd281a1f1cff2afa0cd2a593764af035e4ceaa4aaba38c2e8",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "deltaflow",
+        "temperature"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 46,
+          "height": null,
+          "columns": {
+            "count": 46,
+            "first": 1792441907703682300,
+            "last": 1792441926963290700,
+            "timestamps_sha256": "540b64fa6cd286adee6b7c6588d326e6fbb10078f9797a7d4f970882bff8f3ef",
+            "values_sha256": "d209186bd2e46310a85104c9c7f342dd238b6f156c4fb5381912a99ba6e8164c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "filter_sensor",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 59,
+          "height": null,
+          "columns": {
+            "count": 59,
+            "first": 1792441907943838800,
+            "last": 1792441926963271200,
+            "timestamps_sha256": "180cec12e3e76eaff97a58c9cbadc974dda2c15423be6a31b604d978c43a9fba",
+            "values_sha256": "64c3fb48dc069aad117df0cf7b04bc25bc290bd85a94a399af71da20e2c6f228",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "filter_sensor",
+        "smoothed_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 77,
+          "height": null,
+          "columns": {
+            "count": 77,
+            "first": 1792441907703662600,
+            "last": 1792441926963271200,
+            "timestamps_sha256": "82439095c008cd29f4938650418b356637255e0002643ec6648ac101f2f2063d",
+            "values_sha256": "15016fd42dc2603589ba9cd013a700268b6cd2efdbdefb26a2b31df5f0d775f3",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::inert_gas_control::pressure_valve",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 2,
+          "height": null,
+          "columns": {
+            "count": 2,
+            "first": 1792441916953669300,
+            "last": 1792441917188951000,
+            "timestamps_sha256": "ef892bb96a18b4e9a256522b7fadcd752d575a144f14de55c1f3c931459761b6",
+            "values_sha256": "0eacf4acebd7f448f7153b57a6e7542389d34f1e5818e03d90956b4c83ccaa0c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Scanners",
+        "scan_manager::scanner::1",
+        "laser_signals_enabled"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 5,
+          "height": null,
+          "columns": {
+            "count": 5,
+            "first": 1792441918700002900,
+            "last": 1792441922198661800,
+            "timestamps_sha256": "a2235b9d8aebce68f0c504529fc519dd2748a60a931aa39734a291bf04cf5da9",
+            "values_sha256": "f11736a208b0a97fcd166642bd40e7d54eca201f675071f1dda1481a3b1c42ba",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Scanners",
+        "scan_manager::scanner::2",
+        "laser_signals_enabled"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 5,
+          "height": null,
+          "columns": {
+            "count": 5,
+            "first": 1792441918700456300,
+            "last": 1792441922199134100,
+            "timestamps_sha256": "74688a9e4690c35c4da0093f21d729dc0173072f3ff634afe0fd069a5054a98a",
+            "values_sha256": "f11736a208b0a97fcd166642bd40e7d54eca201f675071f1dda1481a3b1c42ba",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "run",
+      "path": [
+        "RunState"
+      ],
+      "data_type": null,
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 11,
+          "height": null,
+          "columns": {
+            "count": 11,
+            "first": 1792441907799000000,
+            "last": 1792441927239000000,
+            "timestamps_sha256": "31695a3e18c2381f331cfc0b18db8269b7234d7c173078731bc62fe0a5da55d6",
+            "values_sha256": "e48f85b4dd5c1f7f2b0f41e7291c16612e4c7cf721c108a32f1a8fd72f8be396",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
         }
       ]
     }
   ],
-  "sensors": [],
+  "validation": {
+    "findings": [],
+    "counts": {
+      "notes": 0,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 1,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 2,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 16,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
   "notes": [
     "Times are the integers the file holds, in no unit the file states (decision D02-19).",
     "The build date is the string as written (phase 2E was dropped).",
     "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
-    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
+    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16)."
   ]
 }

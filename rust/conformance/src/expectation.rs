@@ -115,3 +115,11 @@ pub(crate) fn array<'a>(value: &'a Value, key: &str) -> Result<&'a Vec<Value>, S
         .as_array()
         .ok_or_else(|| format!("`{key}` is not a list"))
 }
+
+pub(crate) fn opt_bool(value: &Value, key: &str) -> Result<Option<bool>, String> {
+    match value.get(key) {
+        None | Some(Value::Null) => Ok(None),
+        Some(Value::Bool(b)) => Ok(Some(*b)),
+        Some(_) => Err(format!("`{key}` is not true, false or null")),
+    }
+}

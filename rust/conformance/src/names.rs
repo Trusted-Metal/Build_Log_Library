@@ -1,8 +1,12 @@
 //! The words of the expectation files and the CDM types they stand for, in both directions.
 
 use build_log_model::{
-    Accuracy, Axis, ChannelDType, ChannelKind, ClockClass, EnumLabels, NumericType, Presence,
+    Accuracy, Axis, ChannelDType, ChannelKind, ClockClass, EnumLabels, EquationKind, EventDataType,
+    EventKind, GalvoProtocol, JoinStatus, NumericType, Origin, Outcome, Presence,
 };
+use serde_json::Value;
+
+use crate::expectation::opt_text;
 
 pub(crate) fn axis_from(name: &str) -> Result<Axis, String> {
     match name {
@@ -44,6 +48,17 @@ pub(crate) fn kind_to(kind: &ChannelKind) -> (String, Option<String>) {
         ChannelKind::Image => ("Image".to_string(), None),
         ChannelKind::Other(name) => (format!("Other({name})"), None),
         _ => ("an unknown kind".to_string(), None),
+    }
+}
+
+/// The origin that an expectation names (IP-07 phase 7A): the two that a laser's stream can carry, by the names of the library's variants.
+pub(crate) fn origin_from(name: &str) -> Result<Origin, String> {
+    match name {
+        "LongestChannel" => Ok(Origin::LongestChannel),
+        "NullDataspace" => Ok(Origin::NullDataspace),
+        other => Err(format!(
+            "`{other}` is not an origin that an expectation names"
+        )),
     }
 }
 
@@ -108,5 +123,104 @@ pub(crate) fn presence_to(presence: &Presence) -> (String, Option<u64>) {
         Presence::RecordedEmpty => ("recorded_empty".to_string(), Some(0)),
         Presence::NotRecorded => ("not_recorded".to_string(), None),
         _ => ("an unknown state".to_string(), None),
+    }
+}
+
+/// The build's outcome as an expectation file says it: `null` is not recorded; otherwise the name the oracle has for the status text, or the text as written.
+pub(crate) fn outcome_from(status: Option<&Value>) -> Result<Outcome, String> {
+    let Some(status) = status.filter(|v| !v.is_null()) else {
+        return Ok(Outcome::NotRecorded);
+    };
+    match (
+        opt_text(status, "named")?.as_deref(),
+        opt_text(status, "other")?,
+    ) {
+        (Some("Complete"), _) => Ok(Outcome::Complete),
+        (Some("InProgress"), _) => Ok(Outcome::InProgress),
+        (Some(other), _) => Err(format!("`{other}` is not an outcome")),
+        (None, Some(text)) => Ok(Outcome::Other(text)),
+        (None, None) => Err("a status has neither a name nor a text".to_string()),
+    }
+}
+
+/// The status of the OPC UA join as an expectation file says it: `null` is none.
+pub(crate) fn join_status_from(status: Option<&Value>) -> Result<Option<JoinStatus>, String> {
+    let Some(status) = status.filter(|v| !v.is_null()) else {
+        return Ok(None);
+    };
+    match (
+        opt_text(status, "named")?.as_deref(),
+        opt_text(status, "other")?,
+    ) {
+        (Some("Complete"), _) => Ok(Some(JoinStatus::Complete)),
+        (Some(other), _) => Err(format!("`{other}` is not a join status")),
+        (None, Some(text)) => Ok(Some(JoinStatus::Other(text))),
+        (None, None) => Err("a status has neither a name nor a text".to_string()),
+    }
+}
+
+/// A galvo's protocol as an expectation file says it: the name the oracle has for the text, or the text as written.
+pub(crate) fn protocol_from(
+    named: Option<String>,
+    other: Option<String>,
+) -> Result<GalvoProtocol, String> {
+    match (named.as_deref(), other) {
+        (Some("Sl2100"), _) => Ok(GalvoProtocol::Sl2100),
+        (Some("Xy2100"), _) => Ok(GalvoProtocol::Xy2100),
+        (Some(name), _) => Err(format!("`{name}` is not a protocol")),
+        (None, Some(text)) => Ok(GalvoProtocol::Other(text)),
+        (None, None) => Err("a protocol has neither a name nor a text".to_string()),
+    }
+}
+
+/// The kind of an equation as an expectation file says it.
+pub(crate) fn equation_kind_from(
+    kind: &str,
+    other: Option<String>,
+) -> Result<EquationKind, String> {
+    match (kind, other) {
+        ("Linear", _) => Ok(EquationKind::Linear),
+        ("Polynomial", _) => Ok(EquationKind::Polynomial),
+        ("Other", Some(text)) => Ok(EquationKind::Other(text)),
+        (kind, _) => Err(format!("`{kind}` is not a kind of equation")),
+    }
+}
+
+/// The kind of an event series as an expectation file spells it.
+pub(crate) fn event_kind_from(kind: &str) -> Result<EventKind, String> {
+    match kind {
+        "sensor" => Ok(EventKind::Sensor),
+        "task" => Ok(EventKind::Task),
+        "run" => Ok(EventKind::Run),
+        other => Err(format!("`{other}` is not a kind of event")),
+    }
+}
+
+/// The kind of an event series as an expectation file spells it.
+pub(crate) fn event_kind_to(kind: &EventKind) -> String {
+    match kind {
+        EventKind::Sensor => "sensor".to_string(),
+        EventKind::Task => "task".to_string(),
+        EventKind::Run => "run".to_string(),
+        EventKind::Other(name) => format!("other: {name}"),
+        _ => "an unknown kind".to_string(),
+    }
+}
+
+/// The type a series declares, as an expectation file spells it: the word that is known, or the text as written.
+pub(crate) fn event_type_from(declared: &str) -> EventDataType {
+    match declared {
+        "Double" => EventDataType::Double,
+        "Boolean" => EventDataType::Boolean,
+        other => EventDataType::Other(other.to_string()),
+    }
+}
+
+pub(crate) fn event_type_to(declared: &EventDataType) -> String {
+    match declared {
+        EventDataType::Double => "Double".to_string(),
+        EventDataType::Boolean => "Boolean".to_string(),
+        EventDataType::Other(text) => text.clone(),
+        _ => "an unknown type".to_string(),
     }
 }

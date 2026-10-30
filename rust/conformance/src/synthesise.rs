@@ -5,13 +5,19 @@
 
 use build_log_model::{
     BuildIdentity, BuildMeta, ByLayer, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind,
-    ClockClass, EnumLabels, LaserKey, LaserLayerMeta, LaserMeta, LayerId, LayerMeta, Presence,
-    Quantity, TimeAxis, TimeValue, TimeWindow, Unit, UnitSource,
+    ClockClass, EnumLabels, EventPart, EventSeries, ImageFormat, LaserKey, LaserLayerMeta,
+    LaserMeta, LayerId, LayerMeta, Presence, Quantity, TimeAxis, TimeValue, TimeWindow, Unit,
+    UnitSource,
 };
 use serde_json::Value;
 
-use crate::expectation::{array, field, float, int, opt_int, opt_text, text, Expectation};
-use crate::names::{accuracy_from, clock_from, kind_from, numeric_from};
+use crate::expectation::{
+    array, field, float, int, opt_bool, opt_int, opt_text, text, Expectation,
+};
+use crate::names::{
+    accuracy_from, clock_from, event_kind_from, event_type_from, join_status_from, kind_from,
+    numeric_from, origin_from, outcome_from,
+};
 
 /// Builds the CDM that an expectation file describes.
 pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
@@ -29,6 +35,10 @@ pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
         source_mcf_hash: opt_text(identity, "source_mcf_hash")?,
     });
     meta.layers_declared = opt_int(build, "layers_declared")?;
+    meta.quality.outcome = outcome_from(build.get("outcome"))?;
+    let provenance = field(build, "provenance")?;
+    meta.provenance.opcua_join_status = join_status_from(provenance.get("opcua_join_status"))?;
+    meta.provenance.opcua_join_version = opt_text(provenance, "opcua_join_version")?;
     if let Some(thickness) = build.get("layer_thickness").filter(|v| !v.is_null()) {
         let spelling = opt_text(field(thickness, "unit")?, "spelling")?;
         meta.layer_thickness = Some(Quantity::from_file(
@@ -83,6 +93,9 @@ pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
     for sensor in array(root, "sensors")? {
         meta.sensors.push(sensor_from(sensor)?);
     }
+    for series in array(root, "events")? {
+        meta.events.push(series_from(series)?);
+    }
     Ok(meta)
 }
 
@@ -97,7 +110,9 @@ fn presence_of(entry: &Value) -> Result<Presence, String> {
 fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
     let key = LaserKey::new(text(laser, "key")?, int(laser, "number")? as u32);
     let mut meta = LaserMeta::new(key);
+    meta.parameters = crate::parameters::synthesise(laser.get("parameters"))?;
 
+    let mut channel_origins: Vec<(LayerId, String, String)> = Vec::new();
     for channel in array(laser, "channels")? {
         let kind = kind_from(
             text(channel, "kind")?,
@@ -130,7 +145,12 @@ fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
         }
         let mut presence = ByLayer::new();
         for entry in array(channel, "layers")? {
-            presence.insert(LayerId(int(entry, "layer")? as u32), presence_of(entry)?);
+            let id = LayerId(int(entry, "layer")? as u32);
+            presence.insert(id, presence_of(entry)?);
+            // D07-2: a channel that is empty because its dataspace is null says so, on the laser's entry for the layer (made below)
+            if let Some(origin) = opt_text(entry, "origin")? {
+                channel_origins.push((id, format!("channel {source_name}"), origin));
+            }
         }
         meta.channels.push(descriptor.with_presence(presence));
     }
@@ -141,6 +161,16 @@ fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
             continue;
         }
         let mut layer = LaserLayerMeta::new(presence);
+        layer.complete = opt_bool(entry, "complete")?;
+        // D07-1: the origin of the stored samples where the channels of the stream differ in length
+        if let Some(name) = opt_text(entry, "stored_samples_origin")? {
+            layer.origins.record("stored_samples", origin_from(&name)?);
+        }
+        for (id, field, name) in &channel_origins {
+            if i64::from(id.0) == int(entry, "layer")? {
+                layer.origins.record(field.clone(), origin_from(name)?);
+            }
+        }
         if let Some(inputs) = entry.get("time_axis_inputs").filter(|v| !v.is_null()) {
             let mut axis =
                 TimeAxis::new().with_accuracy(accuracy_from(text(entry, "expected_accuracy")?)?);
@@ -176,13 +206,25 @@ fn sensor_from(sensor: &Value) -> Result<ChannelDescriptor, String> {
     } else {
         ChannelKind::Sensor
     };
-    // the expectation says a sensor's identity, presence, unit and clock class and nothing else (decision D02-16), so the type is any
-    let mut descriptor = ChannelDescriptor::new(
-        ChannelKey::new([text(sensor, "name")?]),
-        kind,
-        clock,
-        ChannelDType::Numeric(build_log_model::NumericType::F64),
-    );
+    let key = ChannelKey::new([text(sensor, "name")?]);
+    let mut descriptor = match sensor.get("image").filter(|v| !v.is_null()) {
+        // a camera channel that says its frame (IP-13 phase 13F)
+        Some(image) => ChannelDescriptor::image(
+            key,
+            ImageFormat::new(
+                int(image, "rows")? as u64,
+                int(image, "columns")? as u64,
+                numeric_from(text(image, "pixel")?)?,
+            ),
+        ),
+        // the expectation says a sensor's identity, presence, unit and clock class and nothing else (decision D02-16), so the type is any
+        None => ChannelDescriptor::new(
+            key,
+            kind,
+            clock,
+            ChannelDType::Numeric(build_log_model::NumericType::F64),
+        ),
+    };
     let unit = field(sensor, "unit")?;
     if let Some(spelling) = opt_text(unit, "spelling")? {
         let parsed = Unit::parse(&spelling);
@@ -202,4 +244,41 @@ fn sensor_from(sensor: &Value) -> Result<ChannelDescriptor, String> {
         presence.insert(LayerId(id as u32), Presence::from_count(1));
     }
     Ok(descriptor.with_presence(presence))
+}
+
+/// An event series as an expectation describes it, with the places it was recorded.
+fn series_from(series: &Value) -> Result<EventSeries, String> {
+    let path: Vec<String> = array(series, "path")?
+        .iter()
+        .map(|p| {
+            p.as_str()
+                .map(str::to_string)
+                .ok_or_else(|| "a part of a path is not text".to_string())
+        })
+        .collect::<Result<_, _>>()?;
+    let mut built = EventSeries::new(event_kind_from(text(series, "kind")?)?, path).with_interval(
+        series
+            .get("interval")
+            .and_then(Value::as_bool)
+            .unwrap_or(false),
+    );
+    if let Some(declared) = opt_text(series, "data_type")? {
+        built = built.with_data_type(event_type_from(&declared));
+    }
+    for place in array(series, "parts")? {
+        let mut part = EventPart::new(int(place, "records")? as u64);
+        if let Some(height) = place.get("height").and_then(Value::as_f64) {
+            part = part.with_height(Quantity::from_file(height, None));
+        }
+        match field(place, "assignment")? {
+            Value::String(word) if word == "unassigned" => built.no_layer = Some(part),
+            other => {
+                let id = other.as_u64().ok_or_else(|| {
+                    "an assignment is neither `unassigned` nor a layer id".to_string()
+                })?;
+                built.layers.insert(LayerId(id as u32), part);
+            }
+        }
+    }
+    Ok(built)
 }

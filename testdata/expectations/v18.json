@@ -25,6 +25,11 @@
         "unit_id": "mm",
         "source": "FromFile"
       }
+    },
+    "outcome": null,
+    "provenance": {
+      "opcua_join_status": null,
+      "opcua_join_version": null
     }
   },
   "layers": [
@@ -298,7 +303,8 @@
             "stored_samples": 25000,
             "sample_period": null
           },
-          "expected_accuracy": "unknown"
+          "expected_accuracy": "unknown",
+          "complete": null
         },
         {
           "layer": 2,
@@ -310,9 +316,11 @@
             "stored_samples": 25000,
             "sample_period": null
           },
-          "expected_accuracy": "unknown"
+          "expected_accuracy": "unknown",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": null
     },
     {
       "key": "Laser_2",
@@ -556,7 +564,8 @@
             "stored_samples": 25000,
             "sample_period": null
           },
-          "expected_accuracy": "unknown"
+          "expected_accuracy": "unknown",
+          "complete": null
         },
         {
           "layer": 2,
@@ -568,9 +577,11 @@
             "stored_samples": 25000,
             "sample_period": null
           },
-          "expected_accuracy": "unknown"
+          "expected_accuracy": "unknown",
+          "complete": null
         }
-      ]
+      ],
+      "parameters": null
     }
   ],
   "sensors": [
@@ -1108,10 +1119,49 @@
       }
     }
   ],
+  "events": [],
+  "validation": {
+    "findings": [],
+    "counts": {
+      "notes": 0,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 2,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 4,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 32,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
   "notes": [
     "Times are the integers the file holds, in no unit the file states (decision D02-19).",
     "The build date is the string as written (phase 2E was dropped).",
     "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
-    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered."
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4)."
   ]
 }

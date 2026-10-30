@@ -4,31 +4,45 @@
 //! the CDM must show, not how an adapter reads it, so any adapter of any version is held to the same facts.
 
 use build_log_model::{
-    BuildMeta, ChannelDescriptor, ChannelKey, LaserMeta, LayerId, Origin, Presence, Quantity,
-    Renderability, TimeAxis, TimeValue, Unit, UnitSource,
+    BuildMeta, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind, LaserMeta, LayerId,
+    Origin, Presence, Quantity, Renderability, TimeAxis, TimeValue, Unit, UnitSource,
 };
 use serde_json::Value;
 
-use crate::expectation::{array, field, int, opt_int, opt_text, text, Expectation};
-use crate::names::{accuracy_to, dtype_to, kind_from, kind_to, presence_to};
+use crate::expectation::{array, field, int, opt_bool, opt_int, opt_text, text, Expectation};
+use crate::names::{
+    accuracy_to, dtype_to, event_kind_to, event_type_to, join_status_from, kind_from, kind_to,
+    numeric_from, origin_from, outcome_from, presence_to,
+};
 
 /// One part of the whole check. An adapter that is built in steps asserts the parts it implements so far (IP-13 decision D13-9); [`check`] is all of them.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum Part {
-    /// The identity of the build, the declared layer count and the build's layer thickness.
+    /// The identity of the build, the declared layer count, the build's layer thickness, its outcome and its provenance.
     Build,
     /// The layers the file holds: their ids, times and thickness.
     Layers,
-    /// The lasers: their presence in each layer, time axes and channels.
+    /// The lasers: their presence in each layer, `complete` flags, time axes and channels.
     Lasers,
-    /// The build-level sensors.
+    /// The parameter snapshot of each laser: its values by name, its equation and whether the power limits are not recorded as numbers.
+    Parameters,
+    /// The build-level sensors and the camera images.
     Sensors,
+    /// The OPC UA event series: their kinds, paths and types, and where each was recorded, with the number of records.
+    Events,
 }
 
 impl Part {
     /// Every part, in the order that [`check`] reports them.
-    pub const ALL: [Part; 4] = [Part::Build, Part::Layers, Part::Lasers, Part::Sensors];
+    pub const ALL: [Part; 6] = [
+        Part::Build,
+        Part::Layers,
+        Part::Lasers,
+        Part::Parameters,
+        Part::Sensors,
+        Part::Events,
+    ];
 }
 
 /// Every way in which `meta` does not conform to `expectation`. Empty when it conforms.
@@ -47,7 +61,7 @@ pub fn check_parts(meta: &BuildMeta, expectation: &Expectation, parts: &[Part]) 
 }
 
 /// Notes a disagreement when `actual` is not `expected`.
-fn same<T: PartialEq + std::fmt::Debug>(
+pub(crate) fn same<T: PartialEq + std::fmt::Debug>(
     found: &mut Vec<String>,
     what: &str,
     actual: T,
@@ -74,15 +88,45 @@ fn run(
     if parts.contains(&Part::Lasers) {
         lasers(meta, array(root, "lasers")?, found)?;
     }
+    if parts.contains(&Part::Parameters) {
+        for laser in array(root, "lasers")? {
+            let number = int(laser, "number")? as u32;
+            if let Some(actual) = meta.lasers().iter().find(|l| l.key.number == number) {
+                crate::parameters::check_laser(actual, laser.get("parameters"), found)?;
+            }
+        }
+    }
     if parts.contains(&Part::Sensors) {
         sensors(meta, array(root, "sensors")?, found)?;
+    }
+    if parts.contains(&Part::Events) {
+        events(meta, array(root, "events")?, found)?;
     }
     Ok(())
 }
 
-/// The build level: the identity, the declared layer count and the build's layer thickness.
+/// The build level: the identity, the declared layer count, the build's layer thickness, its outcome and its provenance.
 fn build_level(meta: &BuildMeta, build: &Value, found: &mut Vec<String>) -> Result<(), String> {
     identity(meta, field(build, "identity")?, found)?;
+    same(
+        found,
+        "the build's outcome",
+        meta.quality.outcome.clone(),
+        outcome_from(build.get("outcome"))?,
+    );
+    let provenance = field(build, "provenance")?;
+    same(
+        found,
+        "the status of the OPC UA join",
+        meta.provenance.opcua_join_status.clone(),
+        join_status_from(provenance.get("opcua_join_status"))?,
+    );
+    same(
+        found,
+        "the version of the OPC UA join",
+        meta.provenance.opcua_join_version.clone(),
+        opt_text(provenance, "opcua_join_version")?,
+    );
     same(
         found,
         "the declared layer count",
@@ -172,7 +216,7 @@ fn identity(meta: &BuildMeta, expected: &Value, found: &mut Vec<String>) -> Resu
 }
 
 /// A unit against `{spelling, unit_id, source}`.
-fn unit(
+pub(crate) fn unit(
     found: &mut Vec<String>,
     what: &str,
     actual: &Unit,
@@ -364,6 +408,21 @@ fn laser_layers(
             presence_to(&actual.presence),
             wanted_state,
         );
+        same(
+            found,
+            &what("its complete flag"),
+            actual.complete,
+            opt_bool(entry, "complete")?,
+        );
+        // D07-1: where the channels of the stream differ in length, its stored samples carry the origin `LongestChannel`; where they agree there is none
+        same(
+            found,
+            &what("where its stored samples came from"),
+            actual.origins.get("stored_samples").cloned(),
+            opt_text(entry, "stored_samples_origin")?
+                .map(|name| origin_from(&name))
+                .transpose()?,
+        );
         let Some(inputs) = entry.get("time_axis_inputs").filter(|v| !v.is_null()) else {
             continue;
         };
@@ -542,6 +601,22 @@ fn channels(laser: &LaserMeta, expected: &[Value], found: &mut Vec<String>) -> R
             actual_presence,
             wanted,
         );
+        // D07-2: a channel that is recorded and empty because its dataspace is null has the origin `NullDataspace`, on the laser's entry for the layer; every other channel has none there
+        let source = text(channel, "source_name")?;
+        for e in array(channel, "layers")? {
+            let id = LayerId(int(e, "layer")? as u32);
+            same(
+                found,
+                &what(&format!("where it came from in layer {id}")),
+                laser
+                    .layers
+                    .get(id)
+                    .and_then(|entry| entry.origins.get(&format!("channel {source}")).cloned()),
+                opt_text(e, "origin")?
+                    .map(|name| origin_from(&name))
+                    .transpose()?,
+            );
+        }
     }
     for channel in &laser.channels {
         if !matched.iter().any(|m| std::ptr::eq(*m, channel)) {
@@ -586,6 +661,30 @@ fn sensors(meta: &BuildMeta, expected: &[Value], found: &mut Vec<String>) -> Res
             actual.unit_source,
             field(sensor, "unit")?,
         )?;
+        // a camera channel says the frame it holds: the rows, the columns and the type of a pixel (IP-13 phase 13F). A sensor whose expectation has no image
+        // description says nothing about its type (decision D02-16).
+        if let Some(image) = sensor.get("image").filter(|v| !v.is_null()) {
+            same(
+                found,
+                &what("its kind"),
+                actual.kind.clone(),
+                ChannelKind::Image,
+            );
+            let format = match &actual.dtype {
+                ChannelDType::Image(format) => Some((format.rows, format.columns, format.pixel)),
+                _ => None,
+            };
+            same(
+                found,
+                &what("its image format (rows, columns, pixel)"),
+                format,
+                Some((
+                    int(image, "rows")? as u64,
+                    int(image, "columns")? as u64,
+                    numeric_from(text(image, "pixel")?)?,
+                )),
+            );
+        }
         let wanted_layers: Vec<u32> = array(sensor, "layers")?
             .iter()
             .filter_map(Value::as_u64)
@@ -606,6 +705,95 @@ fn sensors(meta: &BuildMeta, expected: &[Value], found: &mut Vec<String>) -> Res
                 .iter()
                 .all(|(_, p)| matches!(p, Presence::Recorded { .. })),
             true,
+        );
+    }
+    Ok(())
+}
+
+/// The places an expectation gives for a series, as (where, records, height): `unassigned` for the bucket that no layer owns, and the layer's id otherwise.
+fn expected_parts(series: &Value) -> Result<Vec<(String, u64, Option<f64>)>, String> {
+    let mut parts = Vec::new();
+    for part in array(series, "parts")? {
+        let assignment = match field(part, "assignment")? {
+            Value::String(text) => text.clone(),
+            other => other.as_u64().map(|id| id.to_string()).ok_or_else(|| {
+                "an assignment is neither `unassigned` nor a layer id".to_string()
+            })?,
+        };
+        parts.push((
+            assignment,
+            int(part, "records")? as u64,
+            part.get("height").and_then(Value::as_f64),
+        ));
+    }
+    Ok(parts)
+}
+
+/// The OPC UA event series: the series themselves (by kind and path), then each one's declared type, its interval and the places it was recorded.
+fn events(meta: &BuildMeta, expected: &[Value], found: &mut Vec<String>) -> Result<(), String> {
+    let name_of = |kind: String, path: &[String]| format!("{kind} {}", path.join("/"));
+    let mut wanted: Vec<String> = Vec::new();
+    for series in expected {
+        let path: Vec<String> = array(series, "path")?
+            .iter()
+            .filter_map(|p| p.as_str().map(str::to_string))
+            .collect();
+        wanted.push(name_of(text(series, "kind")?.to_string(), &path));
+    }
+    let mut actual: Vec<String> = meta
+        .events
+        .iter()
+        .map(|s| name_of(event_kind_to(&s.kind), &s.path))
+        .collect();
+    actual.sort();
+    wanted.sort();
+    same(found, "the event series (kind and path)", actual, wanted);
+    for series in expected {
+        let path: Vec<String> = array(series, "path")?
+            .iter()
+            .filter_map(|p| p.as_str().map(str::to_string))
+            .collect();
+        let kind = text(series, "kind")?;
+        let Some(actual) = meta
+            .events
+            .iter()
+            .find(|s| event_kind_to(&s.kind) == kind && s.path == path)
+        else {
+            continue;
+        };
+        let what = |part: &str| format!("event {kind} {}, {part}", path.join("/"));
+        same(
+            found,
+            &what("its declared type"),
+            actual.data_type.as_ref().map(event_type_to),
+            opt_text(series, "data_type")?,
+        );
+        same(
+            found,
+            &what("whether each record is an interval"),
+            actual.interval,
+            opt_bool(series, "interval")?.unwrap_or(false),
+        );
+        let mut places: Vec<(String, u64, Option<f64>)> = Vec::new();
+        if let Some(part) = &actual.no_layer {
+            places.push((
+                "unassigned".to_string(),
+                part.records,
+                part.height.as_ref().map(|h| h.value),
+            ));
+        }
+        for (id, part) in actual.layers.iter() {
+            places.push((
+                id.0.to_string(),
+                part.records,
+                part.height.as_ref().map(|h| h.value),
+            ));
+        }
+        same(
+            found,
+            &what("where it was recorded, with the records and the height"),
+            places,
+            expected_parts(series)?,
         );
     }
     Ok(())
