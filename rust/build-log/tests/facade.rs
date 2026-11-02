@@ -259,6 +259,49 @@ fn availability_and_findings_through_the_facade_alone() {
 }
 
 #[test]
+fn build_context_through_the_facade_alone() {
+    // the machine, the starting height and the build plate of tauri's current output (IP-02 phase 2V), asked for with the facade's own types: the plate in three dimensions with their units, the
+    // thickness and weight that the file wrote as 0 and that are not recorded, and the build's origins that say so
+    let opened = open(miniature_path(miniature::V17_MOCK)).expect("the mock capture opens");
+    let build = opened.source().build().expect("the metadata");
+    let plate = &build.context.plate;
+    assert_eq!(plate.x.as_ref().map(|q| q.value), Some(250.0));
+    assert_eq!(
+        plate.x.as_ref().map(|q| q.unit.spelling.as_deref()),
+        Some(Some("mm"))
+    );
+    assert!(plate.dimension.is_none() && plate.thickness.is_none() && plate.weight.is_none());
+    assert_eq!(build.context.recoat_direction.as_deref(), Some("X+"));
+    assert_eq!(
+        build
+            .origins
+            .get(&build_log::BuildContext::origin_name("plate")),
+        Some(&build_log::Origin::Other(
+            build_log::PLATE_AS_AXES.to_string()
+        ))
+    );
+    assert_eq!(
+        build
+            .origins
+            .get(&build_log::BuildContext::origin_name("plate.thickness")),
+        Some(&build_log::Origin::PlaceholderDropped { raw: "0.0".into() })
+    );
+    // every value by its name, as a consumer lists them, without knowing what a file calls any of them
+    let names: Vec<String> = build.context.values().into_iter().map(|(n, _)| n).collect();
+    assert!(
+        names.contains(&"machine_serial".to_string()) && names.contains(&"plate.x".to_string())
+    );
+    // a file of the other vocabulary says its own, and has none of the first's values
+    let older = open(miniature_path(miniature::V17_OCT15)).expect("the 2026-10-15 file opens");
+    let older = older.source().build().expect("the metadata");
+    assert_eq!(
+        older.context.plate.dimension.as_ref().map(|q| q.value),
+        Some(280.0)
+    );
+    assert!(older.context.plate.x.is_none());
+}
+
+#[test]
 fn a_frame_region_of_the_images_file_reads_through_the_facade_alone() {
     // the camera frames of a real file (IP-06 phase 6G), asked for with the facade's own types: discovery says which image channel there is, its format and its layers, and one request reads a rectangle
     let opened =

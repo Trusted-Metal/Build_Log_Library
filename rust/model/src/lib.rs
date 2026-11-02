@@ -1,10 +1,7 @@
-//! Plain Rust types mirroring the Build Log HDF5 schema.
+//! The Common Data Model of the Build Log Library: plain Rust types for a build, its layers, lasers and channels, and the requests that reach their samples.
 //!
-//! Types here are derived empirically from a reference fixture
-//! (`fixtures/reference_build_log_opcua_and_clearbox_sensors.h5`) rather
-//! than a pre-existing spec. See `docs/models/derivation.md` for the
-//! fixture-path-to-type mapping, and treat these shapes as pre-peer-review
-//! until noted otherwise.
+//! The types are version-neutral: the adapter of each file version fills them, and no type names a group or an attribute of any file. `docs/models/cdm.md`
+//! has the map of the modules and the rules for changing them, and the shapes stay provisional until the first consumers have read them.
 //!
 //! * **Layer:** the Model, the bottom of the library. Plain data types, no I/O.
 //! * **May depend on:** no other crate of this workspace (in tests only: `build-log-testkit`), and **no HDF5**. It must build for `wasm32`.
@@ -12,13 +9,13 @@
 
 #![forbid(unsafe_code)]
 
-// The Common Data Model (IP-02): one module per concept, in the layout of the plan's Appendix A. They are empty until the phases that fill them; consumers
-// never name a module, because every public type is re-exported from the crate root (BL-AR-03). The policy guards in `tests/policy_guards.rs` read each of
-// these files.
+// The Common Data Model (IP-02): one module per concept, in the layout of the plan's Appendix A. Consumers never name a module, because every public type is
+// re-exported from the crate root (BL-AR-03). The policy guards in `tests/policy_guards.rs` read each of these files.
 mod availability;
 mod capabilities;
 mod channel;
 mod column;
+mod context;
 mod error;
 mod event_columns;
 mod events;
@@ -34,14 +31,6 @@ mod time;
 mod units;
 mod validation;
 
-// The pre-cleanup types, shaped like the V18 file and holding whole `Vec`s. They leave in IP-02 phase 2T; the policy guards skip these five files, and the
-// list of them in the guards may only get shorter.
-mod build;
-mod by_layer;
-mod corrections;
-mod laser;
-mod sensor;
-
 // The Common Data Model, re-exported from the root: consumers never name a module (BL-AR-03).
 pub use availability::{
     availability_of, AvailabilityCounts, AvailabilityReport, Item, ItemAvailability, ItemKind,
@@ -55,6 +44,7 @@ pub use column::{
     BuildSource, CacheStats, CancelToken, ColumnData, ColumnRange, ColumnRequest, ColumnSource,
     InMemorySource, Precision, ProgressSink, ReadContext, Revision, Shared, CANCEL_CHECK_INTERVAL,
 };
+pub use context::{BuildContext, BuildPlate, PLATE_AS_AXES, PLATE_AS_DIMENSION};
 pub use error::{Error, ErrorClass, ErrorKind, Location, Violation};
 pub use event_columns::{EventColumns, EventPlace, EventRequest, TypedValues};
 pub use events::{EventDataType, EventKind, EventPart, EventSeries};
@@ -79,16 +69,4 @@ pub use time::{
 pub use units::{parse_embedded, Dimension, Quantity, Unit, UnitSource};
 pub use validation::{
     validate_build, Finding, FindingCode, Severity, ValidationCounts, ValidationReport,
-};
-
-// The pre-cleanup types (see above). Their `ByLayer` keeps its old name inside the crate and is exported as `LegacyByLayer` until phase 2T, because the CDM's
-// `ByLayer` (keyed by `LayerId`) has the root name.
-pub use build::Build;
-pub use by_layer::ByLayer as LegacyByLayer;
-pub use corrections::{
-    CalibrationCurve, CorrectionFile, Corrections, EquationConstant, InverseCorrectionGrid,
-};
-pub use laser::{Laser, LaserMonitoringLayer};
-pub use sensor::{
-    EventRecord, GrayscaleImage, ImagePair, OpcUaReading, Sensor, SensorCalibration, SensorKind,
 };

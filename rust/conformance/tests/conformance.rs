@@ -889,6 +889,7 @@ fn the_parts_together_equal_the_whole() {
                         Part::Parameters,
                         Part::Lasers,
                         Part::Layers,
+                        Part::Context,
                         Part::Build
                     ]
                 ),

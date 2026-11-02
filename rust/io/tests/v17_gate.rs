@@ -155,6 +155,20 @@ fn nothing_in_the_images_file_is_dropped() {
     nothing_in_a_file_is_dropped(miniature::V17_2026_08_18_IMAGES);
 }
 
+/// The other four V17 miniatures (phase 13M, criterion 8 of the read half): the mock capture, the 2026-10-15 build, the March build and the special-layer file. Together with the two
+/// above this is **every V17 miniature, each held to the same walk**, so that a row of the inventory that a flavor carries and no phase typed or kept shows here.
+#[test]
+fn nothing_in_the_other_v17_files_is_dropped() {
+    for file in [
+        miniature::V17_MOCK,
+        miniature::V17_OCT15,
+        miniature::V17_MARCH,
+        miniature::V17_SPECIAL_LAYERS,
+    ] {
+        nothing_in_a_file_is_dropped(file);
+    }
+}
+
 fn nothing_in_a_file_is_dropped(file: &str) {
     let path = miniature_path(file);
     let build = build_of(file);
@@ -186,8 +200,9 @@ fn nothing_in_a_file_is_dropped(file: &str) {
             walk(&file.group(top).unwrap(), top, &mut nodes, &mut attributes);
         }
     }
+    // a floor that shows the walk looked at the file and not at nothing: the smallest of the six miniatures (the mock capture) has 78 nodes
     assert!(
-        nodes.len() > 100,
+        nodes.len() > 50,
         "the walk found only {} nodes: it looked at too little",
         nodes.len()
     );
@@ -197,6 +212,8 @@ fn nothing_in_a_file_is_dropped(file: &str) {
     let mut typed_nodes: BTreeSet<String> = [mount_path.clone(), monitoring_path.clone()].into();
     let mut typed_attributes: BTreeSet<(String, String)> = layout::TYPED_ON_THE_MOUNT
         .iter()
+        .copied()
+        .chain(layout::context_attributes())
         .map(|a| (mount_path.clone(), a.to_string()))
         .collect();
     let mut kept_nodes: BTreeSet<String> = BTreeSet::new();

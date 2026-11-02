@@ -21,10 +21,12 @@
 //!   so they do not change what is written here.
 
 use crate::channel::ChannelDescriptor;
+use crate::context::BuildContext;
+use crate::error::{Error, ErrorKind, Violation};
 use crate::events::EventSeries;
 use crate::extra::Extra;
 use crate::identity::{ByLayer, LaserKey, LayerId, Presence};
-use crate::params::LaserParameters;
+use crate::params::{LaserParameters, ParameterValue};
 use crate::provenance::{Origin, Origins, Provenance};
 use crate::quality::QualityRecord;
 use crate::time::{TimeAxis, TimeValue};
@@ -89,7 +91,7 @@ impl LayerMeta {
         unit: Option<&str>,
         placeholders: &[f64],
     ) {
-        self.actual_thickness = thickness_from_file(
+        self.actual_thickness = quantity_or_placeholder(
             &mut self.origins,
             "actual_thickness",
             value,
@@ -106,7 +108,7 @@ impl LayerMeta {
         unit: Option<&str>,
         placeholders: &[f64],
     ) {
-        self.commanded_thickness = thickness_from_file(
+        self.commanded_thickness = quantity_or_placeholder(
             &mut self.origins,
             "commanded_thickness",
             value,
@@ -116,8 +118,8 @@ impl LayerMeta {
     }
 }
 
-/// A thickness that a file gave, or nothing and an origin if the value is a placeholder.
-fn thickness_from_file(
+/// A quantity that a file gave, or nothing and an origin if the value is a placeholder: the one place that says what a placeholder is dropped as (the layer thicknesses and the build's context).
+fn quantity_or_placeholder(
     origins: &mut Origins,
     field: &str,
     value: f64,
@@ -224,6 +226,8 @@ pub struct BuildMeta {
     pub quality: QualityRecord,
     /// What was done to the data after capture, as its file says: the OPC UA join (decision J14).
     pub provenance: Provenance,
+    /// What the build carries beyond its identity: the machine, the material, the starting height and the build plate (IP-02 phase 2V, decisions D02-20 and D02-21).
+    pub context: BuildContext,
     pub origins: Origins,
     /// What the adapter did not type of the build.
     pub extra: Extra,
@@ -241,6 +245,7 @@ impl BuildMeta {
             events: Vec::new(),
             quality: QualityRecord::new(),
             provenance: Provenance::new(),
+            context: BuildContext::new(),
             origins: Origins::new(),
             extra: Extra::new(),
             lasers: Vec::new(),
@@ -269,6 +274,31 @@ impl BuildMeta {
                 self.lasers.insert(at, laser);
                 None
             }
+        }
+    }
+
+    /// Sets a quantity of the build's context from the value a file gave, **by the rule of the layer thickness** (J4, decision D02-21): a value that is one of `placeholders` (what that
+    /// version's writer writes when it does not know, and that is not a possible value of the field) is not a value: the field stays absent and the build's origin for the name
+    /// ([`BuildContext::origin_name`]) is `PlaceholderDropped` with the raw spelling. Which values are placeholders is the adapter's knowledge of its version, so the adapter passes them.
+    /// A name that is not a quantity of the context is refused.
+    pub fn set_context_quantity_from_file(
+        &mut self,
+        name: &str,
+        value: f64,
+        unit: Option<&str>,
+        placeholders: &[f64],
+    ) -> Result<(), Error> {
+        if !BuildContext::is_a_quantity(name) {
+            return Err(Error::new(ErrorKind::ValidationError {
+                violations: vec![Violation::new(format!(
+                    "`{name}` is not a quantity of the context"
+                ))],
+            }));
+        }
+        let field = BuildContext::origin_name(name);
+        match quantity_or_placeholder(&mut self.origins, &field, value, unit, placeholders) {
+            Some(quantity) => self.context.set(name, ParameterValue::Quantity(quantity)),
+            None => Ok(()),
         }
     }
 
@@ -411,6 +441,48 @@ mod tests {
         let mut other = LayerMeta::new(LayerId(4));
         other.set_actual_thickness_from_file(1.0, None, &[0.0]);
         assert_eq!(other.actual_thickness.as_ref().map(|t| t.value), Some(1.0));
+    }
+
+    #[test]
+    fn a_context_quantity_that_is_a_placeholder_is_not_recorded_and_keeps_its_raw_value() {
+        let mut build = BuildMeta::new(identity());
+        // V17 writes 0 for a plate's thickness when it does not know it
+        build
+            .set_context_quantity_from_file("plate.thickness", 0.0, None, &[0.0])
+            .expect("a quantity of the context");
+        assert!(build.context.plate.thickness.is_none());
+        assert_eq!(
+            build.origins.get("context.plate.thickness"),
+            Some(&Origin::PlaceholderDropped { raw: "0.0".into() })
+        );
+        // the same value is a value where the version does not use it as a placeholder (a starting height of 0 is possible), and a real value says nothing
+        build
+            .set_context_quantity_from_file("starting_height", 0.0, None, &[])
+            .expect("a quantity of the context");
+        assert_eq!(
+            build.context.starting_height.as_ref().map(|q| q.value),
+            Some(0.0)
+        );
+        assert_eq!(build.origins.get("context.starting_height"), None);
+        build
+            .set_context_quantity_from_file("plate.x", 250.0, Some("mm"), &[0.0])
+            .expect("a quantity of the context");
+        assert!(build.context.plate.x.as_ref().unwrap().unit.is_known());
+        assert_eq!(build.origins.get("context.plate.x"), None);
+    }
+
+    #[test]
+    fn a_context_name_that_is_not_a_quantity_is_refused_even_for_a_placeholder_value() {
+        let mut build = BuildMeta::new(identity());
+        assert!(build
+            .set_context_quantity_from_file("machine_serial", 0.0, None, &[0.0])
+            .is_err());
+        assert!(build
+            .set_context_quantity_from_file("plate.depth", 1.0, None, &[])
+            .is_err());
+        // nothing was said of either
+        assert!(build.context.is_empty());
+        assert!(build.origins.is_empty());
     }
 
     #[test]

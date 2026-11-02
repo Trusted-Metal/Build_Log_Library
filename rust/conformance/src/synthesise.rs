@@ -39,6 +39,7 @@ pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
     let provenance = field(build, "provenance")?;
     meta.provenance.opcua_join_status = join_status_from(provenance.get("opcua_join_status"))?;
     meta.provenance.opcua_join_version = opt_text(provenance, "opcua_join_version")?;
+    crate::context::synthesise(build.get("context"), &mut meta)?;
     if let Some(thickness) = build.get("layer_thickness").filter(|v| !v.is_null()) {
         let spelling = opt_text(field(thickness, "unit")?, "spelling")?;
         meta.layer_thickness = Some(Quantity::from_file(

@@ -7,6 +7,7 @@
 use build_log_model::{BuildIdentity, BuildMeta, Error, JoinStatus, Outcome, Quantity};
 use hdf5::Group;
 
+use super::context;
 use super::events::Events;
 use super::layers::read_layers_with;
 use super::layout;
@@ -40,7 +41,10 @@ pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
     build.provenance.opcua_join_status =
         optional_text(mount, layout::OPCUA_JOIN_STATUS)?.map(join_status_of);
     build.provenance.opcua_join_version = optional_text(mount, layout::OPCUA_JOIN_VERSION)?;
-    keep_other_attributes(mount, &layout::TYPED_ON_THE_MOUNT, &mut build.extra)?;
+    // the machine, the material, the starting height and the build plate (IP-02 phase 2V): what is typed leaves `extra`, and what could not be read stays in it
+    let mut typed: Vec<&str> = layout::TYPED_ON_THE_MOUNT.to_vec();
+    typed.extend(context::read(mount, &mut build));
+    keep_other_attributes(mount, &typed, &mut build.extra)?;
     let mut events = Events::new();
     read_layers_with(mount, &mut build, &mut events)?;
     let trains = parameters::read_all(mount, &mut build)?;

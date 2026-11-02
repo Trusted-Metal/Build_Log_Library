@@ -23,6 +23,73 @@
     "provenance": {
       "opcua_join_status": null,
       "opcua_join_version": null
+    },
+    "context": {
+      "values": [
+        {
+          "name": "machine_serial",
+          "kind": "text",
+          "value": "XXXXXXXX"
+        },
+        {
+          "name": "material_parameter_id",
+          "kind": "text",
+          "value": "na"
+        },
+        {
+          "name": "plate.shape",
+          "kind": "text",
+          "value": "Square"
+        },
+        {
+          "name": "plate.thickness",
+          "kind": "quantity",
+          "value": 19.0,
+          "unit": {
+            "spelling": null,
+            "unit_id": null,
+            "source": "Unknown"
+          }
+        },
+        {
+          "name": "plate.weight",
+          "kind": "quantity",
+          "value": 10.0,
+          "unit": {
+            "spelling": null,
+            "unit_id": null,
+            "source": "Unknown"
+          }
+        },
+        {
+          "name": "recoater_blade",
+          "kind": "text",
+          "value": "Soft"
+        },
+        {
+          "name": "scanner_id",
+          "kind": "text",
+          "value": "XXXXXXXX"
+        },
+        {
+          "name": "starting_height",
+          "kind": "quantity",
+          "value": 0.0,
+          "unit": {
+            "spelling": null,
+            "unit_id": null,
+            "source": "Unknown"
+          }
+        }
+      ],
+      "dropped": [
+        {
+          "name": "plate.dimension",
+          "raw": "0.0"
+        }
+      ],
+      "plate_vocabulary": "dimension",
+      "plate_origin": "plate: one dimension and a shape"
     }
   },
   "layers": [
@@ -2065,6 +2132,7 @@
     "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
     "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
     "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The build's context lists each attribute the file has by the CDM's name, as written (D02-20); a quantity has the unit of its companion attribute where the file has one and an unknown unit otherwise; a value that is the placeholder of the version is not recorded and is listed under `dropped` with its raw spelling (V17: 0 for the plate's thickness, weight and dimension; V16: 1.0 for the starting height, thickness and weight); a starting height of 0 and a dimension of 280 are recorded as written; the plate vocabulary the file uses is stated (D02-21).",
     "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
     "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16)."
   ]

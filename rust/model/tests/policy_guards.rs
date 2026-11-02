@@ -13,18 +13,19 @@
 //!
 //! The scanner reads the source of the crate as text. It needs no parser (the crate must stay free of dependencies) because the rules are about the
 //! lines above a type, its derives, its fields and the names it uses. Each rule is also run on source made to break it, so a guard that stopped
-//! looking would be noticed. The five files of the pre-cleanup types are skipped until phase 2T removes them.
+//! looking would be noticed. The pre-cleanup types that held whole `Vec`s were removed in phase 2T, so every file of the crate is a module below.
 
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 
 /// The modules of the Common Data Model (IP-02 Appendix A). Each is a file in `src/`, and each is scanned.
-const CDM_MODULES: [&str; 18] = [
+const CDM_MODULES: [&str; 19] = [
     "availability",
     "capabilities",
     "channel",
     "column",
+    "context",
     "error",
     "event_columns",
     "events",
@@ -41,9 +42,27 @@ const CDM_MODULES: [&str; 18] = [
     "validation",
 ];
 
-/// The pre-cleanup types: shaped like the V18 file, holding whole `Vec`s. They leave in phase 2T (task T02.23), and these guards do not apply to them.
-/// **This list may only get shorter**: `every_source_file_is_a_cdm_module_or_a_legacy_one` fails for a file that is on neither list.
-const LEGACY_MODULES: [&str; 5] = ["build", "by_layer", "corrections", "laser", "sensor"];
+/// The modules and types of the pre-cleanup model, shaped like the V18 file and holding whole `Vec`s. They were removed in phase 2T (task T02.23, decision
+/// D02-23) and `old_vec_bearing_types_are_gone` keeps them out: no file of these names, no `mod` line for them, no root export of the types.
+const REMOVED_MODULES: [&str; 5] = ["build", "by_layer", "corrections", "laser", "sensor"];
+const REMOVED_TYPES: [&str; 16] = [
+    "Build",
+    "LegacyByLayer",
+    "CalibrationCurve",
+    "CorrectionFile",
+    "Corrections",
+    "EquationConstant",
+    "InverseCorrectionGrid",
+    "Laser",
+    "LaserMonitoringLayer",
+    "EventRecord",
+    "GrayscaleImage",
+    "ImagePair",
+    "OpcUaReading",
+    "Sensor",
+    "SensorCalibration",
+    "SensorKind",
+];
 
 const NUMERIC: [&str; 14] = [
     "u8", "u16", "u32", "u64", "u128", "usize", "i8", "i16", "i32", "i64", "i128", "isize", "f32",
@@ -867,7 +886,7 @@ fn every_module_of_appendix_a_exists_and_states_its_rule() {
 }
 
 #[test]
-fn every_source_file_is_a_cdm_module_or_a_legacy_one() {
+fn every_source_file_is_a_cdm_module() {
     let mut present: BTreeSet<String> = fs::read_dir(src_dir())
         .expect("src can be listed")
         .filter_map(|e| e.ok())
@@ -875,21 +894,47 @@ fn every_source_file_is_a_cdm_module_or_a_legacy_one() {
         .filter_map(|n| n.strip_suffix(".rs").map(str::to_string))
         .collect();
     assert!(present.remove("lib"), "src/lib.rs exists");
-    let known: BTreeSet<String> = CDM_MODULES
-        .iter()
-        .chain(LEGACY_MODULES.iter())
-        .map(|s| s.to_string())
-        .collect();
+    let known: BTreeSet<String> = CDM_MODULES.iter().map(|s| s.to_string()).collect();
     let unknown: Vec<_> = present.difference(&known).collect();
     assert!(
         unknown.is_empty(),
-        "these source files are neither a module of Appendix A nor on the legacy list, so no guard would read them: {unknown:?}"
+        "these source files are not a module of Appendix A, so no guard would read them: {unknown:?}"
     );
     let gone: Vec<_> = known.difference(&present).collect();
     assert!(
         gone.is_empty(),
-        "these modules are listed but their files are gone (take legacy files off LEGACY_MODULES when phase 2T removes them): {gone:?}"
+        "these modules are listed but their files are gone: {gone:?}"
     );
+}
+
+#[test]
+fn old_vec_bearing_types_are_gone() {
+    let lib = fs::read_to_string(src_dir().join("lib.rs")).expect("lib.rs");
+    for module in REMOVED_MODULES {
+        assert!(
+            !src_dir().join(format!("{module}.rs")).exists(),
+            "{module}.rs is back: the pre-cleanup types were removed in phase 2T"
+        );
+        assert!(
+            !lib.lines().any(|l| l.trim() == format!("mod {module};")),
+            "lib.rs declares `mod {module};` again"
+        );
+    }
+    // a name is exported only by a `pub use` line, so look at those and at nothing else (a word in a comment is not an export)
+    let exports: Vec<&str> = lib
+        .lines()
+        .map(str::trim)
+        .filter(|l| !l.starts_with("//"))
+        .collect();
+    let exported = exports.join(" ");
+    for name in REMOVED_TYPES {
+        let word = |c: char| !(c.is_alphanumeric() || c == '_');
+        let found = exported.split(word).any(|w| w == name);
+        assert!(
+            !found,
+            "lib.rs exports `{name}`, a pre-cleanup type that phase 2T removed (D02-23)"
+        );
+    }
 }
 
 // ---------------------------------------------------------------- the guards are checked: source made to break each rule

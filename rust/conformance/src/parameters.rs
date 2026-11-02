@@ -102,7 +102,8 @@ pub(crate) fn check_laser(
     Ok(())
 }
 
-fn value_against(
+/// One value of an expectation (`{name, kind, value, unit}`) against the value that was found. The parameters and the build's context list their values the same way.
+pub(crate) fn value_against(
     what: &str,
     actual: &ParameterValue,
     expected: &Value,
@@ -164,6 +165,30 @@ fn expected_constants(equation: &Value) -> Result<Vec<(String, f64)>, String> {
     Ok(list)
 }
 
+/// The value that one entry of an expectation (`{name, kind, value, unit}`) describes, as the public calls an adapter uses make it.
+pub(crate) fn value_from(entry: &Value) -> Result<ParameterValue, String> {
+    Ok(match text(entry, "kind")? {
+        "quantity" => {
+            let spelling = opt_text(field(entry, "unit")?, "spelling")?;
+            ParameterValue::Quantity(Quantity::from_file(
+                float(entry, "value")?,
+                spelling.as_deref(),
+            ))
+        }
+        "plain" => ParameterValue::Plain(float(entry, "value")?),
+        "whole" => ParameterValue::Whole(int(entry, "value")?),
+        "flag" => ParameterValue::Flag(
+            opt_bool(entry, "value")?.ok_or_else(|| "a flag has no value".to_string())?,
+        ),
+        "text" => ParameterValue::Text(text(entry, "value")?.to_string()),
+        "protocol" => ParameterValue::Protocol(protocol_from(
+            opt_text(entry, "named")?,
+            opt_text(entry, "other")?,
+        )?),
+        other => return Err(format!("`{other}` is not a kind of parameter")),
+    })
+}
+
 /// The snapshot an expectation describes, built with the public calls an adapter uses.
 pub(crate) fn synthesise(expected: Option<&Value>) -> Result<Option<LaserParameters>, String> {
     let Some(expected) = expected.filter(|v| !v.is_null()) else {
@@ -172,26 +197,7 @@ pub(crate) fn synthesise(expected: Option<&Value>) -> Result<Option<LaserParamet
     let mut parameters = LaserParameters::new();
     parameters.optical_train_number = Some(int(expected, "optical_train")? as u32);
     for entry in array(expected, "values")? {
-        let value = match text(entry, "kind")? {
-            "quantity" => {
-                let spelling = opt_text(field(entry, "unit")?, "spelling")?;
-                ParameterValue::Quantity(Quantity::from_file(
-                    float(entry, "value")?,
-                    spelling.as_deref(),
-                ))
-            }
-            "plain" => ParameterValue::Plain(float(entry, "value")?),
-            "whole" => ParameterValue::Whole(int(entry, "value")?),
-            "flag" => ParameterValue::Flag(
-                opt_bool(entry, "value")?.ok_or_else(|| "a flag has no value".to_string())?,
-            ),
-            "text" => ParameterValue::Text(text(entry, "value")?.to_string()),
-            "protocol" => ParameterValue::Protocol(protocol_from(
-                opt_text(entry, "named")?,
-                opt_text(entry, "other")?,
-            )?),
-            other => return Err(format!("`{other}` is not a kind of parameter")),
-        };
+        let value = value_from(entry)?;
         parameters
             .set(text(entry, "name")?, value)
             .map_err(|e| e.to_string())?;

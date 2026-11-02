@@ -6,9 +6,7 @@
 
 use build_log_conformance::{check, expectations_dir, Expectation};
 use build_log_io::dispatch::{open, production};
-use build_log_model::{
-    AttrValue, BuildMeta, ExtraAttribute, LaserKey, LaserMeta, LayerId, Presence, StoredClass,
-};
+use build_log_model::{AttrValue, BuildMeta, LaserKey, LaserMeta, LayerId, Presence, StoredClass};
 use build_log_testkit::{miniature, miniature_path};
 use hdf5::types::TypeDescriptor;
 
@@ -40,10 +38,6 @@ fn path(parts: &[&str]) -> Vec<String> {
     parts.iter().map(|p| p.to_string()).collect()
 }
 
-fn attribute<'a>(build: &'a BuildMeta, name: &str) -> Option<&'a ExtraAttribute> {
-    build.extra.attribute(name)
-}
-
 // ---------------------------------------------------------------- the current flavor: the mock capture and the 2026-10-15 build
 
 #[test]
@@ -73,37 +67,6 @@ fn the_2026_10_15_file_conforms_with_its_second_laser_recorded_empty() {
     // recorded and empty is not "not recorded": the group is there, with its own times, and holds no samples
     assert_eq!(second.presence, Presence::RecordedEmpty);
     assert!(second.time_axis.window.is_some());
-}
-
-#[test]
-fn a_different_plate_vocabulary_is_kept_in_extra() {
-    // the older vocabulary: one dimension and a shape; the newer one: three dimensions, a corner radius and a unit beside each. Neither is typed (it is not in
-    // the slice); each file keeps its own, as written, and not the other's
-    let older = build_of(miniature::V17_OCT15);
-    assert_eq!(
-        attribute(&older, "Build_Plate_Dimensions").map(|a| &a.value),
-        Some(&AttrValue::Float(vec![280.0]))
-    );
-    assert_eq!(
-        attribute(&older, "Build_Plate_Shape").map(|a| &a.value),
-        Some(&AttrValue::Text(vec!["Square".into()]))
-    );
-    assert!(attribute(&older, "Build_Plate_X_Dimension").is_none());
-
-    let newer = build_of(miniature::V17_MOCK);
-    for (name, value) in [
-        ("Build_Plate_X_Dimension", 250.0),
-        ("Build_Plate_Y_Dimension", 250.0),
-        ("Build_Plate_Z_Dimension", 20.0),
-        ("Build_Plate_Corner_Radius", 125.0),
-    ] {
-        assert_eq!(
-            attribute(&newer, name).map(|a| &a.value),
-            Some(&AttrValue::Float(vec![value])),
-            "{name}"
-        );
-    }
-    assert!(attribute(&newer, "Build_Plate_Dimensions").is_none());
 }
 
 // ---------------------------------------------------------------- the March flavor

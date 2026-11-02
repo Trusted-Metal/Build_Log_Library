@@ -260,3 +260,142 @@ pub const TYPED_ON_THE_MOUNT: [&str; 11] = [
     OPCUA_JOIN_STATUS,
     OPCUA_JOIN_VERSION,
 ];
+
+// ---------------------------------------------------------------- the build's context (IP-02 phase 2V; decisions D02-20 and D02-21)
+
+/// The machine's serial number (text).
+pub const MACHINE_SERIAL: &str = "Machine_Serial";
+/// The scanner's identifier (text).
+pub const SCANNER_ID: &str = "Scanner_ID";
+/// The identifier of the material's parameter set (text; empty in tauri's files, `na` in the March build).
+pub const PARAMETER_ID_FOR_MATERIAL: &str = "Parameter_ID_For_Material";
+/// The kind of recoater blade (text).
+pub const RECOATER_BLADE_TYPE: &str = "Recoater_Blade_Type";
+/// The direction of the gas flow (text, `Y+`). Only tauri's current output has it.
+pub const GAS_FLOW_DIRECTION: &str = "Gas_Flow_Direction";
+/// The direction of the recoater's travel (text, `X+`). Only tauri's current output has it.
+pub const RECOAT_DIRECTION: &str = "Recoat_Direction";
+/// The height the build starts at (a number; no file states its unit).
+pub const STARTING_HEIGHT: &str = "Starting_Height";
+/// The older vocabulary of the build plate: its shape (text, `Square`).
+pub const BUILD_PLATE_SHAPE: &str = "Build_Plate_Shape";
+/// The older vocabulary: the plate's one dimension (a number; no file states its unit).
+pub const BUILD_PLATE_DIMENSIONS: &str = "Build_Plate_Dimensions";
+/// The current vocabulary: the plate's three dimensions and its corner radius, each with the attribute that holds its unit.
+pub const BUILD_PLATE_X_DIMENSION: &str = "Build_Plate_X_Dimension";
+pub const BUILD_PLATE_X_DIMENSION_UNIT: &str = "Build_Plate_X_Dimension_unit";
+pub const BUILD_PLATE_Y_DIMENSION: &str = "Build_Plate_Y_Dimension";
+pub const BUILD_PLATE_Y_DIMENSION_UNIT: &str = "Build_Plate_Y_Dimension_unit";
+pub const BUILD_PLATE_Z_DIMENSION: &str = "Build_Plate_Z_Dimension";
+pub const BUILD_PLATE_Z_DIMENSION_UNIT: &str = "Build_Plate_Z_Dimension_unit";
+pub const BUILD_PLATE_CORNER_RADIUS: &str = "Build_Plate_Corner_Radius";
+pub const BUILD_PLATE_CORNER_RADIUS_UNIT: &str = "Build_Plate_Corner_Radius_unit";
+/// Both vocabularies: the plate's thickness and its weight (numbers; no file states their unit).
+pub const BUILD_PLATE_THICKNESS: &str = "Build_Plate_Thickness";
+pub const BUILD_PLATE_WEIGHT: &str = "Build_Plate_Weight";
+
+/// What kind of value an attribute of the context holds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ContextKind {
+    /// Text, as written.
+    Text,
+    /// A number, whether the file stored it as a float or as an integer, with the unit that its companion attribute states, if it has one.
+    Quantity,
+}
+
+/// The attributes of the mount that make the build's context: the attribute, the name the CDM gives its value, its kind, and the attribute that holds its unit (a quantity with none has
+/// an unknown unit). The adapter says which attribute holds which name and nothing else: the Model maps a name to a field.
+pub const CONTEXT: [(&str, &str, ContextKind, Option<&str>); 15] = [
+    (MACHINE_SERIAL, "machine_serial", ContextKind::Text, None),
+    (SCANNER_ID, "scanner_id", ContextKind::Text, None),
+    (
+        PARAMETER_ID_FOR_MATERIAL,
+        "material_parameter_id",
+        ContextKind::Text,
+        None,
+    ),
+    (
+        RECOATER_BLADE_TYPE,
+        "recoater_blade",
+        ContextKind::Text,
+        None,
+    ),
+    (
+        GAS_FLOW_DIRECTION,
+        "gas_flow_direction",
+        ContextKind::Text,
+        None,
+    ),
+    (
+        RECOAT_DIRECTION,
+        "recoat_direction",
+        ContextKind::Text,
+        None,
+    ),
+    (
+        STARTING_HEIGHT,
+        "starting_height",
+        ContextKind::Quantity,
+        None,
+    ),
+    (BUILD_PLATE_SHAPE, "plate.shape", ContextKind::Text, None),
+    (
+        BUILD_PLATE_DIMENSIONS,
+        "plate.dimension",
+        ContextKind::Quantity,
+        None,
+    ),
+    (
+        BUILD_PLATE_X_DIMENSION,
+        "plate.x",
+        ContextKind::Quantity,
+        Some(BUILD_PLATE_X_DIMENSION_UNIT),
+    ),
+    (
+        BUILD_PLATE_Y_DIMENSION,
+        "plate.y",
+        ContextKind::Quantity,
+        Some(BUILD_PLATE_Y_DIMENSION_UNIT),
+    ),
+    (
+        BUILD_PLATE_Z_DIMENSION,
+        "plate.z",
+        ContextKind::Quantity,
+        Some(BUILD_PLATE_Z_DIMENSION_UNIT),
+    ),
+    (
+        BUILD_PLATE_CORNER_RADIUS,
+        "plate.corner_radius",
+        ContextKind::Quantity,
+        Some(BUILD_PLATE_CORNER_RADIUS_UNIT),
+    ),
+    (
+        BUILD_PLATE_THICKNESS,
+        "plate.thickness",
+        ContextKind::Quantity,
+        None,
+    ),
+    (
+        BUILD_PLATE_WEIGHT,
+        "plate.weight",
+        ContextKind::Quantity,
+        None,
+    ),
+];
+
+/// Every attribute of the mount that the context types: each value's attribute, and the attribute of each unit. The build level does not keep them in `extra`.
+pub fn context_attributes() -> Vec<&'static str> {
+    CONTEXT
+        .iter()
+        .flat_map(|(attribute, _, _, unit)| std::iter::once(*attribute).chain(*unit))
+        .collect()
+}
+
+/// What V17's writers write for a value of the context when they do not know it, and that is not a possible value of the field (J4, decision D02-21), by the CDM's name: tauri writes `0` for a
+/// plate's thickness and weight, and the March build writes `0.0` for its dimension; no plate has none. **A starting height of `0` is possible and is recorded, and a dimension of `280`
+/// (tauri's older output) cannot be told from a real plate, so neither is here**: one line of this table changes it, if tauri confirms that the 280 was hard-coded.
+pub const CONTEXT_PLACEHOLDERS: [(&str, f64); 3] = [
+    ("plate.thickness", 0.0),
+    ("plate.weight", 0.0),
+    ("plate.dimension", 0.0),
+];

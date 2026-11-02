@@ -82,12 +82,12 @@ fn every_lib_rs_states_its_layer_and_what_it_may_depend_on() {
 fn the_facade_reexports_the_model_at_its_root() {
     // the same type, not a copy: a value built through the facade is accepted where the Model's own type is expected
     assert_eq!(
-        std::any::TypeId::of::<build_log::Build>(),
-        std::any::TypeId::of::<build_log_model::Build>()
+        std::any::TypeId::of::<build_log::BuildMeta>(),
+        std::any::TypeId::of::<build_log_model::BuildMeta>()
     );
     assert_eq!(
-        std::any::TypeId::of::<build_log::Laser>(),
-        std::any::TypeId::of::<build_log_model::Laser>()
+        std::any::TypeId::of::<build_log::LaserMeta>(),
+        std::any::TypeId::of::<build_log_model::LaserMeta>()
     );
 }
 

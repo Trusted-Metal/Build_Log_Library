@@ -27,6 +27,7 @@
 
 mod check;
 mod columns;
+mod context;
 mod event_columns;
 mod expectation;
 mod image_regions;

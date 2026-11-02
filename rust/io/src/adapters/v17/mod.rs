@@ -11,6 +11,7 @@
 //! * **It never names another version's module** (BL-VA-05; `tests/adapter_isolation.rs`).
 
 pub mod columns;
+mod context;
 mod event_columns;
 pub mod events;
 mod image_regions;

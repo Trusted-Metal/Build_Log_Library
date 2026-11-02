@@ -281,8 +281,11 @@ fn nothing_on_the_mount_is_dropped_by_the_build_level() {
     let file = hdf5::File::open(gate_path()).expect("the file");
     let mount = file.group(layout::MOUNT).expect("the mount");
     let on_the_mount: BTreeSet<String> = mount.attr_names().unwrap().into_iter().collect();
+    // what the build level types: its own attributes, and the context's (IP-02 phase 2V)
     let typed: BTreeSet<String> = layout::TYPED_ON_THE_MOUNT
         .iter()
+        .copied()
+        .chain(layout::context_attributes())
         .map(|s| s.to_string())
         .collect();
     let kept: BTreeSet<String> = build
@@ -290,9 +293,11 @@ fn nothing_on_the_mount_is_dropped_by_the_build_level() {
         .attributes()
         .map(|(name, _)| name.to_string())
         .collect();
+    // the test looks at something: the mount has attributes and the build level types some of them. **Since phase 2V the gate file types every attribute of its mount** (the identity, the
+    // outcome and the context), so nothing of it is kept here; what is kept is held by the files that carry more (the March build, in `v17_gate.rs`) and by the made file below
     assert!(
-        on_the_mount.len() > typed.len(),
-        "the mount has more attributes than the build level types"
+        !on_the_mount.is_empty() && !typed.is_disjoint(&on_the_mount),
+        "the mount has attributes that the build level types"
     );
     // an attribute is typed or kept, and never both; the marker is the version itself and is typed
     assert!(
@@ -312,16 +317,27 @@ fn nothing_on_the_mount_is_dropped_by_the_build_level() {
     // the marker is the version itself: it chose this adapter and is not kept as data that a conversion would carry to another version
     assert!(on_the_mount.contains(layout::MARKER));
     assert!(build.extra.attribute(layout::MARKER).is_none());
-    // a kept attribute keeps the form it was stored in: a number that is an array of one is not turned into a scalar
-    let height = build
+    // a kept attribute keeps the form it was stored in: a number that is an array of one is not turned into a scalar (an attribute that no phase types, made for the purpose: the gate
+    // file's mount has none left since phase 2V)
+    let kept = with_mount(
+        "kept-form",
+        |mount| {
+            put_array(mount, layout::MARKER, &[17i32]);
+            put_text(mount, layout::BUILD_ID, "a build");
+            put_array(mount, "A_Setting", &[1.5f32]);
+            common::monitoring(mount);
+        },
+        |mount| v17::read::read_build(mount).expect("the build level"),
+    );
+    let setting = kept
         .extra
-        .attribute("Starting_Height")
+        .attribute("A_Setting")
         .expect("an attribute that the build level does not type");
-    assert!(matches!(height.value, AttrValue::Float(ref v) if v.len() == 1));
-    assert_eq!(height.stored_as.class, StoredClass::Float);
-    assert_eq!(height.stored_as.bits, Some(32));
-    assert_eq!(height.stored_as.shape, AttrShape::Array { elements: 1 });
-    assert!(height.issue.is_none());
+    assert!(matches!(setting.value, AttrValue::Float(ref v) if v.len() == 1));
+    assert_eq!(setting.stored_as.class, StoredClass::Float);
+    assert_eq!(setting.stored_as.bits, Some(32));
+    assert_eq!(setting.stored_as.shape, AttrShape::Array { elements: 1 });
+    assert!(setting.issue.is_none());
 }
 
 // ---------------------------------------------------------------- samples (phase 13L)

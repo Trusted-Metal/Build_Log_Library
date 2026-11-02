@@ -15,8 +15,6 @@
 //! `ColumnSource::read_events`, with the request and the result of the module `event_columns` (IP-06 phase 6F). Nothing here decodes a value: a V17 file holds them as
 //! text and the library keeps them so.
 //!
-//! The pre-cleanup `EventRecord` (module `sensor`) keeps its name until phase 2T retires it, so the new types are named for the series.
-//!
 //! The policy guards in `tests/policy_guards.rs` scan this file from now on: every enum is `#[non_exhaustive]` or says `// closed: <reason>`, every public struct
 //! says `// constructed-by: producer|library|caller-options` and follows that rule, and none holds bulk data.
 

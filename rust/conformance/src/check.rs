@@ -21,6 +21,8 @@ use crate::names::{
 pub enum Part {
     /// The identity of the build, the declared layer count, the build's layer thickness, its outcome and its provenance.
     Build,
+    /// The build's context: the machine, the material, the starting height and the build plate, each value by name, the placeholders that are not recorded, and the plate vocabulary.
+    Context,
     /// The layers the file holds: their ids, times and thickness.
     Layers,
     /// The lasers: their presence in each layer, `complete` flags, time axes and channels.
@@ -35,8 +37,9 @@ pub enum Part {
 
 impl Part {
     /// Every part, in the order that [`check`] reports them.
-    pub const ALL: [Part; 6] = [
+    pub const ALL: [Part; 7] = [
         Part::Build,
+        Part::Context,
         Part::Layers,
         Part::Lasers,
         Part::Parameters,
@@ -81,6 +84,9 @@ fn run(
     let root = expectation.root();
     if parts.contains(&Part::Build) {
         build_level(meta, field(root, "build")?, found)?;
+    }
+    if parts.contains(&Part::Context) {
+        crate::context::check(meta, field(root, "build")?.get("context"), found)?;
     }
     if parts.contains(&Part::Layers) {
         layers(meta, array(root, "layers")?, found)?;
