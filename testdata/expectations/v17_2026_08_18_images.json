@@ -1,0 +1,4593 @@
+{
+  "expectations_version": 1,
+  "about": "What the CDM must show for this miniature. Written by bl_fixtures.expectations from the miniature alone; never edited by hand.",
+  "miniature": {
+    "file": "v17_2026_08_18_images.h5",
+    "sha256": "be510775b0dd7fcb004820033320e809d41a310313a5768fb7df6d24b1b387c2"
+  },
+  "file_version": 17,
+  "build": {
+    "identity": {
+      "build_id": "XXXXXXX",
+      "date": "2026-08-18 16:48:25 UTC+00:00",
+      "username": "XXXX",
+      "alloy": "",
+      "part_count": 1,
+      "project_id": null,
+      "source_mcf_name": null,
+      "source_mcf_hash": null
+    },
+    "layers_declared": 3,
+    "layer_thickness": {
+      "value": 0.029999999329447746,
+      "unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      }
+    },
+    "outcome": {
+      "text": "complete",
+      "named": "Complete",
+      "other": null
+    },
+    "provenance": {
+      "opcua_join_status": {
+        "text": "complete",
+        "named": "Complete",
+        "other": null
+      },
+      "opcua_join_version": "2"
+    },
+    "context": {
+      "values": [
+        {
+          "name": "machine_serial",
+          "kind": "text",
+          "value": ""
+        },
+        {
+          "name": "material_parameter_id",
+          "kind": "text",
+          "value": ""
+        },
+        {
+          "name": "plate.dimension",
+          "kind": "quantity",
+          "value": 280.0,
+          "unit": {
+            "spelling": null,
+            "unit_id": null,
+            "source": "Unknown"
+          }
+        },
+        {
+          "name": "plate.shape",
+          "kind": "text",
+          "value": "Square"
+        },
+        {
+          "name": "recoater_blade",
+          "kind": "text",
+          "value": "Standard"
+        },
+        {
+          "name": "scanner_id",
+          "kind": "text",
+          "value": "XXXXXXXX"
+        },
+        {
+          "name": "starting_height",
+          "kind": "quantity",
+          "value": 0.0,
+          "unit": {
+            "spelling": null,
+            "unit_id": null,
+            "source": "Unknown"
+          }
+        }
+      ],
+      "dropped": [
+        {
+          "name": "plate.thickness",
+          "raw": "0.0"
+        },
+        {
+          "name": "plate.weight",
+          "raw": "0.0"
+        }
+      ],
+      "plate_vocabulary": "dimension",
+      "plate_origin": "plate: one dimension and a shape"
+    }
+  },
+  "layers": [
+    {
+      "id": 1,
+      "start": 1787071705620,
+      "end": 1787071738579,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    },
+    {
+      "id": 2,
+      "start": 1787071738604,
+      "end": 1787071772013,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    },
+    {
+      "id": 3,
+      "start": 1787071772040,
+      "end": 1787071805795,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "0.0"
+      }
+    }
+  ],
+  "lasers": [
+    {
+      "key": "Laser_1",
+      "number": 1,
+      "channels": [
+        {
+          "source_name": "Laser_Power",
+          "kind": "LaserPower",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "F32"
+          },
+          "enum_labels": null,
+          "stored_as": "F32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "V",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.012210012413561344,
+                "max": 2.0805861949920654,
+                "first": [
+                  0.02442002482712269,
+                  0.014652014710009098,
+                  0.01953602023422718
+                ],
+                "last": [
+                  2.0439560413360596,
+                  2.0415141582489014,
+                  2.0439560413360596
+                ],
+                "sha256": "7d10a1c9e9d84ca44fb6a934999f0c1e81a927f2811195e331f0722448fd9e26"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.012210012413561344,
+                "max": 2.07570219039917,
+                "first": [
+                  0.01953602023422718,
+                  0.01953602023422718,
+                  0.01953602023422718
+                ],
+                "last": [
+                  2.0537240505218506,
+                  2.058608055114746,
+                  2.0512821674346924
+                ],
+                "sha256": "12ca3ff3cc6d7095b7c25533a08b6c610d45c3f6f2419076c7fe950bf7ae07a5"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.012210012413561344,
+                "max": 2.0732600688934326,
+                "first": [
+                  0.01953602023422718,
+                  0.01953602023422718,
+                  0.02442002482712269
+                ],
+                "last": [
+                  2.039072036743164,
+                  2.039072036743164,
+                  2.0415141582489014
+                ],
+                "sha256": "a484fea323e8f5a4eb6123d2da5b89d2a4bddc56bc21c6144538f922a2452cf9"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Laser_State",
+          "kind": "LaserState",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": "Enum",
+          "enum_labels": "unknown",
+          "stored_as": "U8",
+          "unit": null,
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  0,
+                  0,
+                  0
+                ],
+                "sha256": "630480531e4cb677eb0660db268d3c5ce4136c6d44d4d4c51a5802f21e31693e"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "132b9bf34ae01c1d9f59c1439628ac66916a8218938651b418c8d5e5bef66f3d"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  0,
+                  0,
+                  0
+                ],
+                "sha256": "e1919f5131e664e2b4aecb25d08dd584a2b6e84ac7fd2582dfcdefea8e0b205a"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_X",
+          "kind": "ActualPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -43293,
+                "max": 89279,
+                "first": [
+                  -43281,
+                  -43282,
+                  -43283
+                ],
+                "last": [
+                  81816,
+                  81815,
+                  81812
+                ],
+                "sha256": "1c7a7b837e1c0cb397ce06e5076b3dd3d045c877fce784e1bf1ca26d36a537fd"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -78037,
+                "max": 89025,
+                "first": [
+                  -78016,
+                  -78021,
+                  -78022
+                ],
+                "last": [
+                  87381,
+                  87381,
+                  87386
+                ],
+                "sha256": "eee3985c1823ae69cd9b11384551c33b70f8bf9de55fb250d4c330c291a85e6b"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -78037,
+                "max": 89398,
+                "first": [
+                  -78016,
+                  -78018,
+                  -78017
+                ],
+                "last": [
+                  80038,
+                  80044,
+                  80052
+                ],
+                "sha256": "976b5d19317742094b0543653a74c6504d2083d62569c6ea0412f5ea2ce89d3f"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Y",
+          "kind": "ActualPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -152665,
+                "max": 11270,
+                "first": [
+                  -152654,
+                  -152653,
+                  -152655
+                ],
+                "last": [
+                  -483,
+                  -481,
+                  -486
+                ],
+                "sha256": "98e5761f6fac84f1035b35e7c3d454bec433ef634fdc497dda0a4358923c1e46"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -24623,
+                "max": 11533,
+                "first": [
+                  -24597,
+                  -24609,
+                  -24607
+                ],
+                "last": [
+                  4754,
+                  4742,
+                  4728
+                ],
+                "sha256": "b2f8ec631d869755ea2b2bcc2317d8cb7b2a7251d1cc1f8fae4c52cbbf758c76"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -24636,
+                "max": 11506,
+                "first": [
+                  -24613,
+                  -24610,
+                  -24614
+                ],
+                "last": [
+                  6574,
+                  6592,
+                  6600
+                ],
+                "sha256": "63d0865fb11d64bdd8fdd896fbecaa1183315d27f727cace426d0b6476b067a5"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Z",
+          "kind": "ActualPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -142849,
+                "max": -127468,
+                "first": [
+                  -127479,
+                  -127479,
+                  -127481
+                ],
+                "last": [
+                  -137053,
+                  -137051,
+                  -137049
+                ],
+                "sha256": "3637f917355cc17461310805d7421e3ebb9a49594bd16db559038fff8ac46557"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -143489,
+                "max": -136027,
+                "first": [
+                  -137245,
+                  -137244,
+                  -137244
+                ],
+                "last": [
+                  -136296,
+                  -136295,
+                  -136294
+                ],
+                "sha256": "166f227fa1da489d9959a647b90fffbaf5df1b54c18a88d00ec095acb472021e"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -143519,
+                "max": -136012,
+                "first": [
+                  -137244,
+                  -137244,
+                  -137246
+                ],
+                "last": [
+                  -137585,
+                  -137583,
+                  -137583
+                ],
+                "sha256": "5cc817c5d685b983593cd234168714e87afd205dd7bc0cfcde133f7cf9d78893"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_X",
+          "kind": "CommandedPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -43276,
+                "max": 89428,
+                "first": [
+                  -43276,
+                  -43276,
+                  -43276
+                ],
+                "last": [
+                  81818,
+                  81818,
+                  81818
+                ],
+                "sha256": "65640525bd2fca5cb3dfac9df117fd21d37d6b5038cb3d433ebbe1a254bad392"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -78019,
+                "max": 89036,
+                "first": [
+                  -78019,
+                  -78019,
+                  -78019
+                ],
+                "last": [
+                  87778,
+                  87784,
+                  87791
+                ],
+                "sha256": "057b9ca55358f268dc02cb97fba2e6a4b1faaa7d198481d3df2c0841c355b789"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -78021,
+                "max": 89481,
+                "first": [
+                  -78021,
+                  -78021,
+                  -78021
+                ],
+                "last": [
+                  80182,
+                  80182,
+                  80182
+                ],
+                "sha256": "7c2532d99c6cad27fde0f3deea3cc2dc6372f900e201c877d9587ce735bdb133"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Y",
+          "kind": "CommandedPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -152651,
+                "max": 11263,
+                "first": [
+                  -152651,
+                  -152651,
+                  -152651
+                ],
+                "last": [
+                  -485,
+                  -485,
+                  -485
+                ],
+                "sha256": "90fa1006549aa25ca2c10669a0fc6c55ba1fa60d78e18d210ed794d3c802997e"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -24606,
+                "max": 11523,
+                "first": [
+                  -24606,
+                  -24606,
+                  -24606
+                ],
+                "last": [
+                  3797,
+                  3781,
+                  3764
+                ],
+                "sha256": "b7e870f60512682727c2fec94e9393a3392d2ff1fcee4de0f0fa8e7328304461"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -24619,
+                "max": 11501,
+                "first": [
+                  -24619,
+                  -24619,
+                  -24619
+                ],
+                "last": [
+                  6858,
+                  6858,
+                  6858
+                ],
+                "sha256": "e130d62766b4192c519595c26df760b6e3faf79aa8e9bbd567229561bd7851cf"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Z",
+          "kind": "CommandedPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -143098,
+                "max": -127478,
+                "first": [
+                  -127478,
+                  -127478,
+                  -127478
+                ],
+                "last": [
+                  -136990,
+                  -136988,
+                  -136986
+                ],
+                "sha256": "d3839ce695500277439fd0627a4fe8bae938572dd841e022ecc6483eaf26a086"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -143882,
+                "max": -135989,
+                "first": [
+                  -137248,
+                  -137248,
+                  -137248
+                ],
+                "last": [
+                  -136199,
+                  -136199,
+                  -136199
+                ],
+                "sha256": "84e3fd03fcf420e0a2146edf8936ba3f452a82a8810dc9f124f8ff18bbf59bd1"
+              }
+            },
+            {
+              "layer": 3,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -143905,
+                "max": -135898,
+                "first": [
+                  -137247,
+                  -137247,
+                  -137247
+                ],
+                "last": [
+                  -137517,
+                  -137519,
+                  -137520
+                ],
+                "sha256": "ebd8141beba2c85cf677dc3c6ea087d8acf7bd1bff83e2e7e3ea90983efdb8f2"
+              }
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071705620000,
+            "window_end": 1787071738579682,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": true
+        },
+        {
+          "layer": 2,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071738604000,
+            "window_end": 1787071772013178,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": true
+        },
+        {
+          "layer": 3,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": 1787071772040000,
+            "window_end": 1787071805795026,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "optical_train_1",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": true
+        }
+      ],
+      "parameters": {
+        "optical_train": 1,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_x.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_y.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "GAUSSIAN"
+          },
+          {
+            "name": "galvo_z.smoothing_parameters",
+            "kind": "plain",
+            "value": 60.0
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLIGHT NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 16
+          },
+          {
+            "name": "light_source.power_max_actual",
+            "kind": "quantity",
+            "value": 1033.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_max_nominal",
+            "kind": "quantity",
+            "value": 1000.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_actual",
+            "kind": "quantity",
+            "value": 101.69999694824219,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_nominal",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": "nm",
+              "unit_id": "nm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.collimator_focal_length",
+            "kind": "quantity",
+            "value": 120.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.id",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.m2_major",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "optics.m2_minor",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "degrees",
+              "unit_id": "deg",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "metadata"
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.scanner_number",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 1.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_test_passed",
+            "kind": "flag",
+            "value": false
+          },
+          {
+            "name": "optics.thermal_lensing_threshold",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_definition",
+            "kind": "text",
+            "value": "knife-edge"
+          },
+          {
+            "name": "optics.waist_major",
+            "kind": "quantity",
+            "value": 66.0,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_minor",
+            "kind": "quantity",
+            "value": 68.0,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_offset_z",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "Aconity3D AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": -87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": 23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": " 00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 50.5
+            },
+            {
+              "name": "a",
+              "value": 107.5
+            }
+          ]
+        },
+        "power_limits_not_recorded": false,
+        "grids": [
+          {
+            "name": "Correction_Data",
+            "role": "Forward",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112700,
+              "min": -376323.1248371424,
+              "max": 184630.5629215818,
+              "sha256": "b3b95bf5d5e73119ad8c632e6f5b44ba3beada6f054e04797afd6f193f2cebc6"
+            }
+          },
+          {
+            "name": "Inverse_Correction_Data",
+            "role": "Inverse",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112178,
+              "min": -150.6970983017486,
+              "max": 220.8145929420911,
+              "sha256": "0333b39e9f9e9707b1965ef0616f92e113dc26be760217f6f3e09b8dc260f51e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "key": "Laser_2",
+      "number": 2,
+      "channels": [
+        {
+          "source_name": "Laser_Power",
+          "kind": "LaserPower",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "F32"
+          },
+          "enum_labels": null,
+          "stored_as": "F32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "V",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Laser_State",
+          "kind": "LaserState",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": "Enum",
+          "enum_labels": "unknown",
+          "stored_as": "U8",
+          "unit": null,
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_X",
+          "kind": "ActualPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Y",
+          "kind": "ActualPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Z",
+          "kind": "ActualPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_X",
+          "kind": "CommandedPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Y",
+          "kind": "CommandedPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Z",
+          "kind": "CommandedPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 2,
+              "state": "recorded_empty",
+              "samples": 0
+            },
+            {
+              "layer": 3,
+              "state": "recorded_empty",
+              "samples": 0
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071705620000,
+            "window_end": 1787071738579682,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": false
+        },
+        {
+          "layer": 2,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071738604000,
+            "window_end": 1787071772013178,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": false
+        },
+        {
+          "layer": 3,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": 1787071772040000,
+            "window_end": 1787071805795026,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "optical_train_2",
+              "raw": 10.0,
+              "value": 10.0,
+              "unit": {
+                "spelling": null,
+                "unit_id": null,
+                "source": "Unknown"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": false
+        }
+      ],
+      "parameters": {
+        "optical_train": 2,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_x.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_x.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_x.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_x.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_x.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_y.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_y.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_y.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_y.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_y.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.protocol",
+            "kind": "protocol",
+            "text": "SL2-100",
+            "named": "Sl2100",
+            "other": null
+          },
+          {
+            "name": "galvo_z.range_of_motion",
+            "kind": "quantity",
+            "value": 40.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "galvo_z.smoothing_kernel",
+            "kind": "text",
+            "value": "None"
+          },
+          {
+            "name": "galvo_z.smoothing_parameters",
+            "kind": "plain",
+            "value": 0.0
+          },
+          {
+            "name": "galvo_z.tuning_parameters",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "galvo_z.tuning_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLIGHT NL-FLS-R11-1.00-1070-230"
+          },
+          {
+            "name": "light_source.power_bit_resolution",
+            "kind": "whole",
+            "value": 16
+          },
+          {
+            "name": "light_source.power_max_actual",
+            "kind": "quantity",
+            "value": 1015.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_max_nominal",
+            "kind": "quantity",
+            "value": 1000.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_actual",
+            "kind": "quantity",
+            "value": 100.5999984741211,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.power_min_nominal",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "light_source.serial",
+            "kind": "text",
+            "value": "00000"
+          },
+          {
+            "name": "light_source.wavelength",
+            "kind": "quantity",
+            "value": 1070.0,
+            "unit": {
+              "spelling": "nm",
+              "unit_id": "nm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_major",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.build_plane_offset_minor",
+            "kind": "quantity",
+            "value": 1.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.collimator_focal_length",
+            "kind": "quantity",
+            "value": 120.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.id",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.m2_major",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "optics.m2_minor",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "degrees",
+              "unit_id": "deg",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.metadata",
+            "kind": "text",
+            "value": "metadata"
+          },
+          {
+            "name": "optics.profile_type",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 3.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 3.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.scanner_number",
+            "kind": "text",
+            "value": ""
+          },
+          {
+            "name": "optics.thermal_lensing_focal_plane_shift",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.thermal_lensing_test_passed",
+            "kind": "flag",
+            "value": true
+          },
+          {
+            "name": "optics.thermal_lensing_threshold",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_definition",
+            "kind": "text",
+            "value": "knife-edge"
+          },
+          {
+            "name": "optics.waist_major",
+            "kind": "quantity",
+            "value": 68.0,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_minor",
+            "kind": "quantity",
+            "value": 68.0,
+            "unit": {
+              "spelling": "μm",
+              "unit_id": "um",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "optics.waist_offset_z",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": "mm",
+              "unit_id": "mm",
+              "source": "FromFile"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 76.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "Aconity3D AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 86.0739974975586,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -21.69499969482422,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": -1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.rotation",
+            "kind": "quantity",
+            "value": 180.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.serial",
+            "kind": "text",
+            "value": "00000000000"
+          },
+          {
+            "name": "scanner.x_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.y_galvo_to_exit_aperture",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner_card.actual_position_timing_offset",
+            "kind": "whole",
+            "value": -8
+          },
+          {
+            "name": "scanner_card.commanded_position_timing_offset",
+            "kind": "whole",
+            "value": 50
+          },
+          {
+            "name": "scanner_card.sample_period",
+            "kind": "quantity",
+            "value": 10.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          }
+        ],
+        "volts_to_watts": {
+          "kind": "Linear",
+          "other": null,
+          "constants": [
+            {
+              "name": "b",
+              "value": 48.5
+            },
+            {
+              "name": "a",
+              "value": 105.0
+            }
+          ]
+        },
+        "power_limits_not_recorded": false,
+        "grids": [
+          {
+            "name": "Correction_Data",
+            "role": "Forward",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112864,
+              "min": -377411.7271711135,
+              "max": 178468.3266030279,
+              "sha256": "cb4f73b68895e7af0cecef49a8f6ea0b5bf93e1b0c732ffec3ab6558786f5a1a"
+            }
+          },
+          {
+            "name": "Inverse_Correction_Data",
+            "role": "Inverse",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112330,
+              "min": -220.3316620952458,
+              "max": 149.4732664456538,
+              "sha256": "fe4ca1559e491fda8b7d44d4c7147c8614f772b808361224ac8dd7f225c1fa38"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "sensors": [
+    {
+      "name": "Post_Exposure",
+      "layers": [
+        1,
+        2,
+        3
+      ],
+      "clock_class": "Image",
+      "unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "image": {
+        "rows": 128,
+        "columns": 128,
+        "pixel": "U8"
+      },
+      "frames": [
+        {
+          "layer": 1,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            0,
+            0,
+            0
+          ],
+          "last": [
+            0,
+            0,
+            0
+          ],
+          "sha256": "793a4e842e5ac9c6c4c6f6ebfaca844d75dfee4ebfa00894e909d7e8c6696243"
+        },
+        {
+          "layer": 2,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            0,
+            0,
+            0
+          ],
+          "last": [
+            1,
+            0,
+            0
+          ],
+          "sha256": "0b02306e6a71432ecca55d81ad3ba6a1320c32f03ec1da0d939cef7767f2c493"
+        },
+        {
+          "layer": 3,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            0,
+            0,
+            0
+          ],
+          "last": [
+            0,
+            1,
+            1
+          ],
+          "sha256": "fd7e38cd9578e403cb5e72be76eb45f34248b67a4b2bf755d02270d631e46d26"
+        }
+      ]
+    },
+    {
+      "name": "Pre_Exposure",
+      "layers": [
+        1,
+        2,
+        3
+      ],
+      "clock_class": "Image",
+      "unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "image": {
+        "rows": 128,
+        "columns": 128,
+        "pixel": "U8"
+      },
+      "frames": [
+        {
+          "layer": 1,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            0,
+            0,
+            0
+          ],
+          "last": [
+            0,
+            0,
+            0
+          ],
+          "sha256": "3054c6fd669a70a9177588aeb803067e2b841ec4e23206c6d3673a4cf8339724"
+        },
+        {
+          "layer": 2,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            1,
+            0,
+            0
+          ],
+          "last": [
+            0,
+            0,
+            1
+          ],
+          "sha256": "7e089300841c721595fb49b5e8ddf4412c570e95062414f6084e2aaa2b7cfc76"
+        },
+        {
+          "layer": 3,
+          "rows": 128,
+          "columns": 128,
+          "count": 16384,
+          "stored_as": "U8",
+          "min": 0,
+          "max": 1,
+          "first": [
+            0,
+            0,
+            0
+          ],
+          "last": [
+            0,
+            1,
+            0
+          ],
+          "sha256": "30e59165e6610213ced4027d6ba0ffcd3ddf84256a8d0993b0ec0c6b40419fad"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "optical_axis::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 44,
+          "height": null,
+          "columns": {
+            "count": 44,
+            "first": 1787072565699249600,
+            "last": 1787072589947668300,
+            "timestamps_sha256": "8ed1d07d337060ab937b0bd769274620ddeb88a8b7b0a3d67287049e20e93982",
+            "values_sha256": "005f316105f65ca126dca991523c5c422aa08292e9daa9691402c5553f24b2e8",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 72,
+          "height": null,
+          "columns": {
+            "count": 72,
+            "first": 1787072590200777400,
+            "last": 1787072621200016900,
+            "timestamps_sha256": "cd27f3709935ac62e8838e1fd0a8759484c84a91df4bcd16ed91ed4929f2e8d7",
+            "values_sha256": "83065c23391a223c5c8230780616bdc80ee3737149b8ab12b5ed59b1edc724f9",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 215,
+          "height": null,
+          "columns": {
+            "count": 215,
+            "first": 1787072621699320400,
+            "last": 1787078025698245600,
+            "timestamps_sha256": "b4f4b75ddf6580246e84c2586cfe5eafc5f3a7224385d48b5f1d1c2af0404cb3",
+            "values_sha256": "efd1bb4e7cb7b96de335d7e0b0b3209ac950461ef928a4f87f3086c48ca93b0c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 62,
+          "height": null,
+          "columns": {
+            "count": 62,
+            "first": 1787072655186009000,
+            "last": 1787072688695347400,
+            "timestamps_sha256": "96c465272cd6b3592443320763e3318ae2cb32df8cca1126ca7c61760642c610",
+            "values_sha256": "a00599fc7461c931876df8a158d0951dd83115c2a70e2847f9ca1b608e0e2883",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "platform::1::drive::node",
+        "current_position"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072601950389100,
+            "last": 1787072610440010900,
+            "timestamps_sha256": "da48ae1744b71d99e53c0e63263761130b3a2a6438dbb1f2ef2e67f742dad0cc",
+            "values_sha256": "9fdd1f7facbd821afe62f0b7b8602cba8ff3d6b9e3da08e07eecdc64f713ce69",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072635450577100,
+            "last": 1787072643949130900,
+            "timestamps_sha256": "d4a8e3ebeacd441550896ca1584ea7c67abd53f6355f7724763bbe6aaf4c60a0",
+            "values_sha256": "9ad25eed8945f31b0747ba4a5fddef7e307d70a5bd33c38b40511765ca12c664",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072669199585800,
+            "last": 1787072677686144600,
+            "timestamps_sha256": "7cee4474d5d48482eb6654ead17eeabe7e0496e30ca0830950b19a687a11cdbc",
+            "values_sha256": "aafc048001ac75cface6db7bbe146bf36d403ea39fd8e870590205b54277f9e6",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "platform::1::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 51,
+          "height": null,
+          "columns": {
+            "count": 51,
+            "first": 1787072566445766000,
+            "last": 1787072588948880000,
+            "timestamps_sha256": "15a4d282b33dacd159f7b21b088849b8b89043bf0117c2aa25cfc5a0abe76f92",
+            "values_sha256": "5750ebcfbbb35aa7ff7a4226225cc35aaa132d36be6e88c81026ad1516f66e80",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 49,
+          "height": null,
+          "columns": {
+            "count": 49,
+            "first": 1787072590699560800,
+            "last": 1787072620700753600,
+            "timestamps_sha256": "bb13c24a51352fba447b3a432c1bdb0d03a30c5ed0f97a46bd61c59058a53b35",
+            "values_sha256": "e8355fd2bc3d8122857593dc39c48b3ef9b74e5e4d87cf34423510dd5b9eb6e1",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 194,
+          "height": null,
+          "columns": {
+            "count": 194,
+            "first": 1787072621446138700,
+            "last": 1787078025945110700,
+            "timestamps_sha256": "d386968530e8ee5f60d17d98ef2a2a18a14a4e9ffe656a69ac3f6364d0b96a87",
+            "values_sha256": "5297ce3a418d92821ac29695ecf1a3155592768fbf3d8aff1f331f6491e1494f",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 63,
+          "height": null,
+          "columns": {
+            "count": 63,
+            "first": 1787072657950255300,
+            "last": 1787072687695639300,
+            "timestamps_sha256": "b639b4d4fd9042626d231d9e5258a7a2ed7c1f27555563da9bf0dee5b2385024",
+            "values_sha256": "38584cf2c871cc5fe20c3c8b99719fb52b5ad3629d1a6275dd69789ba8b68ccf",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "platform::1::drive::node",
+        "stopped"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072601950389100,
+            "last": 1787072610440010900,
+            "timestamps_sha256": "f426c4e388aced4a909f92741b6462214f6df27ad040ad11de157f0af5f73966",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072635450577100,
+            "last": 1787072643949130900,
+            "timestamps_sha256": "6bc3653e4da1bb58c317af538c1940d591264f2e756dfb3670b2d486b39785a5",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072669199585800,
+            "last": 1787072677686144600,
+            "timestamps_sha256": "1094cdf772f29ae66fcb44b2b295a1feb50abfb7c552596f46904d250bb846d2",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "slider::drive::node",
+        "current_position"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 67,
+          "height": null,
+          "columns": {
+            "count": 67,
+            "first": 1787072603448449400,
+            "last": 1787072621199986500,
+            "timestamps_sha256": "f47591a740e2c1f7877d71534b066e1252221cb4dc9390dad0e8bad44a5bef66",
+            "values_sha256": "d61a0f25e3137ecb02bd3197fa51578a1a39f7e398eabf637487f33e18d259dd",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 77,
+          "height": null,
+          "columns": {
+            "count": 77,
+            "first": 1787072621446112900,
+            "last": 1787077951685898300,
+            "timestamps_sha256": "e58616668a7cba317c725dbebc233d042fe61979b1c0e32117f9b245e5fbe710",
+            "values_sha256": "7db8e7855a9b9d7ce10a8c398d0fed2a8c30e2299e6d3fe7f73b799137df31c5",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 74,
+          "height": null,
+          "columns": {
+            "count": 74,
+            "first": 1787072654950246200,
+            "last": 1787072688695297800,
+            "timestamps_sha256": "ea6997d8c543be60390fa2958faaf4ce25edf875eb086b2700e71a4a816ad3a9",
+            "values_sha256": "2c826fab8cd5f3c86ce3346f03818614cebeb15fac7923b5e29549cc2f07157b",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "slider::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 62,
+          "height": null,
+          "columns": {
+            "count": 62,
+            "first": 1787072565945366100,
+            "last": 1787072589947617800,
+            "timestamps_sha256": "62201a1a5f5e4deb9e6f098bb3d7ee79c1bed8df94fd9100a91bf854e51be1a9",
+            "values_sha256": "34679e5f14fe97ee8efad1b178d8524aa63e680c49314d85314c8efca7f1293f",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 90,
+          "height": null,
+          "columns": {
+            "count": 90,
+            "first": 1787072590200726900,
+            "last": 1787072621199986500,
+            "timestamps_sha256": "371ebeca5bc2f2a04dee08f340e2ad54927b20cd09648409c5048f119105989e",
+            "values_sha256": "f167d2eae6803475e8fb675cd4d0992a4081bdd5b2d3f78044c2e7107991c4d5",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 253,
+          "height": null,
+          "columns": {
+            "count": 253,
+            "first": 1787072621446112900,
+            "last": 1787078026445062200,
+            "timestamps_sha256": "ea26855e6e710427ca83d395a7ac4ddacaccfaa03dc869737add8004cd07b532",
+            "values_sha256": "420f7e45758dd1898d6a21af3c4a71a410aa75f47b9a583779b2c0d9cf5a6216",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 104,
+          "height": null,
+          "columns": {
+            "count": 104,
+            "first": 1787072654950246200,
+            "last": 1787072688448122500,
+            "timestamps_sha256": "4fa8e2256ceb261a2aeb7cfea14d7960eb28f48c4320b430b6dc0b92be694cf8",
+            "values_sha256": "91dde1485aeb19fd5222e9e6f4e096f939dabe71451889b4c3dd59886dae843b",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "slider::drive::node",
+        "stopped"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072603448449400,
+            "last": 1787072620935844600,
+            "timestamps_sha256": "01169a55e3d07e3d8b61ad5314607d67f2ac51a212d28e53eb6d97dcf61f9b03",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072636949572300,
+            "last": 1787072654450868900,
+            "timestamps_sha256": "bbddfba3445c7738d168e064ef3ed549796c441f4704b1b2bf00d396a572fd8a",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072670699603000,
+            "last": 1787072688195075700,
+            "timestamps_sha256": "ef2e65a0d3783338ef1b505a75665f221d25160b0a8d0f04bafdef8d5102dfb0",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "supplier::1::drive::node",
+        "current_position"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072601950300600,
+            "last": 1787072610439931000,
+            "timestamps_sha256": "2a0b92c2c9e7f5be2e038ee4294970d6113b04d63b09844de59d7c6ab82f95a3",
+            "values_sha256": "057dbfc3548c560e92549d9cffa75cafe65dd6cc2548575a72b048c1199bfb11",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072635450527000,
+            "last": 1787072643949055600,
+            "timestamps_sha256": "193e5087a5acd261cc5ce660bd9ac76c7db1beb5e95bd26da0b58d938b070c50",
+            "values_sha256": "72ebfeff447c642867214b119debe4b82078c37eaf5cea57b80d22b3a31d7132",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 16,
+          "height": null,
+          "columns": {
+            "count": 16,
+            "first": 1787072669199502200,
+            "last": 1787072677686089100,
+            "timestamps_sha256": "e8aca32ac740842f718771e005b6dfd96abc1b36b5d4a05eae518ca6ac957152",
+            "values_sha256": "8b59ba65f1da548826143f40f0a629a268f973f642506cbc41753f911790d643",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "supplier::1::drive::node",
+        "current_velocity"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 44,
+          "height": null,
+          "columns": {
+            "count": 44,
+            "first": 1787072565945314300,
+            "last": 1787072588448525800,
+            "timestamps_sha256": "05526dc56ff85557cddb679621e2514b84a3af793747760ecc89fbc18d6ff5ab",
+            "values_sha256": "7b1c3954f0e01c958efb343d258907d49ff38bc4e776e5d9bbe52165fdbca54b",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 46,
+          "height": null,
+          "columns": {
+            "count": 46,
+            "first": 1787072592438679500,
+            "last": 1787072618200935500,
+            "timestamps_sha256": "0b44bb6c4ecba38b89d9302b9a966f7da5b2debe601662099b4ed3fb4d3359d5",
+            "values_sha256": "be640a343b2101517f7ee86e65108029609f8814d865b48c5ef27d5468d2247c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 173,
+          "height": null,
+          "columns": {
+            "count": 173,
+            "first": 1787072622435739100,
+            "last": 1787078025445020000,
+            "timestamps_sha256": "a8e7c3cc256f96ad59a9365523941465ee04ef89581ef2d40c52b91f5723fc2b",
+            "values_sha256": "1bc897d656e35442eef118a9190fefc85bc49f06506b29991370202161c9901d",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 71,
+          "height": null,
+          "columns": {
+            "count": 71,
+            "first": 1787072654950202100,
+            "last": 1787072688448079200,
+            "timestamps_sha256": "61092b60cf7416334b03ec58f31b3271cab069fd7cc9fd7caecb716b588f4627",
+            "values_sha256": "6273eb29cf2097ab22564651ddfff9168526d6b06c66870e58a320b73ae6ca1e",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Actuators",
+        "supplier::1::drive::node",
+        "stopped"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072601950300600,
+            "last": 1787072610439931000,
+            "timestamps_sha256": "40299040f5349d8c1333d8b7d6e6ab09ce794047dc5bea5bb5aaf985960a3fb7",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072635450527000,
+            "last": 1787072643949055600,
+            "timestamps_sha256": "1922413eb2c5d2d7472d04758f22104f3baf4fbecf58d0ec16f4ae13d9c0d221",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072669199502200,
+            "last": 1787072677686089100,
+            "timestamps_sha256": "ab5c7ce28ba6e738467f320fc91fcee2050c834f823927a42542c6baee3be893",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Chamber",
+        "AconityStream_client::1",
+        "snapshot_is_active"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 3,
+          "height": null,
+          "columns": {
+            "count": 3,
+            "first": 1787072600945244300,
+            "last": 1787072620935972100,
+            "timestamps_sha256": "1f784ff0ecc86ab84d5378c5da1e37a61e42776fb50d365c3f9ca96ec0b31197",
+            "values_sha256": "39d46386667c5b4fda2bb08131b61b01bf5aac39700298ab7f2186826d03a653",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 6,
+          "height": null,
+          "columns": {
+            "count": 6,
+            "first": 1787072621946560000,
+            "last": 1787078026197588200,
+            "timestamps_sha256": "78456c673c775977e414ae073821e18063a65c54e2f7d6250761d60ff434ab8b",
+            "values_sha256": "f7c92611b4458a19c43e93c939c7dfacb22fe5a6f1b1c046f8fba8551c542276",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072655449744900,
+            "last": 1787072688195200100,
+            "timestamps_sha256": "771c502799eea1abf86e4e5429f7e1a285336514ce6961fe24dbeceeb501178a",
+            "values_sha256": "61c004b7a8ddb5d44b0f7872656021868b70000a5560c47364b62a981b359d72",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Chamber",
+        "spare::analog_input::1",
+        "current_signal"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 75,
+          "height": null,
+          "columns": {
+            "count": 75,
+            "first": 1787072565945680500,
+            "last": 1787072589947935500,
+            "timestamps_sha256": "b918a00d5601190cc006a11d1706d8752f4c1d4cdb8b0b7a821a8210707471b5",
+            "values_sha256": "d0c97aaaf06b694142a5b9a8c87b8ae9f82839263df336f034b311f8c526d19c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 108,
+          "height": null,
+          "columns": {
+            "count": 108,
+            "first": 1787072590436120200,
+            "last": 1787072621200340200,
+            "timestamps_sha256": "8ee5a4312715108f6bad871e26b9a3338765b689b4877a03e698c3fda52764a8",
+            "values_sha256": "5d5892dfabdf8fb6efcb94c0f7d6366974d67bce35faafb01ca2c98bfe3a7ccf",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 333,
+          "height": null,
+          "columns": {
+            "count": 333,
+            "first": 1787072621446285700,
+            "last": 1787078026445438800,
+            "timestamps_sha256": "b14c24f52cb64d87514e6d292ae66acb1a70aadbc79ddb34cc7684934998633f",
+            "values_sha256": "6d3e970a337376a2b3380336c7113e0ab92c318e717802df12d6526cc7e15e68",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 108,
+          "height": null,
+          "columns": {
+            "count": 108,
+            "first": 1787072654950431700,
+            "last": 1787072688695491900,
+            "timestamps_sha256": "add950302cbf2fade71efc4102f105fbdd7d09dd5f4d62cdfcadd6622a70ac8f",
+            "values_sha256": "4f9cc5e678ecf0d43f7ceb88fb89987b8f7cddd36adbf6f9bc3eeb86925b5d18",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Chamber",
+        "weighing_scale",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 2,
+          "height": null,
+          "columns": {
+            "count": 2,
+            "first": 1787072587186770800,
+            "last": 1787072587449926200,
+            "timestamps_sha256": "b8abd050c9c8bde16f19731415debc57963b25be416f48676e15f9c0be51aff5",
+            "values_sha256": "36c5734c0ed0ec0f6fce53f6b6919c2ae0dbce83bf8f5f5e615dc14f6798978f",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 2,
+          "height": null,
+          "columns": {
+            "count": 2,
+            "first": 1787072590435884200,
+            "last": 1787072590699508500,
+            "timestamps_sha256": "16cf480486df0187d7e2730251b183d9b433406d299778c908f7f9a016c62270",
+            "values_sha256": "36c5734c0ed0ec0f6fce53f6b6919c2ae0dbce83bf8f5f5e615dc14f6798978f",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 40,
+          "height": null,
+          "columns": {
+            "count": 40,
+            "first": 1787077951450621600,
+            "last": 1787078023936056200,
+            "timestamps_sha256": "888dd2478eb12586eefcf2f2aac44a077d336aec9fb1f4b3e0efca8a702d9087",
+            "values_sha256": "de22e8ecc5d7fd708b74c1661940388fd7d72d64dbf409abcc5b70d19ad80a7a",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 4,
+          "height": null,
+          "columns": {
+            "count": 4,
+            "first": 1787072663699981400,
+            "last": 1787072684945792700,
+            "timestamps_sha256": "d611aea3bdaef45ff17e424f0947a0f45fa25fa8b346c62df5ecb5b9aa4f6385",
+            "values_sha256": "1615c814eec440fe4a729b1a1158c62664225feaeb754343271552aa1eb99ce6",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "deltaflow",
+        "flow"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 96,
+          "height": null,
+          "columns": {
+            "count": 96,
+            "first": 1787072565699289500,
+            "last": 1787072589947638400,
+            "timestamps_sha256": "3fd625ec9113304d1c9b76f8302e145b7b387cb642b5478c027d82b4a3a5f912",
+            "values_sha256": "595af3cc2b1342b4b16ecfe33b92a57054a5ea70000f81d474d573fb5ea86bf2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 122,
+          "height": null,
+          "columns": {
+            "count": 122,
+            "first": 1787072590200752500,
+            "last": 1787072621200064300,
+            "timestamps_sha256": "522e69c919a8782af69eafccd1c84543c338083821a02a0461b2c225c62731cf",
+            "values_sha256": "3434c6688dbb6573badbe36600cd94cdf66494d6d45baa103d393bcf96ad98ae",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 445,
+          "height": null,
+          "columns": {
+            "count": 445,
+            "first": 1787072621446136800,
+            "last": 1787078026445125200,
+            "timestamps_sha256": "4a21b0bbf79f8b5c0692b1a059a5c82456f5cd278a738cfe0d2c3d235cb4d7a2",
+            "values_sha256": "a2c0227e1352428497612449084c9ad0074490b68238e3237a988880f0654dc2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 135,
+          "height": null,
+          "columns": {
+            "count": 135,
+            "first": 1787072654950307700,
+            "last": 1787072688695366400,
+            "timestamps_sha256": "fed5ae1ffae1981d7274b51231b2d8777adb214da9742682c450e10e40753f78",
+            "values_sha256": "58cf6533f4c8ee1a92f808e89d0551f24d91a64aaf0237131f637e28fbc8ee58",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "deltaflow",
+        "flow_speed"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 96,
+          "height": null,
+          "columns": {
+            "count": 96,
+            "first": 1787072565699289500,
+            "last": 1787072589947638400,
+            "timestamps_sha256": "3fd625ec9113304d1c9b76f8302e145b7b387cb642b5478c027d82b4a3a5f912",
+            "values_sha256": "882000bcab959e45ad5d7455ba9998abe23b6ca4030e7ea700a37e1926065a8a",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 122,
+          "height": null,
+          "columns": {
+            "count": 122,
+            "first": 1787072590200752500,
+            "last": 1787072621200064300,
+            "timestamps_sha256": "522e69c919a8782af69eafccd1c84543c338083821a02a0461b2c225c62731cf",
+            "values_sha256": "0888b25bc2641a603630da03472f08bd6b61dcfd0e90dbca1e4e8f04b500f02e",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 445,
+          "height": null,
+          "columns": {
+            "count": 445,
+            "first": 1787072621446136800,
+            "last": 1787078026445125200,
+            "timestamps_sha256": "4a21b0bbf79f8b5c0692b1a059a5c82456f5cd278a738cfe0d2c3d235cb4d7a2",
+            "values_sha256": "84fa4278e0eb08021b79f8fa45200350a9984d77495e6c8f7160f3cfda8031ab",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 135,
+          "height": null,
+          "columns": {
+            "count": 135,
+            "first": 1787072654950307700,
+            "last": 1787072688695366400,
+            "timestamps_sha256": "fed5ae1ffae1981d7274b51231b2d8777adb214da9742682c450e10e40753f78",
+            "values_sha256": "c3362777952e681a4fabe8829e0c5640f2c4cf1d81b1e5b49254724ad741ee22",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "deltaflow",
+        "temperature"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 83,
+          "height": null,
+          "columns": {
+            "count": 83,
+            "first": 1787072565699289500,
+            "last": 1787072589947638400,
+            "timestamps_sha256": "587a1a2e9926e9cf49fcb4d9ef7b7a9d7490c409f14921c4aa6b47413dbbc353",
+            "values_sha256": "eda2c1547e627c3c5ec1bc3836acb53ff07cd89c9302413aa18bd3ba3903b32e",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 105,
+          "height": null,
+          "columns": {
+            "count": 105,
+            "first": 1787072590200752500,
+            "last": 1787072621200064300,
+            "timestamps_sha256": "89a2506929d42a1ff527606f1749564465c19b4578becd086d7be26dd5c5d4ae",
+            "values_sha256": "f1d161e41d12e1f05074bf4f3d0c25ca546314498254c21cf7c3d5fd1fa6d3d8",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 348,
+          "height": null,
+          "columns": {
+            "count": 348,
+            "first": 1787072621446136800,
+            "last": 1787078026445125200,
+            "timestamps_sha256": "9fc75cb6e3304dbbe67b85a0772037e1c7252fcbd0ef08abf1e41e8bed0a5f7b",
+            "values_sha256": "184109f5fbf539fced9e36057aa7429639698057f1af17a84e02d2761fa29108",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 109,
+          "height": null,
+          "columns": {
+            "count": 109,
+            "first": 1787072654950307700,
+            "last": 1787072688695366400,
+            "timestamps_sha256": "d2202c855851a866073716b4aa7ee90f5989e2e71ad82492dcc3d308c6d54c09",
+            "values_sha256": "735cd862b6633007b96cb01ac4676c6e0125208699ea578c2287cd74e874b675",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "filter_fill_sensor",
+        "fill_level"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 98,
+          "height": null,
+          "columns": {
+            "count": 98,
+            "first": 1787072565699380600,
+            "last": 1787072589947693000,
+            "timestamps_sha256": "0121bf42a807503f91d637bbd0d0ed02640d3e60a6a07383389ba512faf091e5",
+            "values_sha256": "32faf16d4dd9af61da10b6a52c35147fa3a3a812033dc5b78acf794faf1ca71d",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 125,
+          "height": null,
+          "columns": {
+            "count": 125,
+            "first": 1787072590200804500,
+            "last": 1787072621200172000,
+            "timestamps_sha256": "f3bc3743e4559ee0b963631f1c620c518fdd5eb276734e28287dfea7e04b1106",
+            "values_sha256": "65e4b75fc2d1771c8487a1d6fe960416a44cf3b07fa1566d0928c2046cc913bf",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 449,
+          "height": null,
+          "columns": {
+            "count": 449,
+            "first": 1787072621446190900,
+            "last": 1787078026445209300,
+            "timestamps_sha256": "49e4eba23495f2bb19f51e0288e82c4d0c55c8aba3019a16f4053c30e419f564",
+            "values_sha256": "bb2861cd07d8c7e02be208d88c1f40c9f65cac6595be235e2828313f64c44687",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 136,
+          "height": null,
+          "columns": {
+            "count": 136,
+            "first": 1787072654950577900,
+            "last": 1787072688695480000,
+            "timestamps_sha256": "723c34537205d3defb2bc495b42eb347f3dfbac9a9f7d5e5071d90e4d5e1f0f6",
+            "values_sha256": "e49d6bb695e1b354f1f48d4111f7c56194854bb9cf42b0929e9d5bdaf649e43d",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "filter_sensor",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 96,
+          "height": null,
+          "columns": {
+            "count": 96,
+            "first": 1787072565699272400,
+            "last": 1787072589947627400,
+            "timestamps_sha256": "bddcdc3a18f041fa1c574e32db39eddf402911685ce858e461fd0c00fc1b7f4b",
+            "values_sha256": "214266914dcae318bc95187a0303683c33da860a81c281fc0b6cf481ceb49323",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 123,
+          "height": null,
+          "columns": {
+            "count": 123,
+            "first": 1787072590200742400,
+            "last": 1787072621200046500,
+            "timestamps_sha256": "f7c7f77a6987a8a07a84243c25d06880d15634f22d66dcb2dbd2bb97e17df85b",
+            "values_sha256": "3c72b06216a1dcb3c7dde8e5f0b3001fac2c6da2f5cc0330781645ca82754256",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 433,
+          "height": null,
+          "columns": {
+            "count": 433,
+            "first": 1787072621699318200,
+            "last": 1787078026445107800,
+            "timestamps_sha256": "1f2b0ceae9b0c9173c9852a9953751d966afce8af50b459e75c4954d16e6d977",
+            "values_sha256": "babd555f4bf3027f285f61ad7821b9ea38afa550299d5080d71828114b94f332",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 128,
+          "height": null,
+          "columns": {
+            "count": 128,
+            "first": 1787072654950289900,
+            "last": 1787072688695344400,
+            "timestamps_sha256": "685224187f36fa97232d0ebdde37964eca0a3b838affab3b02674d288fb1faac",
+            "values_sha256": "243a4f262443fc0810b2acae3ada8d4b17e56abd51b8f9f972f3902e26a80e9c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "filter_sensor",
+        "smoothed_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 96,
+          "height": null,
+          "columns": {
+            "count": 96,
+            "first": 1787072565699272400,
+            "last": 1787072589947627400,
+            "timestamps_sha256": "6103b5d3412f6af1aae9b7b373e76ad9283e436a4c9de31d1dc386d96f4a587f",
+            "values_sha256": "e17ec3032f3b75500adab9a2766872e71e5f7ce2b2c640bc8ac6ca34aa99d7b3",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 125,
+          "height": null,
+          "columns": {
+            "count": 125,
+            "first": 1787072590200742400,
+            "last": 1787072621200046500,
+            "timestamps_sha256": "e526645a0a4b5eeec4be43aa15bd80874c90c441457594bbd3e7d4d5d184e59d",
+            "values_sha256": "9c51547a7745d064773008d49f038efd8ef7e4ee8c9f00e7c8ce92c1f13b0856",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 449,
+          "height": null,
+          "columns": {
+            "count": 449,
+            "first": 1787072621446126400,
+            "last": 1787078026445107800,
+            "timestamps_sha256": "f5cec14d5861b60e3594a740b7d49e58db4455f652bc2fa46ed139789c26ee25",
+            "values_sha256": "31ff7d67aff87487b6621d697263521d3806c666fca778137a204078b3ead2b3",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 135,
+          "height": null,
+          "columns": {
+            "count": 135,
+            "first": 1787072654950289900,
+            "last": 1787072688695344400,
+            "timestamps_sha256": "7ddf2f716547c832975c4b7962fe6118b058ca00581108dbab1c1c16c7782acf",
+            "values_sha256": "4c4a6281f176855187ef8ae1937a9d6b1a4375963347b1355749a727587c2e95",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "gas_control",
+        "evacuation_command_available"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197516900,
+            "last": 1787078026197516900,
+            "timestamps_sha256": "04985264ea276fe7473368121f2acb0e26ada84a89053c1517405c2ce1b900fa",
+            "values_sha256": "1f419139f10195a90bb89635e7ccfd5d1614e64da16f8f068bf684fec5073111",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "gas_control",
+        "off_command_available"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197516900,
+            "last": 1787078026197516900,
+            "timestamps_sha256": "04985264ea276fe7473368121f2acb0e26ada84a89053c1517405c2ce1b900fa",
+            "values_sha256": "819738269f2dacaae5a199d3e902828e334b698e7ac1c904f4e5e39931943931",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "gas_control",
+        "static_pressure_command_available"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197516900,
+            "last": 1787078026197516900,
+            "timestamps_sha256": "04985264ea276fe7473368121f2acb0e26ada84a89053c1517405c2ce1b900fa",
+            "values_sha256": "1f419139f10195a90bb89635e7ccfd5d1614e64da16f8f068bf684fec5073111",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "gas_control",
+        "static_pressure_mode"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197516900,
+            "last": 1787078026197516900,
+            "timestamps_sha256": "04985264ea276fe7473368121f2acb0e26ada84a89053c1517405c2ce1b900fa",
+            "values_sha256": "819738269f2dacaae5a199d3e902828e334b698e7ac1c904f4e5e39931943931",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "oxygen_sensor::circulation",
+        "oxygen_level"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 33,
+          "height": null,
+          "columns": {
+            "count": 33,
+            "first": 1787072565945421000,
+            "last": 1787072589695112300,
+            "timestamps_sha256": "50a9512d995b10a3ec4e717ce954c677b2b263b9fb0403f1bcfe6cb639a120bf",
+            "values_sha256": "f6358872e88e5332b1e7ebe92cd89a4ff7921504e65534a3eb1faea7e1c1aafa",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 60,
+          "height": null,
+          "columns": {
+            "count": 60,
+            "first": 1787072590200733100,
+            "last": 1787072619946256500,
+            "timestamps_sha256": "89d43daa043df1bf03ef948e92a696d81aae528c8b06069c9b8ef45b0ee874de",
+            "values_sha256": "df7a33020a512fecf5048a7173887dc7708a884137111bbf703f580808535ab2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 185,
+          "height": null,
+          "columns": {
+            "count": 185,
+            "first": 1787072623199352000,
+            "last": 1787078026445092900,
+            "timestamps_sha256": "ca9f801a056ab7d6527680e68b704c9510be0e1274d1209f7b54b1d398d4bba1",
+            "values_sha256": "2b9b9bb0d4ef3f26331d3c42d9bea8304fa0677080972bf5bcf68b8b9691ef8f",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 52,
+          "height": null,
+          "columns": {
+            "count": 52,
+            "first": 1787072655449668300,
+            "last": 1787072688448138700,
+            "timestamps_sha256": "7d396c1eccadee8d4c5b2a4bb70d317935e6bebb0fd542eca876b8cdd93e0d9b",
+            "values_sha256": "7e8b2389c6dcf29c401bd589a36210b2c2db20148e5a0aebe1ad3dff56c162bb",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "client_setpoint"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197673200,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "544bb4cb7667f2e7d7eed8cae3e43642a426a93e6a31ff12ffa20bed9ef8d8a5",
+            "values_sha256": "e4f60d0aa6d7f3d3b6a6494b1c861b99f649c6f9ec51abaf201b20f297327c95",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "enabled"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197673200,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "544bb4cb7667f2e7d7eed8cae3e43642a426a93e6a31ff12ffa20bed9ef8d8a5",
+            "values_sha256": "819738269f2dacaae5a199d3e902828e334b698e7ac1c904f4e5e39931943931",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "flow_speed"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 96,
+          "height": null,
+          "columns": {
+            "count": 96,
+            "first": 1787072565699468300,
+            "last": 1787072589947860600,
+            "timestamps_sha256": "45ecab9bfa55db6d74eb28721bf36433ff56c67b7f062cc3168709074cab3f3e",
+            "values_sha256": "be17f971893dd160fd5f0d19d5a185bd8688a6452937ff2cad505974ad074234",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 122,
+          "height": null,
+          "columns": {
+            "count": 122,
+            "first": 1787072590201099100,
+            "last": 1787072621200260600,
+            "timestamps_sha256": "bc2301d53ffe19ea14abdfd9fb8e3d997123a5083eb6d6f5197cd356901d8114",
+            "values_sha256": "43f4c39366be98f187c4e4fc77054413dee518aa01c90afdcce53bd019e810e0",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 444,
+          "height": null,
+          "columns": {
+            "count": 444,
+            "first": 1787072621446245600,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "5ba7f8d37dd342e678216abd6aaea96a8069d0965e17c7f3506ac181a1f208b8",
+            "values_sha256": "cc817fdddd9df54120acc53c6a85545d1cecfbd25f44d76b3716f077b7ada47c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 135,
+          "height": null,
+          "columns": {
+            "count": 135,
+            "first": 1787072654950383100,
+            "last": 1787072688695451000,
+            "timestamps_sha256": "4827c530c627b5e8cafbd22ab7f3216e6f7c02fcae302848849f32a1c1fb65dd",
+            "values_sha256": "68a45f94ad59ad83f38e89c5b242430b70cfd582dd89c3b4b8ef9ec560ca64f2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "hardware_setpoint"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 6,
+          "height": null,
+          "columns": {
+            "count": 6,
+            "first": 1787072579698165700,
+            "last": 1787072587187074300,
+            "timestamps_sha256": "1a33203acc17ab8e61e53ea56e247829650e53f06ef816bc5a73695fb98fe086",
+            "values_sha256": "c3e696de65c11ae56089dba660545bd90418785c6c14cbb3417ab79cec696e34",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 5,
+          "height": null,
+          "columns": {
+            "count": 5,
+            "first": 1787072590436080800,
+            "last": 1787072615445433500,
+            "timestamps_sha256": "e88ba1294709706e3690aa2736e3c5950308ab435267d5cf6f7dc5a80b286d73",
+            "values_sha256": "a402edfd2a5207b5bb5c2dcafcfdec3f98fc4a1ae402db0e894d73b2d300c036",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 14,
+          "height": null,
+          "columns": {
+            "count": 14,
+            "first": 1787072647195724600,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "3477c3876094c1aa9c0bd4d0f950ef3b04a08878c98653cad52c58c9ff6f872d",
+            "values_sha256": "cc1b84d22cb75a98270af8d175722e5bbddbae9cf6eba1f4ce5220162b493cc3",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "stable"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197673200,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "544bb4cb7667f2e7d7eed8cae3e43642a426a93e6a31ff12ffa20bed9ef8d8a5",
+            "values_sha256": "819738269f2dacaae5a199d3e902828e334b698e7ac1c904f4e5e39931943931",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::fume_extraction",
+        "transitioning"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787078026197673200,
+            "last": 1787078026197673200,
+            "timestamps_sha256": "544bb4cb7667f2e7d7eed8cae3e43642a426a93e6a31ff12ffa20bed9ef8d8a5",
+            "values_sha256": "1f419139f10195a90bb89635e7ccfd5d1614e64da16f8f068bf684fec5073111",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::inert_gas_control::flow_sensor",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 61,
+          "height": null,
+          "columns": {
+            "count": 61,
+            "first": 1787072565699238100,
+            "last": 1787072589695092800,
+            "timestamps_sha256": "8f404a4a498856e35bcbcc717f3d501815d6d11a9af4cbdcadc2896d830edae0",
+            "values_sha256": "98c13bf765a725993b1004ded95651c5b17f038be0b6ab4844e5f307f48cf983",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 65,
+          "height": null,
+          "columns": {
+            "count": 65,
+            "first": 1787072590200724300,
+            "last": 1787072620936243500,
+            "timestamps_sha256": "700495f42cbf5763244502259d9e659d4ad4c4125f847c0a9db35b1ac2f13221",
+            "values_sha256": "dae493afbaed0b2724f7d233b7d7f8e80317f5373e4fc505c31c2bf7f8b410f8",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 166,
+          "height": null,
+          "columns": {
+            "count": 166,
+            "first": 1787072621446106600,
+            "last": 1787078026197530100,
+            "timestamps_sha256": "c0f8135bd539c58d185f8397895bbeae462f709b0ac382260db3d31e4de1aabe",
+            "values_sha256": "f4f45b7a7fab46efccbff65bfa7c1a6d531e6275494764665ae98bdb775583f3",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 75,
+          "height": null,
+          "columns": {
+            "count": 75,
+            "first": 1787072654950256100,
+            "last": 1787072688695308400,
+            "timestamps_sha256": "5af136e581699d8f18e443986f0173516f0cf108727085b465278c4fbf3ced4f",
+            "values_sha256": "7be4f809877f79afcae8dac4bb0e04b1848781d1e72b00cb940b6f876bcaa861",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::inert_gas_control::pressure_valve",
+        "current_value"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 84,
+          "height": null,
+          "columns": {
+            "count": 84,
+            "first": 1787072565699218000,
+            "last": 1787072589947596300,
+            "timestamps_sha256": "13a8ce9d4c20ef7b1489a75fadb90696d5f16104dbe2998b4d490a726b60be44",
+            "values_sha256": "27a5071940046c82065b6c2383ef18c4b66c2783cae449c33fb6e33326521104",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 101,
+          "height": null,
+          "columns": {
+            "count": 101,
+            "first": 1787072590200714100,
+            "last": 1787072621199987100,
+            "timestamps_sha256": "6cb159ba7452603fae2da81dc14b31ed60d20b164351cae47af03cdbc2706678",
+            "values_sha256": "e9afe8b19fa653afe744d1adffd86cc3c966b8a9d69d4a306c30e8972ed27be5",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 361,
+          "height": null,
+          "columns": {
+            "count": 361,
+            "first": 1787072621446094900,
+            "last": 1787078026445054100,
+            "timestamps_sha256": "ad846d7ad12c834df55d3e22a41cf90034681ded44582cfde5ad6ce659a65b46",
+            "values_sha256": "8776a52de78d9154e4c487f4e4c19347fde9156eecbe2b32eae421d6fe6a86e2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 109,
+          "height": null,
+          "columns": {
+            "count": 109,
+            "first": 1787072654950236300,
+            "last": 1787072688695290600,
+            "timestamps_sha256": "3569624d461120a10d7dad2e5282d5b0b5e9a70b0c26e4bf2fa122399144f21b",
+            "values_sha256": "779980f18eb2b606183b0e6a57c6f0df1014ce7220661e5acabc1fc0c95f6c26",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::oxygen_sensor::1",
+        "oxygen_level"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 7,
+          "height": null,
+          "columns": {
+            "count": 7,
+            "first": 1787072574948863700,
+            "last": 1787072589695342000,
+            "timestamps_sha256": "3a7ace5729a8c9aa6efd3b6b963b90a2b1ad11c16b68a926dd5a5f853c87e570",
+            "values_sha256": "5c1a868d2fe7097789c59a61f0a27996c23fab9d86c87e89c4c561cd6f829d63",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 11,
+          "height": null,
+          "columns": {
+            "count": 11,
+            "first": 1787072590201072500,
+            "last": 1787072620200729000,
+            "timestamps_sha256": "c1f337a08d0335f33ca1a205d2872afa790d5a835bc5faa5cf457d5f84396ac2",
+            "values_sha256": "429d2cc2afd6b24d8d996730e851c0677c420565020b0f0b730109394a21a5aa",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 33,
+          "height": null,
+          "columns": {
+            "count": 33,
+            "first": 1787072633445351400,
+            "last": 1787078026197642300,
+            "timestamps_sha256": "b999dd9f30d112e4f4edaf72b59624bc496c6f7edfccafc98285325915fa5b3a",
+            "values_sha256": "35157b85d018ea5456e0be6c2c1b7d4eb6ed96284a789932e612a75dc2eed06c",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 25,
+          "height": null,
+          "columns": {
+            "count": 25,
+            "first": 1787072656685776800,
+            "last": 1787072687449771500,
+            "timestamps_sha256": "e5eabda3e7ea9add7973371a4501e3ef40a8310472cc7baf1b850635642be8fc",
+            "values_sha256": "db7aa9a7f3fc1c337db9bfd815b11542620671b173fbe5eac522d9996ba5db3a",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Gas",
+        "process_chamber::gas_management::oxygen_sensor::1",
+        "volume_flow"
+      ],
+      "data_type": "Double",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 2,
+          "height": null,
+          "columns": {
+            "count": 2,
+            "first": 1787072607447367200,
+            "last": 1787072607935647400,
+            "timestamps_sha256": "808d9675bc0ed3fb12b74aacf9793514a45ff836fcf6931549f5becadee8e564",
+            "values_sha256": "1f51581184fdef85a653e894f939b109c7b605bd168889eb28fdce309ae5abba",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 2,
+          "height": null,
+          "columns": {
+            "count": 2,
+            "first": 1787072679439473800,
+            "last": 1787072679945552600,
+            "timestamps_sha256": "b845a0a44bd2ceed355f6ec5073c33ddae9e067ef0e89c0856ffb4a09d747ffd",
+            "values_sha256": "1f51581184fdef85a653e894f939b109c7b605bd168889eb28fdce309ae5abba",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "sensor",
+      "path": [
+        "Scanners",
+        "scan_manager::scanner::1",
+        "laser_signals_enabled"
+      ],
+      "data_type": "Boolean",
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 3,
+          "height": null,
+          "columns": {
+            "count": 3,
+            "first": 1787072588448654600,
+            "last": 1787072588948950400,
+            "timestamps_sha256": "97e43757e28d0bd61d7fe75a726d8be2a6894be22eb4f276b78763cde3714b56",
+            "values_sha256": "39d46386667c5b4fda2bb08131b61b01bf5aac39700298ab7f2186826d03a653",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 1,
+          "records": 13,
+          "height": null,
+          "columns": {
+            "count": 13,
+            "first": 1787072590200897800,
+            "last": 1787072600945184300,
+            "timestamps_sha256": "4970ef8902b832f08a03a42e2e1cc0f50cf667ff0e059891702f4da6edcc371e",
+            "values_sha256": "90e2a1e373dc455a296aa5a8ffbfe8849d4f9bdf6f6c97f7e532474267ed7240",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 2,
+          "records": 21,
+          "height": null,
+          "columns": {
+            "count": 21,
+            "first": 1787072621946505200,
+            "last": 1787078024200260800,
+            "timestamps_sha256": "f4b23cc1bd484d1fa3fccd51965e1a725c133b149e7e099867199cfa3cfbe43c",
+            "values_sha256": "a83a6a10bafe1a25f7f733d758dce2151fa30a7b7aa3010dc0cdbe31068207d2",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        },
+        {
+          "assignment": 3,
+          "records": 12,
+          "height": null,
+          "columns": {
+            "count": 12,
+            "first": 1787072655449690100,
+            "last": 1787072668200993400,
+            "timestamps_sha256": "c2571730bbed30c97157687423602c8e204574fa41637303293b0035cf46f163",
+            "values_sha256": "1b052dca2a91365f4d2f79fd3300a9b3a8c8401c8c3de615106859367887e3b4",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    },
+    {
+      "kind": "task",
+      "path": [
+        "AddLayerCommand",
+        "_",
+        "State"
+      ],
+      "data_type": null,
+      "interval": true,
+      "parts": [
+        {
+          "assignment": 2,
+          "records": 1,
+          "height": 0.0,
+          "columns": {
+            "count": 1,
+            "first": 1787072620724866700,
+            "last": 1787072620724866700,
+            "timestamps_sha256": "912cd2125efb395db23287941193619db6e3867349b97a3ccf16819bac912a03",
+            "values_sha256": null,
+            "start_sha256": "71723a49f9ad147cddd520ed99473d76f934be2f95ad670cb58389c8f0e30c31",
+            "stop_sha256": "29f2cd990a266ebc8c8b905d8db7aa66e092eb021ba15d86ebca20a5d7905d33"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "task",
+      "path": [
+        "CameraSnapshotCommand::1",
+        "_",
+        "State"
+      ],
+      "data_type": null,
+      "interval": true,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 1,
+          "height": 0.0,
+          "columns": {
+            "count": 1,
+            "first": 1787072601721279400,
+            "last": 1787072601721279400,
+            "timestamps_sha256": "630de479eb79eed7307a7dc3a8e5a2d38bb0c70aee8d2e07864a12040f745642",
+            "values_sha256": "68e9e86b6926cc2b37df96b5e61bb8cabdab276272bb73f6767e420c3ead0663",
+            "start_sha256": "47a10d37a421968c0602fe8691a4e1aa6dc34d265e893dd96faf56284ce7fd32",
+            "stop_sha256": "b08d471ae53a2cba2e3f22536eba876dd922b7e830dfcc91883fdf6a3a46e69d"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "task",
+      "path": [
+        "ExposeCommand",
+        "scan_manager::scanner::1",
+        "State"
+      ],
+      "data_type": null,
+      "interval": true,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 1,
+          "height": 0.0,
+          "columns": {
+            "count": 1,
+            "first": 1787072589899388600,
+            "last": 1787072589899388600,
+            "timestamps_sha256": "48ee38eb9e9a89af2145fb0296930ac2f11bb44d96cb9991d05835b164fa60e5",
+            "values_sha256": null,
+            "start_sha256": "b7dfce0589c96076a2658bef7178f0613ccd7659ca99035bfb1b9336c9d3999d",
+            "stop_sha256": "0db64e1095c843bc44671a5d325133993b0b6d7f7dba63d3c1d5f5857f2c9305"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "task",
+      "path": [
+        "WaitCommand",
+        "_",
+        "State"
+      ],
+      "data_type": null,
+      "interval": true,
+      "parts": [
+        {
+          "assignment": 1,
+          "records": 1,
+          "height": 0.0,
+          "columns": {
+            "count": 1,
+            "first": 1787072600793942800,
+            "last": 1787072600793942800,
+            "timestamps_sha256": "8216e0e0a1bc07ffd243e03dcba6a4bcbd7d78cdad80d10636d556e92d54eb74",
+            "values_sha256": "68e9e86b6926cc2b37df96b5e61bb8cabdab276272bb73f6767e420c3ead0663",
+            "start_sha256": "b0bbf7f015d49b1d9be4c014db74a1c91c72b94646ae01f5e243220e137a14b0",
+            "stop_sha256": "090b9147a2c763650c3cb2cbb3733e0d6bd1deb314e1e25c11abe29dcaf2c80e"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "run",
+      "path": [
+        "RunState"
+      ],
+      "data_type": null,
+      "interval": false,
+      "parts": [
+        {
+          "assignment": "unassigned",
+          "records": 1,
+          "height": null,
+          "columns": {
+            "count": 1,
+            "first": 1787072585717000000,
+            "last": 1787072585717000000,
+            "timestamps_sha256": "2080ec2ede7266cef0ecaf4d6b40df24c4ebcb579fced1c73fd99cf9ed2b52f6",
+            "values_sha256": "e1e3bbcc7ad958768efdaa1f9b76735aeaea05eb6d524c4c9e3619a71cb59f52",
+            "start_sha256": null,
+            "stop_sha256": null
+          }
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "findings": [],
+    "counts": {
+      "notes": 0,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 3,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 6,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 48,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
+  "notes": [
+    "Times are the integers the file holds, in no unit the file states (decision D02-19).",
+    "The build date is the string as written (phase 2E was dropped).",
+    "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The build's context lists each attribute the file has by the CDM's name, as written (D02-20); a quantity has the unit of its companion attribute where the file has one and an unknown unit otherwise; a value that is the placeholder of the version is not recorded and is listed under `dropped` with its raw spelling (V17: 0 for the plate's thickness, weight and dimension; V16: 1.0 for the starting height, thickness and weight); a starting height of 0 and a dimension of 280 are recorded as written; the plate vocabulary the file uses is stated (D02-21).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
+    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16).",
+    "A laser's correction grids are listed with its parameters, as recorded (IP-24 24B, D24-11): the name as the file spells it, which grid the name says it is (V17 names its inverse; V16's one grid is not said to be either), the stored type, the extents in the order the file stores them, a fingerprint of the values in that order (the count, the type, how many are not a number, the minimum and the maximum of those that are, and the SHA-256 of the stored bytes: the V17 grids are mostly NaN, which is what the file holds), and that the domain and the axis order are Unrecorded: no file states them."
+  ]
+}

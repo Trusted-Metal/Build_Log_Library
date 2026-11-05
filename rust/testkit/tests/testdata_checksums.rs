@@ -1,7 +1,7 @@
 //! The committed miniatures are held to `testdata/SHA256SUMS` (IP-01 task T01.6; IP-00 decisions D00-5, D00-9 and D00-10).
 //!
 //! `testdata_matches_checksums` fails if an `.h5` file in `testdata/` differs from its listed hash, is not listed, or has no sidecar; if a listed file is
-//! missing; or if one file is over 12 MB or the files together are over 50 MB. It runs on every operating system in CI, so it is also the proof that a checkout
+//! missing; or if one file is over 12 MB or the files together are over 75 MB. It runs on every operating system in CI, so it is also the proof that a checkout
 //! with `core.autocrlf=true` did not change a byte (`*.h5` is marked binary in `.gitattributes`). A miniature is committed and never rebuilt: changing one needs
 //! the owner's approval and a new line in `SHA256SUMS`.
 //!

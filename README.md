@@ -15,7 +15,7 @@ A versioned library for the per-build records of laser powder bed fusion (LPBF) 
 | [`rust/testkit`](rust/testkit) | `build-log-testkit`: where tests find their data. Dev-only. |
 | [`schema/`](schema) | The language-neutral specification (not written yet); outside every language folder. |
 | [`testdata/`](testdata/README.md) | The committed, redacted miniatures that tests run on, with their checksums. |
-| [`docs/`](docs) | The test conventions, the model derivation, and the per-version layout and migration documents (which arrive with the adapters). |
+| [`docs/`](docs) | The test conventions, the Common Data Model, and the per-version layout and migration documents (which arrive with the adapters). |
 | [`.github/`](.github) | The CI workflow and its helper script, and the pull request template. |
 
 ## The layers
@@ -90,7 +90,7 @@ The advisory jobs show on a pull request but never block it.
 - **Tests** are named for the claim they prove and live where [`docs/test-conventions.md`](docs/test-conventions.md) says.
 - **Pull requests** use [the template](.github/pull_request_template.md).
 - **Test data**: the miniatures in [`testdata/`](testdata/README.md) are never rebuilt; the originals they were cut from are not in this repository.
-- **The Model** is documented against the file it mirrors in [`docs/models/derivation.md`](docs/models/derivation.md).
+- **The Model** (the Common Data Model) is documented, with its modules and the rules for changing it, in [`docs/models/cdm.md`](docs/models/cdm.md).
 
 ## License
 

@@ -17,14 +17,16 @@ pub const MODEL: &str = "build-log-model";
 pub const IO: &str = "build-log-io";
 pub const PROCESSING: &str = "build-log-processing";
 pub const TESTKIT: &str = "build-log-testkit";
+pub const CONFORMANCE: &str = "build-log-conformance";
 
 /// The five crates every checkout has, and where each lives (decisions D01-1 and D01-2).
-pub const LAYERS: [(&str, &str); 5] = [
+pub const LAYERS: [(&str, &str); 6] = [
     (MODEL, "rust/model"),
     (IO, "rust/io"),
     (PROCESSING, "rust/processing"),
     (FACADE, "rust/build-log"),
     (TESTKIT, "rust/testkit"),
+    (CONFORMANCE, "rust/conformance"),
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]

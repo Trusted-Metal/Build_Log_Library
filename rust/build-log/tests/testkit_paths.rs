@@ -31,6 +31,8 @@ fn the_miniature_names_are_the_files_that_are_committed() {
         miniature::V17_MARCH,
         miniature::V17_MOCK,
         miniature::V17_OCT15,
+        miniature::V17_TRIGGERED_2026_10_19,
+        miniature::V17_2026_08_18_IMAGES,
         miniature::V18,
         miniature::V17_SPECIAL_LAYERS,
     ] {

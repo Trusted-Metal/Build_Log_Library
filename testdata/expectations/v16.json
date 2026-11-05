@@ -1,0 +1,1208 @@
+{
+  "expectations_version": 1,
+  "about": "What the CDM must show for this miniature. Written by bl_fixtures.expectations from the miniature alone; never edited by hand.",
+  "miniature": {
+    "file": "v16.h5",
+    "sha256": "7f72b76a80f7cc171c551d2e5c7c45463e92816dbc257ff64f43dffdd67fd8f0"
+  },
+  "file_version": 16,
+  "build": {
+    "identity": {
+      "build_id": "XXXXXXXXXXXXX",
+      "date": "2026-01-26 19:37:22 UTC-05:00",
+      "username": "XXXXXX ",
+      "alloy": "IN718",
+      "part_count": 15,
+      "project_id": null,
+      "source_mcf_name": null,
+      "source_mcf_hash": null
+    },
+    "layers_declared": 2,
+    "layer_thickness": null,
+    "outcome": null,
+    "provenance": {
+      "opcua_join_status": null,
+      "opcua_join_version": null
+    },
+    "context": {
+      "values": [
+        {
+          "name": "machine_serial",
+          "kind": "text",
+          "value": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        },
+        {
+          "name": "material_parameter_id",
+          "kind": "text",
+          "value": "NA"
+        },
+        {
+          "name": "recoater_blade",
+          "kind": "text",
+          "value": "Soft"
+        },
+        {
+          "name": "scanner_id",
+          "kind": "text",
+          "value": "XXXXXXXXXXXXXXXXXXXXXXXXXX"
+        }
+      ],
+      "dropped": [
+        {
+          "name": "plate.thickness",
+          "raw": "1.0"
+        },
+        {
+          "name": "plate.weight",
+          "raw": "1.0"
+        },
+        {
+          "name": "starting_height",
+          "raw": "1.0"
+        }
+      ],
+      "plate_vocabulary": null,
+      "plate_origin": null
+    }
+  },
+  "layers": [
+    {
+      "id": 1,
+      "start": 1769456448906486,
+      "end": 1769456473287880,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "1.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "1.0"
+      }
+    },
+    {
+      "id": 2,
+      "start": 1769456486191607,
+      "end": 1769456510278576,
+      "times_unit": {
+        "spelling": null,
+        "unit_id": null,
+        "source": "Unknown"
+      },
+      "actual_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "1.0"
+      },
+      "commanded_thickness": {
+        "value": null,
+        "origin": "PlaceholderDropped",
+        "raw": "1.0"
+      }
+    }
+  ],
+  "lasers": [
+    {
+      "key": "Laser_1",
+      "number": 1,
+      "channels": [
+        {
+          "source_name": "Laser_Power",
+          "kind": "LaserPower",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "F32"
+          },
+          "enum_labels": null,
+          "stored_as": "F32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "V",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 2.0903542041778564,
+                "max": 2.136752128601074,
+                "first": [
+                  2.1098902225494385,
+                  2.09768009185791,
+                  2.107448101043701
+                ],
+                "last": [
+                  2.107448101043701,
+                  2.1123321056365967,
+                  2.1098902225494385
+                ],
+                "sha256": "bdbf4920ceb672e3f4fe896249c8a05b3c359891fc5e6da94ea30d89522ffddb"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "F32",
+                "min": 0.012210012413561344,
+                "max": 2.1416361331939697,
+                "first": [
+                  0.021978022530674934,
+                  0.021978022530674934,
+                  0.01953602023422718
+                ],
+                "last": [
+                  2.105006217956543,
+                  2.105006217956543,
+                  2.107448101043701
+                ],
+                "sha256": "e9ee3075516d743f2622059275a5ed452268d6bae33b54258bde8357382eb0f9"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Laser_State",
+          "kind": "LaserState",
+          "axis": null,
+          "clock_class": "LaserSynchronous",
+          "dtype": "Enum",
+          "enum_labels": "unknown",
+          "stored_as": "U8",
+          "unit": null,
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "313ece98ce774a18a6e664c3c53752c82b89112cf5e263354ad95c7b8aa78b6a"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "U8",
+                "min": 0,
+                "max": 1,
+                "first": [
+                  0,
+                  0,
+                  0
+                ],
+                "last": [
+                  1,
+                  1,
+                  1
+                ],
+                "sha256": "fc01262c8e6c15e8511d5a09ebc28c87efee7c37b8a264ae4d6392b46d3aad8f"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_X",
+          "kind": "ActualPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -42149,
+                "max": 36132,
+                "first": [
+                  -42149,
+                  -42130,
+                  -42092
+                ],
+                "last": [
+                  24090,
+                  24105,
+                  24118
+                ],
+                "sha256": "024bb3bb19a700f728b843ea953f6859f6865f1581b88c136b814b3db2efd1d9"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -38973,
+                "max": 28684,
+                "first": [
+                  -38957,
+                  -38947,
+                  -38956
+                ],
+                "last": [
+                  28119,
+                  28107,
+                  28103
+                ],
+                "sha256": "7a34d484ea1fadc9c313b49a77d742305c4b7a898218f698a57c9aa375c1be1d"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Y",
+          "kind": "ActualPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -149786,
+                "max": 36512,
+                "first": [
+                  -149786,
+                  -149719,
+                  -149645
+                ],
+                "last": [
+                  27204,
+                  27214,
+                  27224
+                ],
+                "sha256": "79098dd123f30a9fc7bd1f92d46f7b098e4cc3e8b713313202dbbc3e8db1b32d"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -29486,
+                "max": 35760,
+                "first": [
+                  -29468,
+                  -29476,
+                  -29471
+                ],
+                "last": [
+                  20996,
+                  21017,
+                  21030
+                ],
+                "sha256": "9b2a0b34544ee623a71d2071c3ffdc443f362e0a99a52768a12fe23f7aff5772"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Actual_Z",
+          "kind": "ActualPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141637,
+                "max": -124497,
+                "first": [
+                  -124497,
+                  -124515,
+                  -124535
+                ],
+                "last": [
+                  -137555,
+                  -137554,
+                  -137554
+                ],
+                "sha256": "a2c9041b9ac77d98d0a23d644eefd03c9a84960e9113df3bf3af68aed6273716"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -138533,
+                "max": -136600,
+                "first": [
+                  -136606,
+                  -136606,
+                  -136606
+                ],
+                "last": [
+                  -137581,
+                  -137581,
+                  -137582
+                ],
+                "sha256": "817b25227d83d86c3a9937526b37946c08926548a92667bdea21d94528023f4f"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_X",
+          "kind": "CommandedPosition",
+          "axis": "X",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -40279,
+                "max": 36538,
+                "first": [
+                  -40279,
+                  -40246,
+                  -40214
+                ],
+                "last": [
+                  25116,
+                  25134,
+                  25151
+                ],
+                "sha256": "1b10d3deaad71d1b9596e41bb741bc5901cc78bf1970e9294eee5995871d7542"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -38957,
+                "max": 28725,
+                "first": [
+                  -38957,
+                  -38957,
+                  -38957
+                ],
+                "last": [
+                  28167,
+                  28168,
+                  28169
+                ],
+                "sha256": "38634ef60db3b3502b017d075dcdd5ba5f532c41335170d3b8abd3e0d5226355"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Y",
+          "kind": "CommandedPosition",
+          "axis": "Y",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -145125,
+                "max": 36660,
+                "first": [
+                  -145125,
+                  -145044,
+                  -144963
+                ],
+                "last": [
+                  27573,
+                  27579,
+                  27585
+                ],
+                "sha256": "fe26f0e8420a82e06e4c5abd98188ceac348aeb2141c80527033b1530b8d105e"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -29470,
+                "max": 36177,
+                "first": [
+                  -29470,
+                  -29470,
+                  -29470
+                ],
+                "last": [
+                  22037,
+                  22054,
+                  22072
+                ],
+                "sha256": "f660aec997c84a1f328fc43304481621504122d1e00dcab095e9092d60dc27c5"
+              }
+            }
+          ]
+        },
+        {
+          "source_name": "Commanded_Z",
+          "kind": "CommandedPosition",
+          "axis": "Z",
+          "clock_class": "LaserSynchronous",
+          "dtype": {
+            "Numeric": "I32"
+          },
+          "enum_labels": null,
+          "stored_as": "I32",
+          "unit": {
+            "spelling": null,
+            "unit_id": "bits",
+            "source": "DeclaredByAdapter"
+          },
+          "captured_width": null,
+          "layers": [
+            {
+              "layer": 1,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -141627,
+                "max": -128244,
+                "first": [
+                  -128244,
+                  -128265,
+                  -128286
+                ],
+                "last": [
+                  -137414,
+                  -137412,
+                  -137411
+                ],
+                "sha256": "9bd073ecb16228b9cdd5bfb98f1ae51552c2f37ca94779cfef8e7f3f10ceb144"
+              }
+            },
+            {
+              "layer": 2,
+              "state": "recorded",
+              "samples": 25000,
+              "column": {
+                "count": 25000,
+                "stored_as": "I32",
+                "min": -139036,
+                "max": -136608,
+                "first": [
+                  -136608,
+                  -136608,
+                  -136608
+                ],
+                "last": [
+                  -137598,
+                  -137597,
+                  -137596
+                ],
+                "sha256": "2c0dc2e0669dfe2eab5ca614c00787b125209c5e2991b168390bb7a494057f79"
+              }
+            }
+          ]
+        }
+      ],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": null,
+            "window_end": null,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "build",
+              "raw": "10us",
+              "value": 10.0,
+              "unit": {
+                "spelling": "us",
+                "unit_id": "us",
+                "source": "FromFile"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": null
+        },
+        {
+          "layer": 2,
+          "state": "recorded",
+          "samples": 25000,
+          "time_axis_inputs": {
+            "window_start": null,
+            "window_end": null,
+            "stored_samples": 25000,
+            "sample_period": {
+              "scope": "build",
+              "raw": "10us",
+              "value": 10.0,
+              "unit": {
+                "spelling": "us",
+                "unit_id": "us",
+                "source": "FromFile"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": null
+        }
+      ],
+      "parameters": {
+        "optical_train": null,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLight-1000"
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          }
+        ],
+        "volts_to_watts": null,
+        "power_limits_not_recorded": false,
+        "origins": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "scanner.offset_x",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          },
+          {
+            "name": "scanner.offset_y",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          },
+          {
+            "name": "scanner.offset_z",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          }
+        ],
+        "grids": [
+          {
+            "name": "CorrectionData",
+            "role": null,
+            "stored_as": "I32",
+            "extents": [
+              2,
+              257,
+              257
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "I32",
+              "not_a_number": 0,
+              "min": -419115,
+              "max": 430988,
+              "sha256": "5fed9bc38962594fd868faf9c8d265246a2174d542e6878a3815e6024db73687"
+            }
+          }
+        ],
+        "untyped": {
+          "attributes": [
+            "3D_System",
+            "Actual_Position_Offset",
+            "Build_Plane_Offset_X",
+            "Build_Plane_Offset_Y",
+            "Commanded_Position_Offset",
+            "Communication_Protocol",
+            "Laser_Offset",
+            "Second_Moment_Major_Axis_At_Build_Plate",
+            "Second_Moment_Major_Axis_At_Waist",
+            "Second_Moment_Minor_Axis_At_Build_Plate",
+            "Second_Moment_Minor_Axis_At_Waist",
+            "Thermal_Lensing_Focal_Shift"
+          ],
+          "nodes": []
+        }
+      }
+    },
+    {
+      "key": "Laser_2",
+      "number": 2,
+      "channels": [],
+      "layers": [
+        {
+          "layer": 1,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": null,
+            "window_end": null,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "build",
+              "raw": "10us",
+              "value": 10.0,
+              "unit": {
+                "spelling": "us",
+                "unit_id": "us",
+                "source": "FromFile"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": null
+        },
+        {
+          "layer": 2,
+          "state": "recorded_empty",
+          "samples": 0,
+          "time_axis_inputs": {
+            "window_start": null,
+            "window_end": null,
+            "stored_samples": 0,
+            "sample_period": {
+              "scope": "build",
+              "raw": "10us",
+              "value": 10.0,
+              "unit": {
+                "spelling": "us",
+                "unit_id": "us",
+                "source": "FromFile"
+              }
+            }
+          },
+          "expected_accuracy": "nominal",
+          "complete": null
+        }
+      ],
+      "parameters": {
+        "optical_train": null,
+        "values": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "kind": "whole",
+            "value": 20
+          },
+          {
+            "name": "light_source.model",
+            "kind": "text",
+            "value": "nLight-1000"
+          },
+          {
+            "name": "optics.major_axis_angle",
+            "kind": "quantity",
+            "value": 180.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_major",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "optics.rayleigh_length_minor",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_x",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_y",
+            "kind": "quantity",
+            "value": 600.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.field_size_z",
+            "kind": "quantity",
+            "value": 1.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.model",
+            "kind": "text",
+            "value": "AconityScan"
+          },
+          {
+            "name": "scanner.offset_x",
+            "kind": "quantity",
+            "value": 23.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_y",
+            "kind": "quantity",
+            "value": -87.5,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.offset_z",
+            "kind": "quantity",
+            "value": 0.0,
+            "unit": {
+              "spelling": null,
+              "unit_id": null,
+              "source": "Unknown"
+            }
+          },
+          {
+            "name": "scanner.scaling_x",
+            "kind": "plain",
+            "value": 1.0
+          },
+          {
+            "name": "scanner.scaling_y",
+            "kind": "plain",
+            "value": 1.0
+          }
+        ],
+        "volts_to_watts": null,
+        "power_limits_not_recorded": false,
+        "origins": [
+          {
+            "name": "galvo_x.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_x.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_y.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_y.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_z.actual_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "galvo_z.commanded_bit_resolution",
+            "text": "bit resolution: one value in the file for every laser and axis"
+          },
+          {
+            "name": "scanner.offset_x",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          },
+          {
+            "name": "scanner.offset_y",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          },
+          {
+            "name": "scanner.offset_z",
+            "text": "scan-head offset: its sign is opposite to other versions' (inferred), kept as written"
+          }
+        ],
+        "grids": [
+          {
+            "name": "CorrectionData",
+            "role": null,
+            "stored_as": "I32",
+            "extents": [
+              2,
+              257,
+              257
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "I32",
+              "not_a_number": 0,
+              "min": -419115,
+              "max": 430988,
+              "sha256": "5fed9bc38962594fd868faf9c8d265246a2174d542e6878a3815e6024db73687"
+            }
+          }
+        ],
+        "untyped": {
+          "attributes": [
+            "3D_System",
+            "Actual_Position_Offset",
+            "Build_Plane_Offset_X",
+            "Build_Plane_Offset_Y",
+            "Commanded_Position_Offset",
+            "Communication_Protocol",
+            "Laser_Offset",
+            "Second_Moment_Major_Axis_At_Build_Plate",
+            "Second_Moment_Major_Axis_At_Waist",
+            "Second_Moment_Minor_Axis_At_Build_Plate",
+            "Second_Moment_Minor_Axis_At_Waist",
+            "Thermal_Lensing_Focal_Shift"
+          ],
+          "nodes": []
+        }
+      }
+    }
+  ],
+  "sensors": [],
+  "events": [],
+  "validation": {
+    "findings": [],
+    "counts": {
+      "notes": 0,
+      "warnings": 0,
+      "faults": 0
+    }
+  },
+  "availability": {
+    "layers": {
+      "present": 2,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "lasers": {
+      "present": 4,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "channels": {
+      "present": 16,
+      "not_recorded": 0,
+      "degraded": 0,
+      "unreadable": 0,
+      "unsupported": 0
+    },
+    "exceptions": []
+  },
+  "notes": [
+    "Times are the integers the file holds, in no unit the file states (decision D02-19).",
+    "The build date is the string as written (phase 2E was dropped).",
+    "Each of a layer's two thicknesses, the actual and the commanded, is reported on its own; one that is the placeholder of the version is not recorded, with the origin PlaceholderDropped and its raw value (J4).",
+    "The sample period is paired with a laser by number for V17 (the optical train of the same number) until the question of J11 is answered.",
+    "The build's status is its outcome and the OPC UA join's status and version are provenance (J14); a text that is not one of the names the oracle lists is kept as written, with the name left empty.",
+    "A V17 laser's parameters are the values of the optical train of the same number, by the CDM's names; a number is a number whether the file stored it as a float or an integer; the volts-to-watts equation is named constants, the intercept first (D13-25).",
+    "A V17 file's OPC UA events are series of the kind sensor, task or run, by their path, recorded in the bucket that no layer owns and inside layers, with the number of records in each place and, for a task event, its height; the series is described and its values are not read (D13-29), and each place carries the fingerprint of its columns (D06-12).",
+    "A V17 layer's camera images are build-level channels of the kind image, one for each phase (Pre_Exposure and Post_Exposure), recorded in the layers that have them, with the rows, the columns and the pixel type of the frame; one frame is recorded in each layer (D13-26).",
+    "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
+    "The build's context lists each attribute the file has by the CDM's name, as written (D02-20); a quantity has the unit of its companion attribute where the file has one and an unknown unit otherwise; a value that is the placeholder of the version is not recorded and is listed under `dropped` with its raw spelling (V17: 0 for the plate's thickness, weight and dimension; V16: 1.0 for the starting height, thickness and weight); a starting height of 0 and a dimension of 280 are recorded as written; the plate vocabulary the file uses is stated (D02-21).",
+    "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
+    "A V16 laser channel recorded with samples in a layer carries the same fingerprint of its stored column (IP-12 12F); a laser that did not fire has no channel and so none.",
+    "A laser's correction grids are listed with its parameters, as recorded (IP-24 24B, D24-11): the name as the file spells it, which grid the name says it is (V17 names its inverse; V16's one grid is not said to be either), the stored type, the extents in the order the file stores them, a fingerprint of the values in that order (the count, the type, how many are not a number, the minimum and the maximum of those that are, and the SHA-256 of the stored bytes: the V17 grids are mostly NaN, which is what the file holds), and that the domain and the axis order are Unrecorded: no file states them."
+  ]
+}
