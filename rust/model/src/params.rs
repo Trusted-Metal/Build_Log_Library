@@ -27,8 +27,17 @@
 
 use crate::error::{Error, ErrorKind, Violation};
 use crate::extra::Extra;
+use crate::grids::CorrectionGrid;
 use crate::provenance::Origins;
 use crate::units::Quantity;
+
+/// What the origin of a scan-head offset says when its sign is opposite to the sign the same offset has in other versions' files. The relation is **inferred** from the magnitudes of one machine's two
+/// lasers (V:CP-10), so the sentence says so, and **the value is kept as written and never flipped** (IP-12 decision D12-6).
+pub const SCAN_HEAD_OFFSET_SIGN_OPPOSITE: &str =
+    "scan-head offset: its sign is opposite to other versions' (inferred), kept as written";
+/// What the origin of a galvo's bit resolution says when the file gave one value for every laser and every axis, and the adapter gave it to this laser's galvo (IP-12 phase 12B, IP-24 finding F2).
+pub const BIT_RESOLUTION_GLOBAL: &str =
+    "bit resolution: one value in the file for every laser and axis";
 
 /// The protocol a galvo is driven with. Only the words that are known are named, and they are matched exactly as written.
 // open-domain: a machine may use a protocol that nobody has listed, and it is kept as the file spells it
@@ -232,7 +241,10 @@ pub struct LaserParameters {
     pub light_source: LightSourceParameters,
     /// How a value came to be what it is, when that is not simply "the file said so", by the name of the value (`light_source.volts_to_watts`).
     pub origins: Origins,
-    /// What the adapter did not type of the calibration: attributes and nodes below the optical train, by their path (the correction grids are here).
+    /// The correction grids of the laser, as recorded (IP-24 phase 24B): the descriptor of each, in the order the file names them. **The values are read through `ColumnSource::read_grid`**, as stored;
+    /// the library does not interpret a grid.
+    pub grids: Vec<CorrectionGrid>,
+    /// What the adapter did not type of the calibration: attributes and nodes below the optical train, by their path (the grids are typed and are not here).
     pub extra: Extra,
 }
 
@@ -498,6 +510,23 @@ impl LaserParameters {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_sentences_of_the_two_notes_are_distinct_and_name_no_version() {
+        // IP-12 phase 12B: an origin says one thing, so the two sentences differ; and the Model names no version, whichever file the note is about
+        assert_ne!(SCAN_HEAD_OFFSET_SIGN_OPPOSITE, BIT_RESOLUTION_GLOBAL);
+        for sentence in [SCAN_HEAD_OFFSET_SIGN_OPPOSITE, BIT_RESOLUTION_GLOBAL] {
+            assert!(!sentence.is_empty());
+            assert!(
+                !sentence.contains("V16") && !sentence.contains("V17") && !sentence.contains("V18")
+            );
+        }
+        // the sign note says that the relation is inferred and that the value is not changed
+        assert!(
+            SCAN_HEAD_OFFSET_SIGN_OPPOSITE.contains("inferred")
+                && SCAN_HEAD_OFFSET_SIGN_OPPOSITE.contains("as written")
+        );
+    }
 
     #[test]
     fn a_snapshot_that_says_nothing_lists_no_value_and_a_value_is_listed_by_name() {

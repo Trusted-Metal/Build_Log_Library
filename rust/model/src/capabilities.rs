@@ -39,6 +39,8 @@ pub enum Feature {
     EventColumns,
     /// Regions of the camera frames, read as stored (IP-06 phase 6G): `ColumnSource::read_image`. The frames themselves are described under `Images`.
     ImageRegions,
+    /// The correction grids of the lasers, read as stored (IP-24 phase 24B): `ColumnSource::read_grid`. The grids are described in the parameters of each laser.
+    CorrectionGrids,
     /// Sensor series.
     Sensors,
     /// The integrity digests of the data.

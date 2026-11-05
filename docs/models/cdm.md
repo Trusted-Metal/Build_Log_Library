@@ -4,7 +4,7 @@ What the Model crate (`rust/model`, package `build-log-model`) holds, where each
 
 **What the CDM is.** Plain Rust types for a build, its layers, lasers and channels, and the *requests* that reach their samples. It is **version-neutral**: the adapter of each file version fills it, and no type names a group, dataset or attribute of any file. It has **no HDF5** and builds for `wasm32`. It holds what a file *says*, as recorded: a value the file spells in its own way keeps that spelling, and where a value needs a note (a placeholder dropped, a channel not read) the note is an **origin** on a side table, not a change to the value.
 
-**Bulk data is never in a metadata type.** Samples, event values, images and correction grids are reached through a column accessor (`ColumnSource` and the requests in `column`, `event_columns` and `image_regions`), so a build of 89 GB is never held whole.
+**Bulk data is never in a metadata type.** Samples, event values, images and correction grids are reached through a column accessor (`ColumnSource` and the requests in `column`, `event_columns`, `image_regions` and `grids`), so a build of 89 GB is never held whole.
 
 ## The modules
 
@@ -24,6 +24,7 @@ Every file of `rust/model/src` is a module of this table, and every public type 
 | `events` | OPC UA event series, described (their records are columns) | `EventSeries`, `EventKind`, `EventDataType`, `EventPart` |
 | `event_columns` | The times and values of one place of one series | `EventRequest`, `EventPlace`, `EventColumns`, `TypedValues` |
 | `image_regions` | A rectangle of a camera frame and the pixels that come back | `ImageRequest`, `ImageRegion`, `ImageData` |
+| `grids` | A laser's correction grid: the descriptor in its parameters (name, which grid the name says it is, stored type, extents, that the meaning is unrecorded) and its values, whole and as stored (IP-24 phase 24B) | `CorrectionGrid`, `GridRole`, `GridInterpretation`, `GridRequest`, `GridData` |
 | `column` | Column access: requests, typed shared results, cancellation and progress, the traits a reader implements | `ColumnSource`, `BuildSource`, `ColumnRequest`, `ColumnData`, `CancelToken`, `InMemorySource` |
 | `availability` | What a consumer can do with each layer, laser and channel | `AvailabilityReport`, `Item`, `AvailabilityCounts`, `availability_of` |
 | `validation` | What is wrong or odd about a build, found without reading a sample | `ValidationReport`, `Finding`, `FindingCode`, `Severity`, `validate_build` |
@@ -59,4 +60,5 @@ Before a change to a type, answer these in the change itself.
 
 | When | Change | Why |
 |---|---|---|
+| 2026-11-03 (IP-24 phase 24B) | **Added the `grids` module** and `Feature::CorrectionGrids`: `CorrectionGrid` (name, role, stored type, extents, `GridInterpretation::Unrecorded`) in `LaserParameters::grids`, and `GridRequest` and `GridData` with the defaulted method `ColumnSource::read_grid`. A grid is a bulk container (`GridData`) read whole, as stored and row-major in the extents the file gives; a value that is not a number comes back bit for bit. | Vision's grid correction needs the V17 grids (F1); the owner asked for V16 too (Q24-6). The library says nothing of the grid's domain or axis order, because no file does (decision D24-11). |
 | 2026-11-02 (IP-02 phase 2T) | **Removed the pre-cleanup types** that held whole `Vec`s and mirrored one V18 reference file: `Build`, `Laser`, `LaserMonitoringLayer`, `Sensor`, `SensorKind`, `SensorCalibration`, `OpcUaReading`, `EventRecord`, `ImagePair`, `GrayscaleImage`, `Corrections`, `CorrectionFile`, `InverseCorrectionGrid`, `CalibrationCurve`, `EquationConstant` and `LegacyByLayer`. **Breaking for anyone who named them.** Use `BuildMeta` with `BuildIdentity` and `BuildContext` for `Build`; `LaserMeta`, `LaserLayerMeta` and `LaserParameters` for `Laser`; `ColumnSource` and `ColumnRequest` for the sample vectors; `ChannelDescriptor` and `ChannelKind` for `Sensor`; `EventSeries` and `EventRequest` for the OPC UA records; `ImageRegion` and `ImageRequest` for the frames; `Equation` and `NamedConstant` for the calibration curve; `ByLayer` (keyed by `LayerId`) for `LegacyByLayer`. The correction grid and the correction document have no replacement yet: their descriptors are planned. | The new types are the CDM; the old ones were shaped like one file, held bulk data in metadata, and duplicated what the new types hold (the replacement rule above). The first adapter (V17) landed on 2026-10-23, and nothing but the Model's own guards and the facade's re-export test named them. |

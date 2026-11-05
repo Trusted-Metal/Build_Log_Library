@@ -20,6 +20,7 @@ mod error;
 mod event_columns;
 mod events;
 mod extra;
+mod grids;
 mod identity;
 mod image_regions;
 mod json;
@@ -52,13 +53,14 @@ pub use extra::{
     AttrShape, AttrValue, Dims, Extra, ExtraAttribute, NodeKind, StoredAs, StoredClass,
     TextCharset, TextPadding, UnknownNode, MAX_ATTRIBUTE_BYTES, MAX_DIMS,
 };
+pub use grids::{CorrectionGrid, GridData, GridInterpretation, GridRequest, GridRole};
 pub use identity::{Availability, ByLayer, ChannelKey, LaserKey, LayerId, Presence};
 pub use image_regions::{ImageData, ImageRegion, ImageRequest};
 pub use meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
 pub use params::{
     Equation, EquationKind, GalvoParameters, GalvoProtocol, LaserParameters, LightSourceParameters,
     NamedConstant, OpticalTrainParameters, ParameterValue, ScannerCardParameters,
-    ScannerParameters,
+    ScannerParameters, BIT_RESOLUTION_GLOBAL, SCAN_HEAD_OFFSET_SIGN_OPPOSITE,
 };
 pub use provenance::{JoinStatus, NotReadCause, Origin, Origins, Provenance};
 pub use quality::{Outcome, QualityRecord};

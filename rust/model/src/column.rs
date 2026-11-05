@@ -33,6 +33,7 @@ use crate::channel::ChannelDescriptor;
 use crate::error::{Error, ErrorKind, Location};
 use crate::event_columns::{EventColumns, EventPlace, EventRequest};
 use crate::events::EventKind;
+use crate::grids::{GridData, GridRequest};
 use crate::identity::{ChannelKey, LaserKey, LayerId};
 use crate::image_regions::{ImageData, ImageRegion, ImageRequest};
 use crate::meta::BuildMeta;
@@ -537,6 +538,22 @@ pub trait ColumnSource: Send + Sync {
         .at(request.location()))
     }
 
+    /// Reads the values of one correction grid of a laser, as stored: the laser and the grid by the name the file spells, the whole grid, **in the type the file holds and row-major in the extents as
+    /// the file stores them** (decision D24-11). **Bulk data stays behind this one door.** The library does not interpret a grid: its domain and its axes are stated by no file, and a value that is not
+    /// a number comes back as it is.
+    ///
+    /// Defaulted: a source that holds no grids answers `UnsupportedInVersion`, so that a source written before grids were readable still compiles and says so; one that has them declares
+    /// `Feature::CorrectionGrids`. Errors: `NotPresent` for a laser or a grid that the source does not have, `Cancelled` when the token fires. Every error carries the laser, the grid as a channel
+    /// and the operation `read_grid`.
+    fn read_grid(&self, request: &GridRequest, context: &ReadContext) -> Result<GridData, Error> {
+        let _ = context;
+        Err(Error::new(ErrorKind::UnsupportedInVersion {
+            version: "this source".to_string(),
+            feature: "reading correction grids".to_string(),
+        })
+        .at(request.location()))
+    }
+
     /// What the source's cache of decoded columns has done so far, or `None` if it has none (PS-12). A source that keeps nothing answers `None`; a caller that wants to
     /// know whether a budget helps reads it before and after.
     fn cache_stats(&self) -> Option<CacheStats> {
@@ -661,6 +678,7 @@ pub struct InMemorySource {
     segment_tables: BTreeMap<(LayerId, LaserKey), ChannelKey>,
     events: BTreeMap<(EventKind, Vec<String>, EventPlace), EventColumns>,
     images: BTreeMap<(LayerId, ChannelKey), ImageData>,
+    grids: BTreeMap<(LaserKey, String), GridData>,
     build: Option<Arc<BuildMeta>>,
     revision: Revision,
 }
@@ -668,6 +686,17 @@ pub struct InMemorySource {
 impl InMemorySource {
     pub fn new() -> Self {
         InMemorySource::default()
+    }
+
+    /// Adds the values of a laser's correction grid, by the name the file spells, and returns the ones it replaced.
+    pub fn insert_grid(
+        &mut self,
+        laser: LaserKey,
+        name: impl Into<String>,
+        data: GridData,
+    ) -> Option<GridData> {
+        self.revision = self.revision.next();
+        self.grids.insert((laser, name.into()), data)
     }
 
     /// Adds a column, and returns the one it replaced.
@@ -823,6 +852,22 @@ impl ColumnSource for InMemorySource {
                 what: "the records are outside the series".to_string(),
             }))
         })
+    }
+
+    fn read_grid(&self, request: &GridRequest, context: &ReadContext) -> Result<GridData, Error> {
+        let located = |error: Error| error.at(request.location());
+        context.check_cancelled().map_err(located)?;
+        let grid = self
+            .grids
+            .get(&(request.laser.clone(), request.grid.clone()))
+            .ok_or_else(|| {
+                located(Error::new(ErrorKind::NotPresent {
+                    what: "the grid".to_string(),
+                }))
+            })?;
+        let values = grid.len() as u64;
+        context.report(values, values);
+        Ok(grid.clone())
     }
 
     fn read_image(
