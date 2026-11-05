@@ -24,13 +24,13 @@ use build_log_model::{
 };
 use hdf5::Group;
 
-use super::lasers::is_about_the_content;
 use super::layout;
-use super::values::{optional_number, optional_text};
 use crate::hdf5::{
     describe_dataset, from_binding, keep_dataset_remainder, keep_group_remainder, keep_node,
     MAX_DEPTH,
 };
+use crate::toolkit::content::is_about_the_content;
+use crate::toolkit::values::{optional_number, optional_text};
 
 fn corrupt(detail: String) -> Error {
     Error::new(ErrorKind::Corrupt { detail })

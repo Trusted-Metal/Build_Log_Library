@@ -23,15 +23,19 @@
 use std::collections::BTreeSet;
 
 use build_log_model::{
-    parse_embedded, BuildMeta, Equation, EquationKind, Error, ErrorKind, GalvoProtocol,
-    LaserParameters, Origin, ParameterValue, Quantity,
+    parse_embedded, BuildMeta, CorrectionGrid, Equation, EquationKind, Error, ErrorKind,
+    GalvoProtocol, GridRole, LaserParameters, Origin, ParameterValue, Quantity,
 };
 use hdf5::Group;
 
-use super::lasers::is_about_the_content;
 use super::layout;
-use super::values::{optional_integer, optional_number, optional_text, optional_written, Written};
+use super::KEY;
+use crate::columns::describe_grid;
 use crate::hdf5::{keep_group_remainder, keep_other_attributes, keep_other_nodes};
+use crate::toolkit::content::is_about_the_content;
+use crate::toolkit::values::{
+    optional_integer, optional_number, optional_text, optional_written, Written,
+};
 
 fn corrupt(detail: String) -> Error {
     Error::new(ErrorKind::Corrupt { detail })
@@ -441,6 +445,34 @@ fn child(parent: &Group, name: &str) -> Result<Option<Group>, Error> {
         .map_err(|e| corrupt(format!("`{name}` is not a group: {e}")))
 }
 
+/// The two grids of an optical train, by the name the file spells and by what that name says each is: the grid, and the one that is named as its inverse.
+const GRIDS: [(&str, GridRole); 2] = [
+    (layout::CORRECTION_DATA, GridRole::Forward),
+    (layout::INVERSE_CORRECTION_DATA, GridRole::Inverse),
+];
+
+/// The descriptor of the grid `name` of a train, or `None` if the train has none by that name. **What a grid is, is the engine's to say** (`describe_grid`): a dataset that it cannot read is an
+/// error here, and the caller keeps it untyped.
+fn describe_one_grid(
+    train: &Group,
+    name: &str,
+    role: GridRole,
+) -> Result<Option<CorrectionGrid>, Error> {
+    if !train.link_exists(name) {
+        return Ok(None);
+    }
+    let dataset = train
+        .dataset(name)
+        .map_err(|e| corrupt(format!("`{name}` is not a dataset: {e}")))?;
+    let (stored_as, extents) = describe_grid(&dataset, KEY)?;
+    Ok(Some(CorrectionGrid::new(
+        name,
+        Some(role),
+        stored_as,
+        extents,
+    )))
+}
+
 /// The snapshot of the optical train `train`, which is the one of the laser numbered `number`.
 pub fn read_train(train: &Group, number: u32) -> Result<LaserParameters, Error> {
     let mut parameters = LaserParameters::new();
@@ -452,14 +484,26 @@ pub fn read_train(train: &Group, number: u32) -> Result<LaserParameters, Error> 
 
     let mut typed: Vec<&'static str> = Vec::new();
     read_rows(train, TRAIN_ROWS, "", &mut parameters, &mut typed)?;
+    // the correction grids (IP-24 phase 24B): a grid that the engine reads is described here and is not kept as an untyped node; one that it does not read stays where it is, and the snapshot says why
+    let mut children: Vec<&str> = vec![layout::SCANNER, layout::SCANNER_CARD, layout::LIGHT_SOURCE];
+    for (name, role) in GRIDS {
+        match describe_one_grid(train, name, role) {
+            Ok(Some(grid)) => {
+                parameters.grids.push(grid);
+                children.push(name);
+            }
+            Ok(None) => {}
+            Err(error) if is_about_the_content(&error) => {
+                parameters
+                    .origins
+                    .record(format!("grid {name}"), Origin::not_read(&error));
+            }
+            Err(error) => return Err(error),
+        }
+    }
     let mut extra = std::mem::take(&mut parameters.extra);
     keep_other_attributes(train, &typed, &mut extra)?;
-    keep_other_nodes(
-        train,
-        &[layout::SCANNER, layout::SCANNER_CARD, layout::LIGHT_SOURCE],
-        &[],
-        &mut extra,
-    )?;
+    keep_other_nodes(train, &children, &[], &mut extra)?;
 
     if let Some(scanner) = child(train, layout::SCANNER)? {
         let mut typed: Vec<&'static str> = Vec::new();

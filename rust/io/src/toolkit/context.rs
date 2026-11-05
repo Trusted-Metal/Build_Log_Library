@@ -1,10 +1,11 @@
-//! The build's context in a V17 file (IP-02 phase 2V; decisions D02-20 and D02-21): the machine, the material, the starting height and the build plate, read from the attributes of the
-//! mount into [`BuildMeta::context`].
+//! The build's context in a file (IP-02 phase 2V; decisions D02-20 and D02-21; moved to the toolkit by IP-12 phase 12A, decision D12-1): the machine, the material, the starting height and the
+//! build plate, read from the attributes of the mount into [`BuildMeta::context`].
 //!
-//! * **One table says which attribute holds which value** ([`layout::CONTEXT`]); the Model maps a name to a field (`BuildContext::set`), so this file names no attribute and no field.
+//! * **One table says which attribute holds which value** ([`ContextTable`], filled by the version's layout module); the Model maps a name to a field (`BuildContext::set`), so this file names
+//!   no attribute and no field.
 //! * **Every value is as the file gave it.** A text is as written (an empty text is a recorded empty text); a number is a number whether the file stored it as a float or an integer; a
 //!   quantity has the unit of its companion attribute where the file has one, and an unknown unit otherwise.
-//! * **A placeholder is not a value** ([`layout::CONTEXT_PLACEHOLDERS`]): the Model's rule of the layer thickness makes the field absent and the build's origin for it says `PlaceholderDropped`
+//! * **A placeholder is not a value** ([`ContextTable::placeholders`]): the Model's rule of the layer thickness makes the field absent and the build's origin for it says `PlaceholderDropped`
 //!   with the raw spelling.
 //! * **The plate keeps the vocabulary of its file**: one dimension and a shape, or three dimensions and a corner radius, and the build's origin for `plate` says which. Neither is converted into
 //!   the other.
@@ -16,8 +17,32 @@ use build_log_model::{
 };
 use hdf5::Group;
 
-use super::layout::{self, ContextKind};
 use super::values::{optional_number, optional_text};
+
+/// What kind of value an attribute of the context holds.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ContextKind {
+    /// Text, as written.
+    Text,
+    /// A number, whether the file stored it as a float or as an integer, with the unit that its companion attribute states, if it has one.
+    Quantity,
+}
+
+/// One attribute of the context: the attribute, the name the CDM gives its value, its kind, and the attribute that holds its unit (a quantity with none has an unknown unit).
+pub type ContextRow = (
+    &'static str,
+    &'static str,
+    ContextKind,
+    Option<&'static str>,
+);
+
+/// What a version says about its context: the attributes that make it, and the values that stand for "unknown" in that version.
+pub struct ContextTable {
+    /// The attributes of the mount that make the build's context. The adapter says which attribute holds which name and nothing else.
+    pub rows: &'static [ContextRow],
+    /// The value that a version writes when it does not know a quantity, by the CDM's name of the quantity. A value that is among them is not recorded.
+    pub placeholders: &'static [(&'static str, f64)],
+}
 
 /// The values of the older vocabulary of the plate, and of the current one, by the CDM's names.
 const OLDER_VOCABULARY: [&str; 2] = ["plate.dimension", "plate.shape"];
@@ -25,11 +50,19 @@ const CURRENT_VOCABULARY: [&str; 4] = ["plate.x", "plate.y", "plate.z", "plate.c
 
 /// Reads the context into `build`. Returns the attributes that were **typed** (each value's, and its unit's where it had one), which the build level does not keep in `extra`; an
 /// attribute that was absent or that could not be read is not among them.
-pub fn read(mount: &Group, build: &mut BuildMeta) -> Vec<&'static str> {
+pub fn read(mount: &Group, build: &mut BuildMeta, table: &ContextTable) -> Vec<&'static str> {
     let mut typed = Vec::new();
     let (mut older, mut current) = (false, false);
-    for (attribute, name, kind, unit_attribute) in layout::CONTEXT {
-        let outcome = read_one(mount, build, attribute, name, kind, unit_attribute);
+    for &(attribute, name, kind, unit_attribute) in table.rows {
+        let outcome = read_one(
+            mount,
+            build,
+            table.placeholders,
+            attribute,
+            name,
+            kind,
+            unit_attribute,
+        );
         match outcome {
             Ok(false) => continue,
             Ok(true) => {
@@ -65,6 +98,7 @@ pub fn read(mount: &Group, build: &mut BuildMeta) -> Vec<&'static str> {
 fn read_one(
     mount: &Group,
     build: &mut BuildMeta,
+    all_placeholders: &[(&str, f64)],
     attribute: &str,
     name: &str,
     kind: ContextKind,
@@ -86,7 +120,7 @@ fn read_one(
                 Some(unit_attribute) => optional_text(mount, unit_attribute)?,
                 None => None,
             };
-            let placeholders: Vec<f64> = layout::CONTEXT_PLACEHOLDERS
+            let placeholders: Vec<f64> = all_placeholders
                 .iter()
                 .filter(|(placeholder_of, _)| *placeholder_of == name)
                 .map(|(_, value)| *value)

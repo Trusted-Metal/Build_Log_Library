@@ -12,8 +12,8 @@ use build_log_conformance::{
 use build_log_model::{
     Accuracy, BuildMeta, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind, ClockClass,
     EquationKind, EventDataType, EventKind, EventPart, EventSeries, GalvoProtocol, ImageFormat,
-    JoinStatus, LaserParameters, LayerId, NumericType, Outcome, Presence, Quantity, TimeValue,
-    TimeWindow, UnitSource,
+    JoinStatus, LaserParameters, LayerId, NumericType, Origin, Outcome, Presence, Quantity,
+    TimeValue, TimeWindow, UnitSource,
 };
 
 fn testdata() -> std::path::PathBuf {
@@ -465,14 +465,117 @@ fn mutations() -> Vec<Mutation> {
         }),
         ("the optical train of a laser is another one", |m| {
             edit_laser(m, 0, |laser| match laser.parameters.as_mut() {
-                Some(parameters) => {
-                    parameters.optical_train_number =
-                        parameters.optical_train_number.map(|n| n + 1);
-                    true
-                }
+                Some(parameters) => match parameters.optical_train_number {
+                    Some(n) => {
+                        parameters.optical_train_number = Some(n + 1);
+                        true
+                    }
+                    None => false,
+                },
                 None => false,
             })
         }),
+        (
+            "a laser is given an optical train that the file does not have",
+            |m| {
+                edit_laser(m, 0, |laser| match laser.parameters.as_mut() {
+                    Some(parameters) if parameters.optical_train_number.is_none() => {
+                        parameters.optical_train_number = Some(1);
+                        true
+                    }
+                    _ => false,
+                })
+            },
+        ),
+        ("the sign of a scan-head offset is flipped", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(q) = laser
+                    .parameters
+                    .as_mut()
+                    .and_then(|p| p.scanner.offset_x.as_mut())
+                else {
+                    return false;
+                };
+                q.value = -q.value;
+                q.value != 0.0
+            })
+        }),
+        ("the note on a value is lost", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                if p.origins.get("scanner.offset_x").is_none() {
+                    return false;
+                }
+                let kept: Vec<_> = p
+                    .origins
+                    .iter()
+                    .filter(|(name, _)| *name != "scanner.offset_x")
+                    .map(|(name, origin)| (name.to_string(), origin.clone()))
+                    .collect();
+                p.origins = build_log_model::Origins::new();
+                for (name, origin) in kept {
+                    p.origins.record(name, origin);
+                }
+                true
+            })
+        }),
+        ("the note on a value says something else", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                if p.origins.get("scanner.offset_x").is_none() {
+                    return false;
+                }
+                p.origins.record(
+                    "scanner.offset_x",
+                    Origin::Other("scan-head offset: flipped".into()),
+                );
+                true
+            })
+        }),
+        ("a note is put on a value that has none", |m| {
+            edit_laser(m, 0, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                if p.origins.get("scanner.offset_x").is_none() {
+                    return false;
+                }
+                p.origins.record(
+                    "scanner.field_size_x",
+                    Origin::Other("a note that was not expected".into()),
+                );
+                true
+            })
+        }),
+        ("a galvo's bit resolution is another number", |m| {
+            edit_laser(m, 1, |laser| {
+                let Some(p) = laser.parameters.as_mut() else {
+                    return false;
+                };
+                match p.galvo_y.actual_bit_resolution {
+                    Some(n) => {
+                        p.galvo_y.actual_bit_resolution = Some(n + 1);
+                        true
+                    }
+                    None => false,
+                }
+            })
+        }),
+        (
+            "a galvo's bit resolution is not given to every galvo",
+            |m| {
+                edit_laser(m, 0, |laser| {
+                    laser
+                        .parameters
+                        .as_mut()
+                        .is_some_and(|p| p.galvo_z.commanded_bit_resolution.take().is_some())
+                })
+            },
+        ),
         ("a value of the snapshot changes", |m| {
             edit_laser(m, 1, |laser| {
                 let Some(q) = laser

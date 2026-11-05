@@ -7,6 +7,8 @@
 //! The names here are the ones the files show: tauri's output of every month, current and March alike (the two flavors differ in how a value is stored, not in
 //! these names). The layers, lasers and channels join this file with the phases that read them (13C and 13D).
 
+use crate::toolkit::context::{ContextKind, ContextTable};
+
 /// The mount: the group that holds the build, and carries the marker.
 pub const MOUNT: &str = "Built_Part";
 
@@ -104,6 +106,11 @@ pub const OPTICAL_TRAIN_PREFIX: &str = "Optical_Train_";
 pub const SCANNER_CARD: &str = "Scanner_Card";
 /// The scanner card's sample period, a number with no unit: the input of a laser's time axis.
 pub const SAMPLE_PERIOD: &str = "Sample_Period";
+
+/// The correction grids of an optical train (IP-24 phase 24B): datasets of the train's own group, `float64` of 257 by 257 by 2 in the files we hold. **No file states their domain or the order of their
+/// axes.** The first is the grid, and the second is named as its inverse.
+pub const CORRECTION_DATA: &str = "Correction_Data";
+pub const INVERSE_CORRECTION_DATA: &str = "Inverse_Correction_Data";
 
 // ---------------------------------------------------------------- the parameters of a laser: its optical train (phase 13H)
 
@@ -294,17 +301,8 @@ pub const BUILD_PLATE_CORNER_RADIUS_UNIT: &str = "Build_Plate_Corner_Radius_unit
 pub const BUILD_PLATE_THICKNESS: &str = "Build_Plate_Thickness";
 pub const BUILD_PLATE_WEIGHT: &str = "Build_Plate_Weight";
 
-/// What kind of value an attribute of the context holds.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ContextKind {
-    /// Text, as written.
-    Text,
-    /// A number, whether the file stored it as a float or as an integer, with the unit that its companion attribute states, if it has one.
-    Quantity,
-}
-
-/// The attributes of the mount that make the build's context: the attribute, the name the CDM gives its value, its kind, and the attribute that holds its unit (a quantity with none has
-/// an unknown unit). The adapter says which attribute holds which name and nothing else: the Model maps a name to a field.
+/// The attributes of the mount that make the build's context: the attribute, the name the CDM gives its value, its kind (the toolkit's), and the attribute that holds its unit (a quantity with none
+/// has an unknown unit). The adapter says which attribute holds which name and nothing else: the Model maps a name to a field.
 pub const CONTEXT: [(&str, &str, ContextKind, Option<&str>); 15] = [
     (MACHINE_SERIAL, "machine_serial", ContextKind::Text, None),
     (SCANNER_ID, "scanner_id", ContextKind::Text, None),
@@ -399,3 +397,9 @@ pub const CONTEXT_PLACEHOLDERS: [(&str, f64); 3] = [
     ("plate.weight", 0.0),
     ("plate.dimension", 0.0),
 ];
+
+/// The two tables above, as the toolkit's reader of the context takes them (IP-12 phase 12A).
+pub const CONTEXT_TABLE: ContextTable = ContextTable {
+    rows: &CONTEXT,
+    placeholders: &CONTEXT_PLACEHOLDERS,
+};

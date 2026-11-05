@@ -590,6 +590,63 @@ fn lasers_are_numbered_not_sorted_as_text() {
     assert_eq!((in_first, in_second), (vec![2, 9, 10, 11], vec![2, 10]));
 }
 
+#[test]
+fn a_lasers_channels_are_listed_in_the_layouts_order_whatever_layer_each_was_first_seen_in() {
+    // IP-12 phase 12A: the layer-major reader lists a channel when it first meets it. Layer 1 has only the actual positions, layer 2 has the power and the state too, so the power is
+    // met after the positions and must still be listed first
+    let build = read_mount("v17-streams-channel-order", |mount| {
+        let layers = monitoring(mount);
+        fixture_laser(
+            &layer(&layers, 1),
+            1,
+            4,
+            &[
+                (Part::Power, How::Removed),
+                (Part::State, How::Removed),
+                (Part::Commanded, How::Removed),
+            ],
+        );
+        fixture_laser(&layer(&layers, 2), 1, 4, &[]);
+    });
+    let kinds: Vec<ChannelKind> = build
+        .laser(&laser_one())
+        .expect("the laser")
+        .channels
+        .iter()
+        .map(|c| c.kind.clone())
+        .collect();
+    assert_eq!(
+        kinds,
+        [
+            ChannelKind::LaserPower,
+            ChannelKind::LaserState,
+            ChannelKind::ActualPosition { axis: Axis::X },
+            ChannelKind::ActualPosition { axis: Axis::Y },
+            ChannelKind::CommandedPosition { axis: Axis::X },
+            ChannelKind::CommandedPosition { axis: Axis::Y },
+            ChannelKind::CommandedPosition { axis: Axis::Z },
+        ]
+    );
+}
+
+#[test]
+fn a_laser_whose_window_does_not_fit_is_reported_on_itself_and_the_build_opens() {
+    // IP-12 phase 12A: a value that does not fit its width is a fact about the file's content, so it is reported on the laser it is in (D13-21) and does not stop the open
+    let build = read_mount("v17-streams-window-too-big", |mount| {
+        let first = layer(&monitoring(mount), 1);
+        let group = fixture_laser(&first, 1, N, &[]);
+        put_array(&group, layout::START_LASER_TIME, &[u64::MAX]);
+    });
+    let entry = stream(&build);
+    assert_eq!(entry.presence, Presence::NotRecorded);
+    match entry.origins.get("laser") {
+        Some(Origin::NotRead { cause, .. }) => {
+            assert_eq!(*cause, build_log_model::NotReadCause::Fault)
+        }
+        other => panic!("expected the typed origin on the laser, got {other:?}"),
+    }
+}
+
 // ---------------------------------------------------------------- the files that we hold
 
 #[test]

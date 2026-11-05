@@ -14,10 +14,10 @@ use hdf5::Group;
 
 use super::events::Events;
 use super::images::Images;
-use super::lasers::Lasers;
+use super::lasers;
 use super::layout;
-use super::values::{optional_float, optional_integer};
 use crate::hdf5::{from_binding, keep_group_remainder, keep_other_attributes, keep_other_nodes};
+use crate::toolkit::values::{optional_float, optional_integer};
 
 /// What V17 writes for a thickness it does not know (decision J4). A thickness of `1.0` is a real one in V17.
 const THICKNESS_PLACEHOLDERS: [f64; 1] = [0.0];
@@ -72,7 +72,7 @@ pub fn read_layers_with(
     let names = monitoring
         .member_names()
         .map_err(|e| from_binding("listing the layers", e))?;
-    let mut lasers = Lasers::new(mount);
+    let mut lasers = lasers::collector(mount);
     let mut images = Images::new();
     let mut layer_names: Vec<&str> = Vec::new();
     for name in &names {

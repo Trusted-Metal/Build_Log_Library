@@ -351,31 +351,36 @@ fn a_column_that_is_not_numbers_has_no_fingerprint() {
 // ---------------------------------------------------------------- the expectations
 
 #[test]
-fn an_expectation_that_names_no_fingerprint_for_a_v17_channel_is_reported() {
-    // a V17 expectation must describe every channel recorded with samples: a check that has nothing to check cannot pass
+fn an_expectation_that_names_no_fingerprint_for_a_v16_or_v17_channel_is_reported() {
+    // a V16 or V17 expectation must describe every channel recorded with samples: a check that has nothing to check cannot pass
     let source = source_with(|_, _, _, data| Some(data));
-    let lines = check_columns(&source, &expectation(17, false));
-    assert_eq!(lines.len(), 1, "{lines:?}");
-    assert!(lines[0].contains("has no fingerprint"), "{lines:?}");
-    // an expectation of another version describes none, and so has none to check
-    assert!(check_columns(&source, &expectation(16, false)).is_empty());
+    for version in [16, 17] {
+        let lines = check_columns(&source, &expectation(version, false));
+        assert_eq!(lines.len(), 1, "V{version}: {lines:?}");
+        assert!(
+            lines[0].contains("has no fingerprint"),
+            "V{version}: {lines:?}"
+        );
+    }
+    // an expectation of V18 describes none yet, and so has none to check
+    assert!(check_columns(&source, &expectation(18, false)).is_empty());
     assert!(column_expectations(&expectation(18, false))
         .expect("none")
         .is_empty());
 }
 
 #[test]
-fn the_six_v17_expectations_describe_every_recorded_channel_and_the_others_describe_none() {
+fn the_v16_and_the_six_v17_expectations_describe_every_recorded_channel_and_v18_describes_none() {
     let all = load_all().expect("the expectation files");
     assert_eq!(all.len(), 8);
-    let (mut v17, mut others, mut columns) = (0, 0, 0);
+    let (mut described_files, mut others, mut columns) = (0, 0, 0);
     for expectation in &all {
         let described = column_expectations(expectation)
             .unwrap_or_else(|e| panic!("{}: {e}", expectation.miniature()));
         if described.is_empty() {
             others += 1;
         } else {
-            v17 += 1;
+            described_files += 1;
             columns += described.len();
             // a stored type that a fingerprint names is one that a column can be
             assert!(described
@@ -384,9 +389,10 @@ fn the_six_v17_expectations_describe_every_recorded_channel_and_the_others_descr
         }
     }
     assert_eq!(
-        (v17, others),
-        (6, 2),
-        "V16 and V18 are the two that describe none"
+        (described_files, others),
+        (7, 1),
+        "V18 is the one that describes none"
     );
-    assert!(columns >= 200, "{columns} columns are described");
+    // the six V17 files describe 208 columns and the V16 file 16
+    assert_eq!(columns, 224, "{columns} columns are described");
 }

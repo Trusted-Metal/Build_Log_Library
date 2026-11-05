@@ -522,7 +522,7 @@ fn what_else_a_series_and_its_places_hold_is_kept_by_its_path() {
 
 #[test]
 fn events_are_declared_in_the_capabilities() {
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::Events));

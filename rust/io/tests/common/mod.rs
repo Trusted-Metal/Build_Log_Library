@@ -19,6 +19,40 @@ pub const MINIATURES: [&str; 8] = [
     miniature::V18,
 ];
 
+/// A build source seen as the column source it is, so that the conformance check (`check_columns`) can hold it to the fingerprints of an expectation.
+pub struct Through<'a>(pub &'a dyn build_log_model::BuildSource);
+
+impl build_log_model::ColumnSource for Through<'_> {
+    fn read(
+        &self,
+        request: &build_log_model::ColumnRequest,
+        context: &build_log_model::ReadContext,
+    ) -> Result<build_log_model::ColumnData, build_log_model::Error> {
+        self.0.read(request, context)
+    }
+
+    fn read_grid(
+        &self,
+        request: &build_log_model::GridRequest,
+        context: &build_log_model::ReadContext,
+    ) -> Result<build_log_model::GridData, build_log_model::Error> {
+        self.0.read_grid(request, context)
+    }
+}
+
+/// The adapter set of V17 in the production registry. **Not `production().sets().next()`**: the sets come in the order of their versions, and V16 (IP-12) is before V17.
+pub fn v17_set() -> &'static build_log_io::adapters::AdapterSet {
+    production_set("17")
+}
+
+/// The adapter set of the version `key` in the production registry.
+pub fn production_set(key: &str) -> &'static build_log_io::adapters::AdapterSet {
+    let key = build_log_io::dispatch::VersionKey::new(key).expect("a version key");
+    build_log_io::dispatch::production()
+        .get(&key)
+        .unwrap_or_else(|| panic!("the production registry has no adapter for version {key}"))
+}
+
 /// Every object of a file that can hold attributes (the root, every group and every dataset), with its path, in the order of a walk.
 pub fn locations(file: &File) -> Vec<(String, Location)> {
     let mut found: Vec<(String, Location)> = Vec::new();
@@ -413,5 +447,111 @@ pub fn put<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, values: &[T], chunk
     .expect("a dataset");
     if !values.is_empty() {
         dataset.write_raw(values).expect("its values");
+    }
+}
+
+// ---------------------------------------------------------------- V16 payloads made at test time (IP-12)
+
+/// Small V16 mounts, made with the binding and read with the adapter's own reader. Every name comes from the V16 layout, so that these files are V16's and not V17's by accident.
+pub mod v16 {
+    use build_log_io::adapters::v16::{self, layout};
+    use build_log_model::{BuildMeta, Error};
+    use hdf5::Group;
+
+    use super::{dataset, put_scalar, put_text, temp_h5, TempH5};
+
+    /// A file with a V16 mount, `Mount`, with only what the build level requires (the marker, the build's id and the layers' group), that `write` adds to.
+    pub fn mount_file(label: &str, write: impl FnOnce(&Group)) -> TempH5 {
+        temp_h5(label, |mount| {
+            put_scalar(mount, layout::MARKER, 16i32);
+            put_text(mount, layout::BUILD_ID, "a build");
+            mount
+                .create_group(layout::MONITORING_DATA)
+                .expect("the layers' group");
+            write(mount);
+        })
+    }
+
+    /// The same, read by the adapter.
+    pub fn made(label: &str, write: impl FnOnce(&Group)) -> Result<BuildMeta, Error> {
+        let on_disk: TempH5 = mount_file(label, write);
+        let file = hdf5::File::open(&on_disk.0).expect("the file opens");
+        let mount = file.group("Mount").expect("the mount");
+        v16::read::read_build(&mount)
+    }
+
+    pub fn monitoring(mount: &Group) -> Group {
+        mount
+            .group(layout::MONITORING_DATA)
+            .expect("the layers' group")
+    }
+
+    pub fn layer(monitoring: &Group, id: u32) -> Group {
+        monitoring
+            .create_group(&format!("{}{id}", layout::LAYER_PREFIX))
+            .expect("a layer's group")
+    }
+
+    /// The two groups of channels of a laser, with no channel in them: what V16 keeps for a laser that did not fire.
+    pub fn empty_laser(layer: &Group, number: u32) -> Group {
+        let group = layer
+            .create_group(&format!("{}{number}", layout::LASER_PREFIX))
+            .expect("a laser's group");
+        group
+            .create_group(layout::LASER_DATA)
+            .expect("the group of the power");
+        group
+            .create_group(layout::POSITION)
+            .expect("the group of the positions");
+        group
+    }
+
+    /// The calibration group of laser `number`, in the mount's calibration group (which is made if it is not there yet).
+    pub fn calibration(mount: &Group, number: u32) -> Group {
+        let data = mount
+            .create_group(layout::CALIBRATION_DATA)
+            .or_else(|_| mount.group(layout::CALIBRATION_DATA))
+            .expect("the calibration group");
+        data.create_group(&format!("{}{number}", layout::CALIBRATION_PREFIX))
+            .expect("a laser's calibration")
+    }
+
+    /// A build whose first layer holds the lasers `numbers`, each with a few samples, and that `write` adds to (the calibrations, the bit resolutions).
+    pub fn with_lasers(
+        label: &str,
+        numbers: &[u32],
+        write: impl FnOnce(&Group),
+    ) -> Result<BuildMeta, Error> {
+        made(label, |mount| {
+            let first = layer(&monitoring(mount), 1);
+            for &number in numbers {
+                laser(&first, number, 3);
+            }
+            write(mount);
+        })
+    }
+
+    /// A laser in a layer with all eight channels of `samples` samples each: the power as `float32`, the state as `uint8`, the positions as `int32`.
+    pub fn laser(layer: &Group, number: u32, samples: usize) -> Group {
+        let group = empty_laser(layer, number);
+        let data = group
+            .group(layout::LASER_DATA)
+            .expect("the group of the power");
+        dataset::<f32>(&data, layout::LASER_POWER, samples);
+        dataset::<u8>(&data, layout::LASER_STATE, samples);
+        let position = group
+            .group(layout::POSITION)
+            .expect("the group of the positions");
+        for name in [
+            layout::ACTUAL_X,
+            layout::ACTUAL_Y,
+            layout::ACTUAL_Z,
+            layout::COMMANDED_X,
+            layout::COMMANDED_Y,
+            layout::COMMANDED_Z,
+        ] {
+            dataset::<i32>(&position, name, samples);
+        }
+        group
     }
 }

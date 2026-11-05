@@ -245,7 +245,7 @@ fn an_image_group_with_no_frame_is_kept_whole_and_describes_no_channel() {
 
 #[test]
 fn images_are_declared_in_the_capabilities() {
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::Images));

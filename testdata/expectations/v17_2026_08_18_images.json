@@ -1415,7 +1415,47 @@
             }
           ]
         },
-        "power_limits_not_recorded": false
+        "power_limits_not_recorded": false,
+        "grids": [
+          {
+            "name": "Correction_Data",
+            "role": "Forward",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112700,
+              "min": -376323.1248371424,
+              "max": 184630.5629215818,
+              "sha256": "b3b95bf5d5e73119ad8c632e6f5b44ba3beada6f054e04797afd6f193f2cebc6"
+            }
+          },
+          {
+            "name": "Inverse_Correction_Data",
+            "role": "Inverse",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112178,
+              "min": -150.6970983017486,
+              "max": 220.8145929420911,
+              "sha256": "0333b39e9f9e9707b1965ef0616f92e113dc26be760217f6f3e09b8dc260f51e"
+            }
+          }
+        ]
       }
     },
     {
@@ -2261,7 +2301,47 @@
             }
           ]
         },
-        "power_limits_not_recorded": false
+        "power_limits_not_recorded": false,
+        "grids": [
+          {
+            "name": "Correction_Data",
+            "role": "Forward",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112864,
+              "min": -377411.7271711135,
+              "max": 178468.3266030279,
+              "sha256": "cb4f73b68895e7af0cecef49a8f6ea0b5bf93e1b0c732ffec3ab6558786f5a1a"
+            }
+          },
+          {
+            "name": "Inverse_Correction_Data",
+            "role": "Inverse",
+            "stored_as": "F64",
+            "extents": [
+              257,
+              257,
+              2
+            ],
+            "interpretation": "Unrecorded",
+            "fingerprint": {
+              "count": 132098,
+              "stored_as": "F64",
+              "not_a_number": 112330,
+              "min": -220.3316620952458,
+              "max": 149.4732664456538,
+              "sha256": "fe4ca1559e491fda8b7d44d4c7147c8614f772b808361224ac8dd7f225c1fa38"
+            }
+          }
+        ]
       }
     }
   ],
@@ -4507,6 +4587,7 @@
     "A laser's complete flag is kept as written in each layer, 0 as false and 1 as true, and is never derived from a sample count (J9; tauri writes true when the laser received any point).",
     "The build's context lists each attribute the file has by the CDM's name, as written (D02-20); a quantity has the unit of its companion attribute where the file has one and an unknown unit otherwise; a value that is the placeholder of the version is not recorded and is listed under `dropped` with its raw spelling (V17: 0 for the plate's thickness, weight and dimension; V16: 1.0 for the starting height, thickness and weight); a starting height of 0 and a dimension of 280 are recorded as written; the plate vocabulary the file uses is stated (D02-21).",
     "The findings are those of a build's metadata found without a sample (IP-07 phase 7C, D07-5), by rules written in this script; a finding the adapter makes by not reading something is never stated here. The availability counts every layer, every laser in every layer and every channel in the layers where its laser is recorded (phase 7D, D07-4).",
-    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16)."
+    "A V17 laser channel recorded with samples in a layer carries a fingerprint of its stored column: the count, the stored type, the minimum, the maximum, the first and the last three values and the SHA-256 of the little-endian bytes (IP-06 6A, D06-16).",
+    "A laser's correction grids are listed with its parameters, as recorded (IP-24 24B, D24-11): the name as the file spells it, which grid the name says it is (V17 names its inverse; V16's one grid is not said to be either), the stored type, the extents in the order the file stores them, a fingerprint of the values in that order (the count, the type, how many are not a number, the minimum and the maximum of those that are, and the SHA-256 of the stored bytes: the V17 grids are mostly NaN, which is what the file holds), and that the domain and the axis order are Unrecorded: no file states them."
   ]
 }

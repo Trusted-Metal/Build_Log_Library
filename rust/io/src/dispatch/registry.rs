@@ -3,8 +3,8 @@
 //! * **The registry is data** (BL-VA-04): a map from version to [`AdapterSet`]. Every function takes `&Registry`; production uses [`production`], a lazily
 //!   initialised static; tests build their own and inject fake versions without touching global state. [`Registry::supported_versions`] is derived from
 //!   the keys and never from a separate list.
-//! * **The production registry holds the real versions only.** Each adapter adds one line to [`build_production`]: V17 (IP-13), then V18 (IP-05) and V16
-//!   (IP-12). The mock version is registered only by injection and is never in it.
+//! * **The production registry holds the real versions only.** Each adapter adds one line to [`build_production`]: V17 (IP-13), V16 (IP-12), then V18
+//!   (IP-05). The mock version is registered only by injection and is never in it.
 //! * **Exact match** (BL-VA-10): an unknown version is `UnsupportedVersion { found, supported }`; `open` preserves the on-disk version, and nothing upgrades
 //!   or downgrades a file; `create(version)` selects the adapter, and a version without a writer answers `UnsupportedInVersion`.
 
@@ -90,9 +90,12 @@ pub fn production() -> &'static Registry {
 fn build_production() -> Registry {
     let mut registry = Registry::new();
     registry
+        .register(crate::adapters::v16::adapter_set())
+        .expect("the production list names each version once");
+    registry
         .register(crate::adapters::v17::adapter_set())
         .expect("the production list names each version once");
-    // IP-05 adds the V18 adapter here and IP-12 the V16 adapter.
+    // IP-05 adds the V18 adapter here.
     registry
 }
 

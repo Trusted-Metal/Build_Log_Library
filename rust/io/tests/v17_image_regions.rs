@@ -456,7 +456,7 @@ fn a_frame_the_metadata_has_and_the_file_lacks_is_corrupt() {
 
 #[test]
 fn image_regions_are_declared_in_the_capabilities() {
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::ImageRegions));

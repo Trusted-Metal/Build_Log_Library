@@ -40,16 +40,18 @@ mod cache;
 mod convert;
 mod engine;
 mod frames;
+mod grids;
 
 use build_log_model::{
-    CacheStats, ChannelKey, ColumnData, ColumnRange, ColumnRequest, Error, LaserKey, LayerId,
-    Precision, ReadContext,
+    CacheStats, ChannelKey, ColumnData, ColumnRange, ColumnRequest, Error, ErrorKind, GridData,
+    GridRequest, LaserKey, LayerId, Precision, ReadContext,
 };
 use hdf5::dataset::Dataset;
 
 pub use cache::Cache;
 pub use engine::can_read;
 pub use frames::read_frame;
+pub use grids::{describe_grid, read_grid};
 
 /// What a locator found for a request: the dataset that holds the column.
 // not exhaustive: an adapter will say more about what it found (a recorded column that holds no dataset, what the metadata expects) when a phase needs it
@@ -85,6 +87,17 @@ pub trait Locator: Send + Sync {
     /// The dataset that holds the column a request names. A column that the file does not have is `NotPresent`; one that the file has but that cannot be opened is the
     /// error of the file. The error need not carry the location of the request: the engine adds it.
     fn locate(&self, request: &ColumnRequest) -> Result<Located, Error>;
+
+    /// The dataset that holds the correction grid a request names (IP-24 phase 24B): a laser's grid, by the name the file spells. A grid that the file does not have is `NotPresent`.
+    ///
+    /// Defaulted: a version that holds no grid answers `UnsupportedInVersion` and names itself. The engine reads the grid (`read_grid`); the locator only says where it is.
+    fn locate_grid(&self, request: &GridRequest) -> Result<Located, Error> {
+        let _ = request;
+        Err(Error::new(ErrorKind::UnsupportedInVersion {
+            version: self.version().to_string(),
+            feature: "reading correction grids".to_string(),
+        }))
+    }
 }
 
 /// Reads the column a request names, through `locator`, as described in the module documentation, **with no cache**: every block is decoded for this read alone.
@@ -121,6 +134,20 @@ impl<L: Locator> ColumnReader<L> {
         context: &ReadContext,
     ) -> Result<ColumnData, Error> {
         engine::read(request, &self.locator, Some(&self.cache), context)
+            .map_err(|error| error.at(request.location()))
+    }
+
+    /// Reads the whole correction grid a request names, as stored, through the locator (decision D24-11). A grid is not cached: it is read once by whoever needs it.
+    pub fn read_grid(
+        &self,
+        request: &GridRequest,
+        context: &ReadContext,
+    ) -> Result<GridData, Error> {
+        let located = self
+            .locator
+            .locate_grid(request)
+            .map_err(|error| error.at(request.location()))?;
+        grids::read_grid(&located.dataset, self.locator.version(), context)
             .map_err(|error| error.at(request.location()))
     }
 

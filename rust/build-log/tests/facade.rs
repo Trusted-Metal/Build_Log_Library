@@ -13,8 +13,8 @@ use build_log::{
     hdf5, library_versions, open, open_at, open_at_with, open_with, supported_versions,
     Availability, Capabilities, ChannelDType, ChannelKind, ColumnData, ColumnRange, ColumnRequest,
     Direction, ErrorKind, EventDataType, EventKind, EventPlace, EventRequest, Feature, FindingCode,
-    ImageRegion, ImageRequest, Item, ItemKind, LayerId, Precision, ReadContext, TypedValues,
-    CDM_VERSION, PACKAGE_VERSION,
+    GridInterpretation, GridRequest, GridRole, ImageRegion, ImageRequest, Item, ItemKind, LayerId,
+    NumericType, Precision, ReadContext, TypedValues, CDM_VERSION, PACKAGE_VERSION,
 };
 use build_log_testkit::scan::code_of;
 use build_log_testkit::{miniature, miniature_path};
@@ -75,8 +75,8 @@ fn the_facade_opens_the_mock_version_through_an_injected_registry() {
     let by_depth = open_at_with(&registry, &deep).expect("a nested mount opens");
     assert_eq!(by_depth.source().build().expect("the metadata"), build);
 
-    // the production registry holds the real versions only (V17 so far), and the mock is never in it
-    assert_eq!(supported_versions(), ["17"]);
+    // the production registry holds the real versions only (V16 and V17 so far), and the mock is never in it
+    assert_eq!(supported_versions(), ["16", "17"]);
     // `open` looks where the real versions keep their marker, and the mock keeps it elsewhere: the file is unversioned for the production registry
     match open(&file.0)
         .expect_err("no real version reads a mock file")
@@ -92,7 +92,7 @@ fn the_facade_opens_the_mock_version_through_an_injected_registry() {
     {
         ErrorKind::UnsupportedVersion { found, supported } => {
             assert_eq!(found, "9001");
-            assert_eq!(supported, &["17".to_string()]);
+            assert_eq!(supported, &["16".to_string(), "17".to_string()]);
         }
         other => panic!("expected UnsupportedVersion, got {other:?}"),
     }
@@ -109,7 +109,7 @@ fn the_facade_opens_the_gate_file_and_reports_schema_17() {
     assert_eq!(report.cdm_version, CDM_VERSION);
     assert_eq!(report.package_version, PACKAGE_VERSION);
     assert_eq!(opened.key().as_str(), "17");
-    // what the library says V17 can do is what its reader returns so far: the metadata, the outcomes (13J), the images (13F), the events (13K), the samples of the lasers (13L), the columns of the events (6F) and the regions of the frames (6G), and no feature beyond them
+    // what the library says V17 can do is what its reader returns so far: the metadata, the outcomes (13J), the images (13F), the events (13K), the samples of the lasers (13L), the columns of the events (6F), the regions of the frames (6G) and the correction grids (24B), and no feature beyond them
     assert_eq!(
         *opened.capabilities(),
         Capabilities::new()
@@ -119,6 +119,7 @@ fn the_facade_opens_the_gate_file_and_reports_schema_17() {
             .with(Direction::Read, Feature::Samples)
             .with(Direction::Read, Feature::EventColumns)
             .with(Direction::Read, Feature::ImageRegions)
+            .with(Direction::Read, Feature::CorrectionGrids)
     );
 
     // the build, as the Model's own types: its layers, its lasers in each layer, and the channels of each laser
@@ -136,14 +137,129 @@ fn the_facade_opens_the_gate_file_and_reports_schema_17() {
         assert_eq!(source.channels(laser).expect("the channels").len(), 8);
     }
 
-    // a file of a version that has no adapter yet names what the library can read, and does not guess
-    let other = open(miniature_path(miniature::V16)).expect_err("V16 has no adapter yet");
+    // a file of a version that has no adapter names what the library can read, and does not guess. The miniature of V16 said so until IP-12 phase 12C gave V16 its adapter, and V18 keeps its
+    // marker on another mount, which no adapter looks at yet, so the file is one that has a marker of a version that nobody reads
+    let unread = temp("no-adapter");
+    {
+        let file = hdf5::File::create(&unread.0).expect("a new file");
+        let mount = file.create_group("Built_Part").expect("the mount");
+        mount
+            .new_attr::<i32>()
+            .create("File_Version")
+            .expect("the marker")
+            .write_scalar(&19i32)
+            .expect("the marker is written");
+    }
+    let other = open(&unread.0).expect_err("no adapter reads version 19");
     match other.kind() {
         ErrorKind::UnsupportedVersion { found, supported } => {
-            assert_eq!(found, "16");
+            assert_eq!(found, "19");
             assert_eq!(supported, &supported_versions());
         }
         kind => panic!("expected UnsupportedVersion, got {kind:?}"),
+    }
+}
+
+#[test]
+fn the_facade_opens_the_v16_miniature_and_reports_schema_16() {
+    // the second real version (IP-12 phase 12C), opened with nothing but the facade
+    let opened = open(miniature_path(miniature::V16)).expect("the V16 miniature opens");
+    let report = opened.report();
+    assert_eq!(report.schema_version, "16");
+    assert_eq!(report.adapter, "v16");
+    assert_eq!(opened.key().as_str(), "16");
+    // what the library says V16 can do is what its reader returns: the metadata, the samples of the lasers and their correction grids, and no outcomes, events or images (decisions D12-9 and D24-11)
+    assert_eq!(
+        *opened.capabilities(),
+        Capabilities::new()
+            .with(Direction::Read, Feature::Samples)
+            .with(Direction::Read, Feature::CorrectionGrids)
+    );
+    // the build level and the layers (the lasers are read in phase 12D)
+    let source = opened.source();
+    let build = source.build().expect("the metadata");
+    assert_eq!(build.layers_declared, Some(2));
+    assert_eq!(
+        source.layers().expect("the layers"),
+        [LayerId(1), LayerId(2)]
+    );
+}
+
+#[test]
+fn the_correction_grids_of_v17_and_v16_read_through_the_facade_alone() {
+    // IP-24 phase 24B: a laser's grids are described in its parameters and their values are bulk behind `read_grid`, for both versions, with the facade's own types and no adapter. V17 keeps its grid and
+    // its inverse in the optical train of the laser's number, `float64` of 257 by 257 by 2; V16 keeps one grid in the laser's own calibration, `int32` of 2 by 257 by 257. The model holds an element type
+    // and a list of extents, and neither shape is its own.
+    for (file, version, expected) in [
+        (
+            miniature::V17_TRIGGERED_2026_10_19,
+            "17",
+            vec![
+                (
+                    Some(GridRole::Forward),
+                    NumericType::F64,
+                    vec![257u64, 257, 2],
+                ),
+                (Some(GridRole::Inverse), NumericType::F64, vec![257, 257, 2]),
+            ],
+        ),
+        (
+            miniature::V16,
+            "16",
+            vec![(None, NumericType::I32, vec![2u64, 257, 257])],
+        ),
+    ] {
+        let opened = open(miniature_path(file)).expect("the file opens");
+        assert_eq!(opened.report().schema_version, version);
+        assert!(
+            opened
+                .capabilities()
+                .supports(Direction::Read, Feature::CorrectionGrids),
+            "V{version} declares its grids"
+        );
+        let source = opened.source();
+        let build = source.build().expect("the metadata");
+        assert_eq!(build.lasers().len(), 2);
+        for laser in build.lasers() {
+            let parameters = laser.parameters.as_ref().expect("a snapshot");
+            // the descriptors are in the metadata: the name the file spells, which grid the name says it is, the type and the extents, and that nothing is recorded of the meaning
+            let described: Vec<_> = parameters
+                .grids
+                .iter()
+                .map(|g| (g.role, g.stored_as, g.extents.as_slice().to_vec()))
+                .collect();
+            assert_eq!(described, expected, "V{version} {}", laser.key);
+            for grid in &parameters.grids {
+                assert_eq!(grid.interpretation, GridInterpretation::Unrecorded);
+                // and the values come through the accessor: as many as the extents hold, in the type that the descriptor says
+                let got = source
+                    .read_grid(
+                        &GridRequest::new(laser.key.clone(), grid.name.clone()),
+                        &ReadContext::new(),
+                    )
+                    .expect("the grid");
+                assert_eq!(got.extents, grid.extents);
+                assert_eq!(got.len() as u64, grid.len());
+                match (grid.stored_as, &got.values) {
+                    (NumericType::F64, ColumnData::F64(_))
+                    | (NumericType::I32, ColumnData::I32(_)) => {}
+                    (stored, other) => {
+                        panic!("V{version}: stored as {stored:?}, read as {other:?}")
+                    }
+                }
+            }
+            // a grid that the laser does not list is not there, and the error says which request it was
+            let error = source
+                .read_grid(
+                    &GridRequest::new(laser.key.clone(), "Not_A_Grid"),
+                    &ReadContext::new(),
+                )
+                .expect_err("not listed");
+            assert!(
+                matches!(error.kind(), ErrorKind::NotPresent { .. }),
+                "{error}"
+            );
+        }
     }
 }
 

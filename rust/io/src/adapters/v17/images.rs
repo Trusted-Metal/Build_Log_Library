@@ -23,9 +23,9 @@ use build_log_model::{
 };
 use hdf5::{Dataset, Group};
 
-use super::lasers::{is_about_the_content, numeric_type};
 use super::layout;
 use crate::hdf5::{describe_dataset, keep_dataset_remainder, keep_group_remainder, keep_node};
+use crate::toolkit::content::{is_about_the_content, numeric_type};
 
 fn corrupt(detail: String) -> Error {
     Error::new(ErrorKind::Corrupt { detail })

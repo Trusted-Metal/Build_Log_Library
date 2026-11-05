@@ -7,15 +7,15 @@
 use build_log_model::{BuildIdentity, BuildMeta, Error, JoinStatus, Outcome, Quantity};
 use hdf5::Group;
 
-use super::context;
 use super::events::Events;
 use super::layers::read_layers_with;
 use super::layout;
 use super::parameters;
-use super::values::{optional_float, optional_integer, optional_text, required_text};
 use crate::hdf5::{
     from_binding, keep_group_remainder, keep_node, keep_other_attributes, keep_other_nodes,
 };
+use crate::toolkit::context;
+use crate::toolkit::values::{optional_float, optional_integer, optional_text, required_text};
 
 /// The build level of the build whose data is under `mount`.
 pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
@@ -43,7 +43,7 @@ pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
     build.provenance.opcua_join_version = optional_text(mount, layout::OPCUA_JOIN_VERSION)?;
     // the machine, the material, the starting height and the build plate (IP-02 phase 2V): what is typed leaves `extra`, and what could not be read stays in it
     let mut typed: Vec<&str> = layout::TYPED_ON_THE_MOUNT.to_vec();
-    typed.extend(context::read(mount, &mut build));
+    typed.extend(context::read(mount, &mut build, &layout::CONTEXT_TABLE));
     keep_other_attributes(mount, &typed, &mut build.extra)?;
     let mut events = Events::new();
     read_layers_with(mount, &mut build, &mut events)?;

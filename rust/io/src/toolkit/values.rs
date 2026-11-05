@@ -1,8 +1,8 @@
-//! The ways V17 stores a value, each read as one value (IP-13 phase 13B, decision D13-2).
+//! The ways a file stores a value, each read as one value (IP-13 phase 13B, decision D13-2; moved to the toolkit by IP-12 phase 12A, decision D12-1).
 //!
-//! The files of V17 do not agree on how they write a number or a string: tauri's current output writes a number as an array of one element and text as a
-//! variable-length string, the March files write a scalar and a fixed-length string. The primitive says how each attribute is stored, and these functions
-//! accept **every form the files show**, so that one reader serves both flavors and no detector is needed.
+//! The files of one version do not always agree on how they write a number or a string: one writer's output has a number as an array of one element and text as a
+//! variable-length string, another's has a scalar and a fixed-length string. The primitive says how each attribute is stored, and these functions
+//! accept **every form the files show**, so that one reader serves every flavor of a version and no detector is needed.
 //!
 //! * **A number** may be a scalar or an array of one element, of any width of integer, or `float32` or `float64`. A `float32` is widened exactly.
 //! * **Text** may be variable-length or fixed-length. Fixed-length bytes must be valid text and are returned as they are: the primitive has already left out

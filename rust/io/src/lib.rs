@@ -4,8 +4,8 @@
 //! * **May depend on:** `build-log-model`, and the HDF5 binding (`hdf5-metno`, pinned once in the workspace manifest). In tests only: `build-log-testkit`.
 //! * **Must not depend on:** `build-log-processing` or the `build-log` facade. Nothing above it may reach an HDF5 path or group name through it.
 //!
-//! The binding is here and proven to link (`tests/link_smoke.rs`). The first adapter is V17 (IP-13), which reads the build level so far; V18 (IP-05) and V16
-//! (IP-12) follow.
+//! The binding is here and proven to link (`tests/link_smoke.rs`). The first adapter is V17 (IP-13), V16 (IP-12, read-only) is the second and V18 (IP-05) follows, and the code that versions share is in
+//! `toolkit/`.
 //! The architecture guards in `rust/build-log/tests` enforce the dependency rules above.
 //!
 //! # Building without a libhdf5 on the machine
@@ -28,6 +28,9 @@ pub mod dispatch;
 /// The HDF5 primitives (IP-03). Internal: the adapters of this crate and its tests use them; they are not part of the facade's contract.
 #[doc(hidden)]
 pub mod hdf5;
+/// The toolkit of the adapters (IP-12): the code that more than one version uses, which names no attribute, no group and no version. Internal: the adapters of this crate use it.
+#[doc(hidden)]
+pub mod toolkit;
 mod version;
 
 /// The HDF5 binding this library is built on, re-exported so that a consumer names the very same types as `open_at` (a mount is a `Group` of it).

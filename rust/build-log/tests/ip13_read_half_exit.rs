@@ -263,7 +263,7 @@ const CHECKLIST: &[(&str, &str, &[&str])] = &[
 ];
 
 /// What the V17 reader returns, as the facade's own test of the gate file says it: the metadata, the outcomes, the images, the events, the samples of the lasers, the columns of the events and the
-/// regions of the frames, and nothing for writing (the writer arrives with IP-08).
+/// regions of the frames and the correction grids (IP-24 phase 24B), and nothing for writing (the writer arrives with IP-08).
 fn v17_capabilities() -> Capabilities {
     Capabilities::new()
         .with(Direction::Read, Feature::Outcomes)
@@ -272,6 +272,7 @@ fn v17_capabilities() -> Capabilities {
         .with(Direction::Read, Feature::Samples)
         .with(Direction::Read, Feature::EventColumns)
         .with(Direction::Read, Feature::ImageRegions)
+        .with(Direction::Read, Feature::CorrectionGrids)
 }
 
 #[test]

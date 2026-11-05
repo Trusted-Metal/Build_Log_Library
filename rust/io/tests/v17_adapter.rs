@@ -13,9 +13,10 @@ mod common;
 use std::collections::BTreeSet;
 
 use build_log_conformance::{check_parts, expectations_dir, Expectation, Part};
-use build_log_io::adapters::v17::{self, layout, values};
+use build_log_io::adapters::v17::{self, layout};
 use build_log_io::adapters::MarkerPlace;
 use build_log_io::dispatch::{open, production};
+use build_log_io::toolkit::values;
 use build_log_model::{
     AttrShape, AttrValue, Capabilities, ChannelKey, ColumnRequest, Direction, ErrorKind, Feature,
     LaserKey, LayerId, ReadContext, StoredClass,
@@ -44,8 +45,9 @@ fn kind(error: &build_log_model::Error) -> String {
 
 #[test]
 fn the_v17_adapter_is_registered_under_17() {
-    assert_eq!(production().supported_versions(), ["17"]);
-    let set = production().sets().next().expect("one adapter set");
+    // V17 and, since IP-12 phase 12C, V16: the registry is ordered by version
+    assert_eq!(production().supported_versions(), ["16", "17"]);
+    let set = common::v17_set();
     assert_eq!(set.key().as_str(), "17");
     assert_eq!(set.name(), "v17");
     assert_eq!(
@@ -62,6 +64,7 @@ fn the_v17_adapter_is_registered_under_17() {
             .with(Direction::Read, Feature::Samples)
             .with(Direction::Read, Feature::EventColumns)
             .with(Direction::Read, Feature::ImageRegions)
+            .with(Direction::Read, Feature::CorrectionGrids)
     );
     assert!(set.reader().is_provided());
     let writer = set.writer().unsupported_reason().expect("a reason");
@@ -73,6 +76,36 @@ fn the_v17_adapter_is_registered_under_17() {
 }
 
 // ---------------------------------------------------------------- the values, in every form V17 stores them
+
+#[test]
+fn a_whole_number_that_a_float_cannot_hold_exactly_is_out_of_width_and_never_rounded() {
+    // IP-12 phase 12A: `optional_number` takes an integer where a float is meant (the 2026-10-15 file has `int32` where the current output has `float32`), but only when the float is that number
+    with_mount(
+        "v17-number-width",
+        |g| {
+            put_scalar(g, "exact", 1i64 << 53);
+            put_scalar(g, "one_more", (1i64 << 53) + 1);
+            put_scalar(g, "negative", -((1i64 << 53) + 1));
+            put_scalar(g, "huge", u64::MAX);
+            put_scalar(g, "small", 7i32);
+        },
+        |g| {
+            assert_eq!(
+                values::optional_number(g, "exact").unwrap(),
+                Some(9_007_199_254_740_992.0)
+            );
+            assert_eq!(values::optional_number(g, "small").unwrap(), Some(7.0));
+            for name in ["one_more", "negative", "huge"] {
+                let error = values::optional_number(g, name).unwrap_err();
+                assert!(
+                    matches!(error.kind(), ErrorKind::OutOfWidth { .. }),
+                    "{name}: {}",
+                    kind(&error)
+                );
+            }
+        },
+    );
+}
 
 #[test]
 fn a_number_stored_as_a_scalar_or_an_array_of_one_reads_the_same() {

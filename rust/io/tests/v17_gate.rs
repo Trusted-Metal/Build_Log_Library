@@ -383,6 +383,10 @@ fn nothing_in_a_file_is_dropped(file: &str) {
             laser.key.number
         );
         typed_nodes.insert(train.clone());
+        // the correction grids are typed since IP-24 phase 24B: datasets of the train that the snapshot lists
+        for grid in &parameters.grids {
+            typed_nodes.insert(format!("{train}/{}", grid.name));
+        }
         let mut groups: Vec<Vec<&str>> = vec![
             vec![],
             vec![layout::SCANNER],

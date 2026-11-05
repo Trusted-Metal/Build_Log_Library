@@ -234,7 +234,33 @@ fn the_engine_names_no_layout_word() {
     );
 }
 
-/// The scan of a folder, the one both guards above use, fails on a folder that holds a source made to break it.
+/// The toolkit (IP-12 phase 12A, decision D12-1) is the shared code of more than one version, so it is held to the same rule as the primitives and the engine: an adapter passes its
+/// names as data, and the toolkit knows none. (That it names no version either, and that no folder of the adapters is called `toolkit`, are in `adapter_isolation.rs`.)
+#[test]
+fn the_toolkit_names_no_layout_word() {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("src")
+        .join("toolkit");
+    let found = scan_folder(
+        &dir,
+        &[
+            "mod.rs",
+            "values.rs",
+            "content.rs",
+            "context.rs",
+            "lasers.rs",
+            "columns.rs",
+            "source.rs",
+        ],
+    );
+    assert!(
+        found.is_empty(),
+        "layout names in the toolkit:\n{}",
+        found.join("\n")
+    );
+}
+
+/// The scan of a folder, the one the guards above use, fails on a folder that holds a source made to break it.
 #[test]
 fn the_scan_of_a_folder_rejects_a_source_made_to_break_it() {
     let dir = std::env::temp_dir().join(format!("build-log-io-guard-{}", std::process::id()));

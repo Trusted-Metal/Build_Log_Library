@@ -792,7 +792,7 @@ fn a_second_read_of_a_place_is_served_from_the_cache_when_the_budget_allows() {
 
 #[test]
 fn event_columns_are_declared_in_the_capabilities() {
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::EventColumns));

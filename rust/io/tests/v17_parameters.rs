@@ -124,12 +124,14 @@ fn the_scanner_and_light_source_attributes_become_parameters_per_laser() {
     // what the parameters typed is not also kept, and what they did not type is kept below the train
     assert!(one.extra.attribute(layout::SCAN_HEAD_MODEL).is_none());
     assert!(one.extra.node(&["Scanner".to_string()]).is_none());
-    let grid = one
-        .extra
-        .node(&["Correction_Data".to_string()])
-        .expect("the correction grid is kept untyped");
-    assert_eq!(grid.dims.as_slice(), [257, 257, 2]);
-    assert_eq!(grid.kind, NodeKind::Dataset);
+    // the correction grids are typed since IP-24 phase 24B: the snapshot lists them (`v17_grids.rs`), and they are not kept as untyped nodes as well
+    assert_eq!(one.grids.len(), 2);
+    for name in [layout::CORRECTION_DATA, layout::INVERSE_CORRECTION_DATA] {
+        assert!(
+            one.extra.node(&[name.to_string()]).is_none(),
+            "{name} is typed and kept as well"
+        );
+    }
     // and the calibration is no longer in the build's own extra, except what no laser typed
     assert!(build.extra.nodes().all(|n| n
         .path

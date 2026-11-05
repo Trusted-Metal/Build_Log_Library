@@ -1,6 +1,6 @@
 //! The fingerprint of a stored column, and the check of a column source against the fingerprints of an expectation (IP-06 phase 6A, task T06.1, decision D06-16).
 //!
-//! A V17 expectation file carries, for each laser channel recorded with samples in a layer, a **fingerprint** of the stored column, written by the independent script
+//! A V17 expectation file carries (and, since IP-12 phase 12F, a V16 one), for each laser channel recorded with samples in a layer, a **fingerprint** of the stored column, written by the independent script
 //! from the miniature alone: the count, the stored type, the minimum and the maximum, the first and the last three values, and the SHA-256 of the values'
 //! little-endian bytes. [`check_columns`] reads each of those columns from a [`ColumnSource`] in full, as stored, and says every way in which what it got is not what
 //! the fingerprint says. The expectation holds no sample, so the check is cheap to keep and the samples stay bulk data.
@@ -20,7 +20,7 @@ use crate::expectation::{array, float, int, opt_text, text};
 use crate::Expectation;
 
 /// How many values are hashed at a time.
-const HASH_BLOCK: usize = 8192;
+pub(crate) const HASH_BLOCK: usize = 8192;
 
 /// How many values of each end of a column a fingerprint shows.
 const ENDS: usize = 3;
@@ -42,7 +42,7 @@ pub struct Fingerprint {
 }
 
 /// A number that a column holds.
-trait Stored: Copy {
+pub(crate) trait Stored: Copy {
     const NAME: &'static str;
     fn as_f64(self) -> f64;
     fn extend_le(self, out: &mut Vec<u8>);
@@ -74,7 +74,7 @@ stored!(u64, "U64", v => v as f64);
 stored!(f32, "F32", v => f64::from(v));
 stored!(f64, "F64", v => v);
 
-fn hex(bytes: &[u8]) -> String {
+pub(crate) fn hex(bytes: &[u8]) -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
 
@@ -195,7 +195,7 @@ impl ColumnExpectation {
 }
 
 /// Every stored column that an expectation describes. **A V17 expectation must describe every channel that is recorded with samples**: one that does not is an
-/// error, so that a check cannot pass by having nothing to check. An expectation of another version describes none.
+/// error, so that a check cannot pass by having nothing to check; **so must a V16 expectation** (IP-12 phase 12F). An expectation of V18 describes none yet.
 pub fn column_expectations(expectation: &Expectation) -> Result<Vec<ColumnExpectation>, String> {
     let root = expectation.root();
     let version = int(root, "file_version")?;
@@ -214,7 +214,7 @@ pub fn column_expectations(expectation: &Expectation) -> Result<Vec<ColumnExpect
                         fingerprint: Fingerprint::from_json(column)
                             .map_err(|e| format!("layer {}, {}, {name}: {e}", layer.0, key.key))?,
                     }),
-                    _ if version == 17 && text(entry, "state")? == "recorded" => {
+                    _ if matches!(version, 16 | 17) && text(entry, "state")? == "recorded" => {
                         return Err(format!(
                             "layer {}, {}, {name}: the expectation has no fingerprint for a channel recorded with samples",
                             layer.0, key.key

@@ -312,7 +312,7 @@ fn a_layer_with_no_laser_is_a_note() {
 #[test]
 fn capabilities_and_availability_agree() {
     // V17 declares that it reads samples, and then every channel that is recorded with samples in the six files is available, and reads
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::Samples));

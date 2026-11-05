@@ -30,6 +30,7 @@ mod columns;
 mod context;
 mod event_columns;
 mod expectation;
+mod grids;
 mod image_regions;
 mod names;
 mod parameters;
@@ -42,6 +43,7 @@ pub use event_columns::{
     check_event_columns, event_expectations, EventExpectation, EventFingerprint,
 };
 pub use expectation::{expectations_dir, load_all, Expectation, EXPECTATIONS_VERSION};
+pub use grids::{check_grids, grid_expectations, GridExpectation, GridFingerprint};
 pub use image_regions::{check_image_regions, frame_expectations, FrameExpectation};
 pub use reports::{check_availability, check_validation};
 pub use synthesise::synthesise;

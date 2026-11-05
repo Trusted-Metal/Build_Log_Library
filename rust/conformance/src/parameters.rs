@@ -1,7 +1,11 @@
 //! The parameter snapshot of a laser, checked against an expectation and built from one (IP-13 phase 13H; decisions D13-18 and D13-25).
 //!
-//! An expectation lists, for a laser, the optical train it comes from, each value by the CDM's name and kind, the volts-to-watts equation as named constants, and
-//! whether the power limits are not recorded as numbers because the file stores them as text (decision D13-16). A laser the file has no calibration for has none.
+//! An expectation lists, for a laser, the optical train it comes from (none for a version that has no optical trains: V16's calibration is the laser's own), each value by the CDM's name and
+//! kind, the volts-to-watts equation as named constants, and whether the power limits are not recorded as numbers because the file stores them as text (decision D13-16). **It may also list
+//! the origins that say something about a value** (`origins`: the name of the value and the sentence, **the independent script's own words**, so that the library's constant is held to them:
+//! IP-12 phase 12B), and then the snapshot has those origins and no other (the power limits' own origin apart). A laser the file has no calibration for has none. **What the snapshot keeps
+//! untyped (`untyped`) is not checked here**: the conformance crate sees no `extra`, and an adapter's own test holds it to the list (IP-12 phase 12E). **The correction grids (`grids`) are**
+//! (IP-24 phase 24B, `crate::grids`): the descriptors here, and their values by `check_grids`.
 
 use std::collections::BTreeMap;
 
@@ -11,7 +15,7 @@ use build_log_model::{
 use serde_json::Value;
 
 use crate::check::{same, unit};
-use crate::expectation::{array, field, float, int, opt_bool, opt_text, text};
+use crate::expectation::{array, field, float, int, opt_bool, opt_int, opt_text, text};
 use crate::names::{equation_kind_from, protocol_from};
 
 /// The name under which a snapshot's origins say that a laser's power limits are not recorded as numbers. The V17 adapter records the same name.
@@ -47,7 +51,7 @@ pub(crate) fn check_laser(
         found,
         &what("the optical train"),
         actual.optical_train_number,
-        Some(int(expected, "optical_train")? as u32),
+        opt_int(expected, "optical_train")?.map(|n| n as u32),
     );
 
     let mut have: BTreeMap<String, ParameterValue> = actual.values().into_iter().collect();
@@ -99,6 +103,33 @@ pub(crate) fn check_laser(
         matches!(actual.origins.get(POWER_LIMITS), Some(Origin::Other(_))),
         opt_bool(expected, "power_limits_not_recorded")?.unwrap_or(false),
     );
+
+    // the other origins, when the expectation lists them: a note on a value, in the script's own words, and no origin that was not listed
+    if expected.get("origins").is_some_and(|v| !v.is_null()) {
+        let mut origins: BTreeMap<String, Origin> = actual
+            .origins
+            .iter()
+            .filter(|(name, _)| *name != POWER_LIMITS)
+            .map(|(name, origin)| (name.to_string(), origin.clone()))
+            .collect();
+        for entry in array(expected, "origins")? {
+            let name = text(entry, "name")?;
+            same(
+                found,
+                &what(&format!("{name}, its origin")),
+                origins.remove(name),
+                Some(Origin::Other(text(entry, "text")?.to_string())),
+            );
+        }
+        for (name, origin) in origins {
+            found.push(format!(
+                "{}: found {origin:?}, expected nothing",
+                what(&format!("{name}, its origin"))
+            ));
+        }
+    }
+    // the correction grids (IP-24 phase 24B), when the expectation lists them: the descriptors, in order (the values are held by `check_grids`)
+    crate::grids::check_descriptors(laser, actual, expected, found)?;
     Ok(())
 }
 
@@ -195,7 +226,7 @@ pub(crate) fn synthesise(expected: Option<&Value>) -> Result<Option<LaserParamet
         return Ok(None);
     };
     let mut parameters = LaserParameters::new();
-    parameters.optical_train_number = Some(int(expected, "optical_train")? as u32);
+    parameters.optical_train_number = opt_int(expected, "optical_train")?.map(|n| n as u32);
     for entry in array(expected, "values")? {
         let value = value_from(entry)?;
         parameters
@@ -220,5 +251,14 @@ pub(crate) fn synthesise(expected: Option<&Value>) -> Result<Option<LaserParamet
             .origins
             .record(POWER_LIMITS, Origin::Other(POWER_LIMITS_WHY.to_string()));
     }
+    if expected.get("origins").is_some_and(|v| !v.is_null()) {
+        for entry in array(expected, "origins")? {
+            parameters.origins.record(
+                text(entry, "name")?,
+                Origin::Other(text(entry, "text")?.to_string()),
+            );
+        }
+    }
+    parameters.grids = crate::grids::synthesise(expected)?;
     Ok(Some(parameters))
 }

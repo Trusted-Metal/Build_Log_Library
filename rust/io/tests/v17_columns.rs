@@ -19,12 +19,11 @@ use build_log_io::adapters::v17::{self, layout};
 use build_log_io::dispatch::{open, production};
 use build_log_io::hdf5::describe_dataset;
 use build_log_model::{
-    BuildMeta, BuildSource, CancelToken, ChannelKey, ColumnData, ColumnRange, ColumnRequest,
-    ColumnSource, Direction, Error, ErrorKind, Feature, LaserKey, LayerId, Precision, Presence,
-    ReadContext, TimeValue,
+    BuildMeta, CancelToken, ChannelKey, ColumnData, ColumnRange, ColumnRequest, ColumnSource,
+    Direction, ErrorKind, Feature, LaserKey, LayerId, Precision, Presence, ReadContext, TimeValue,
 };
 use build_log_testkit::{large_fixture_or_skip, miniature, miniature_path};
-use common::{laser, layer, monitoring, pick_rows, put_text, temp_h5, Rng};
+use common::{laser, layer, monitoring, pick_rows, put_text, temp_h5, Rng, Through};
 use hdf5::File;
 
 const SIX: [&str; 6] = [
@@ -35,15 +34,6 @@ const SIX: [&str; 6] = [
     miniature::V17_MARCH,
     miniature::V17_SPECIAL_LAYERS,
 ];
-
-/// A source seen as the column source it is, so that the conformance check can hold it to the fingerprints.
-struct Through<'a>(&'a dyn BuildSource);
-
-impl ColumnSource for Through<'_> {
-    fn read(&self, request: &ColumnRequest, context: &ReadContext) -> Result<ColumnData, Error> {
-        self.0.read(request, context)
-    }
-}
 
 /// Every laser channel of a build that is recorded with samples in a layer: the laser, the channel, the layer and the number of samples.
 fn recorded_columns(build: &BuildMeta) -> Vec<(LaserKey, ChannelKey, LayerId, u64)> {
@@ -405,7 +395,7 @@ fn a_read_can_be_cancelled() {
 
 #[test]
 fn samples_are_declared_in_the_capabilities() {
-    let set = production().sets().next().expect("the V17 adapter set");
+    let set = common::v17_set();
     assert!(set
         .capabilities()
         .supports(Direction::Read, Feature::Samples));
