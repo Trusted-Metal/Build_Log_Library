@@ -1,0 +1,557 @@
+//! Helpers that the integration tests of the primitives share: the eight miniatures, and a walk over every object of a file that can hold attributes.
+
+#![allow(dead_code)]
+
+use build_log_io::hdf5::{ByteOrder, Charset, Class, Field, Padding, Shape, TextForm, TextLength};
+use build_log_testkit::{miniature, testdata_dir};
+use hdf5::{File, Location};
+use serde_json::Value as Json;
+
+/// The eight committed miniatures, by name.
+pub const MINIATURES: [&str; 8] = [
+    miniature::V16,
+    miniature::V17_MARCH,
+    miniature::V17_SPECIAL_LAYERS,
+    miniature::V17_MOCK,
+    miniature::V17_OCT15,
+    miniature::V17_TRIGGERED_2026_10_19,
+    miniature::V17_2026_08_18_IMAGES,
+    miniature::V18,
+];
+
+/// A build source seen as the column source it is, so that the conformance check (`check_columns`) can hold it to the fingerprints of an expectation.
+pub struct Through<'a>(pub &'a dyn build_log_model::BuildSource);
+
+impl build_log_model::ColumnSource for Through<'_> {
+    fn read(
+        &self,
+        request: &build_log_model::ColumnRequest,
+        context: &build_log_model::ReadContext,
+    ) -> Result<build_log_model::ColumnData, build_log_model::Error> {
+        self.0.read(request, context)
+    }
+
+    fn read_grid(
+        &self,
+        request: &build_log_model::GridRequest,
+        context: &build_log_model::ReadContext,
+    ) -> Result<build_log_model::GridData, build_log_model::Error> {
+        self.0.read_grid(request, context)
+    }
+}
+
+/// The adapter set of V17 in the production registry. **Not `production().sets().next()`**: the sets come in the order of their versions, and V16 (IP-12) is before V17.
+pub fn v17_set() -> &'static build_log_io::adapters::AdapterSet {
+    production_set("17")
+}
+
+/// The adapter set of the version `key` in the production registry.
+pub fn production_set(key: &str) -> &'static build_log_io::adapters::AdapterSet {
+    let key = build_log_io::dispatch::VersionKey::new(key).expect("a version key");
+    build_log_io::dispatch::production()
+        .get(&key)
+        .unwrap_or_else(|| panic!("the production registry has no adapter for version {key}"))
+}
+
+/// Every object of a file that can hold attributes (the root, every group and every dataset), with its path, in the order of a walk.
+pub fn locations(file: &File) -> Vec<(String, Location)> {
+    let mut found: Vec<(String, Location)> = Vec::new();
+    let mut stack = vec![file.group("/").expect("the root group")];
+    while let Some(group) = stack.pop() {
+        found.push((group.name(), (*group).clone()));
+        for name in group.member_names().expect("the members of a group") {
+            if let Ok(sub) = group.group(&name) {
+                stack.push(sub);
+            } else if let Ok(dataset) = group.dataset(&name) {
+                found.push((dataset.name(), (**dataset).clone()));
+            }
+        }
+    }
+    found
+}
+
+/// Every dataset of a file, with its path.
+pub fn datasets(file: &File) -> Vec<(String, hdf5::Dataset)> {
+    let mut found = Vec::new();
+    let mut stack = vec![file.group("/").expect("the root group")];
+    while let Some(group) = stack.pop() {
+        for name in group.member_names().expect("the members of a group") {
+            if let Ok(sub) = group.group(&name) {
+                stack.push(sub);
+            } else if let Ok(dataset) = group.dataset(&name) {
+                found.push((dataset.name(), dataset));
+            }
+        }
+    }
+    found
+}
+
+/// The group or dataset at a path.
+pub fn locate(file: &File, path: &str) -> Location {
+    match file.group(path) {
+        Ok(group) => (*group).clone(),
+        Err(_) => (**file
+            .dataset(path)
+            .unwrap_or_else(|e| panic!("`{path}` is neither a group nor a dataset: {e}")))
+        .clone(),
+    }
+}
+
+// ---------------------------------------------------------------- small HDF5 files made at test time (IP-04)
+
+/// A temporary HDF5 file, removed when the value is dropped, even if the test fails.
+pub struct TempH5(pub std::path::PathBuf);
+
+impl Drop for TempH5 {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
+}
+
+/// A temporary file with one group, `Mount`, that `write` fills. The label must be different in each test, because tests run side by side.
+pub fn temp_h5(label: &str, write: impl FnOnce(&hdf5::Group)) -> TempH5 {
+    let path = std::env::temp_dir().join(format!("build-log-io-{}-{label}.h5", std::process::id()));
+    {
+        let file = File::create(&path).expect("a new HDF5 file can be created");
+        let group = file.create_group("Mount").expect("a group can be created");
+        write(&group);
+    }
+    TempH5(path)
+}
+
+/// A temporary file that `write` fills, with whatever groups it likes. The label must be different in each test.
+pub fn temp_file(label: &str, write: impl FnOnce(&File)) -> TempH5 {
+    let path = std::env::temp_dir().join(format!("build-log-io-{}-{label}.h5", std::process::id()));
+    {
+        let file = File::create(&path).expect("a new HDF5 file can be created");
+        write(&file);
+    }
+    TempH5(path)
+}
+
+pub fn put_scalar<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, value: T) {
+    group
+        .new_attr::<T>()
+        .create(name)
+        .expect("an attribute can be created")
+        .write_scalar(&value)
+        .expect("it can be written");
+}
+
+pub fn put_array<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, values: &[T]) {
+    group
+        .new_attr::<T>()
+        .shape(values.len())
+        .create(name)
+        .expect("an attribute can be created")
+        .write_raw(values)
+        .expect("it can be written");
+}
+
+pub fn put_text(group: &hdf5::Group, name: &str, text: &str) {
+    put_scalar(
+        group,
+        name,
+        text.parse::<hdf5::types::VarLenUnicode>().expect("text"),
+    );
+}
+
+// ---------------------------------------------------------------- the oracle, `testdata/primitives.json` (phase 3A)
+
+pub fn oracle() -> Json {
+    let text = std::fs::read_to_string(testdata_dir().join("primitives.json"))
+        .expect("testdata/primitives.json (phase 3A)");
+    serde_json::from_str(&text).expect("the oracle is JSON")
+}
+
+pub fn flatten(value: &Json, out: &mut Vec<Json>) {
+    match value {
+        Json::Array(items) => items.iter().for_each(|i| flatten(i, out)),
+        other => out.push(other.clone()),
+    }
+}
+
+pub fn hex(text: &str) -> Vec<u8> {
+    (0..text.len() / 2)
+        .map(|i| u8::from_str_radix(&text[2 * i..2 * i + 2], 16).expect("hex"))
+        .collect()
+}
+
+pub fn order_of(t: &Json) -> ByteOrder {
+    match t["order"].as_str().expect("an order") {
+        "little" => ByteOrder::Little,
+        "big" => ByteOrder::Big,
+        other => panic!("the oracle gives the byte order {other}"),
+    }
+}
+
+/// The class the oracle describes. A string that is not null-padded is `Unknown`, as the safe binding cannot say more (see `Padding::Unknown`).
+pub fn class_of(t: &Json) -> Class {
+    match t["class"].as_str().expect("a class") {
+        "integer" => Class::Integer {
+            bits: t["bits"].as_u64().expect("bits") as u8,
+            signed: t["signed"].as_bool().expect("signed"),
+            order: order_of(t),
+        },
+        "float" => Class::Float {
+            bits: t["bits"].as_u64().expect("bits") as u8,
+            order: order_of(t),
+        },
+        "string" => {
+            let charset = match t["cset"].as_str().expect("a character set") {
+                "ascii" => Charset::Ascii,
+                "utf-8" => Charset::Utf8,
+                other => panic!("the oracle gives the character set {other}"),
+            };
+            let length = match &t["length"] {
+                Json::String(s) if s == "variable" => TextLength::Variable,
+                n => TextLength::Fixed {
+                    bytes: n.as_u64().expect("a length") as usize,
+                    padding: if t["pad"] == "nullpad" {
+                        Padding::NullPadded
+                    } else {
+                        Padding::Unknown
+                    },
+                },
+            };
+            Class::Text(TextForm { charset, length })
+        }
+        "array" => Class::Array {
+            dims: t["dims"]
+                .as_array()
+                .expect("dims")
+                .iter()
+                .map(|d| d.as_u64().expect("a dimension") as usize)
+                .collect(),
+            base: Box::new(class_of(&t["base"])),
+        },
+        "compound" => Class::Compound {
+            fields: t["fields"]
+                .as_array()
+                .expect("fields")
+                .iter()
+                .map(|f| Field {
+                    name: f["name"].as_str().expect("a name").to_string(),
+                    class: class_of(&f["type"]),
+                })
+                .collect(),
+        },
+        other => panic!("the oracle gives the class {other}"),
+    }
+}
+
+pub fn shape_of(space: &Json) -> Shape {
+    match space["kind"].as_str().expect("a kind of space") {
+        "scalar" => Shape::Scalar,
+        "array" => Shape::Array(
+            space["shape"]
+                .as_array()
+                .expect("a shape")
+                .iter()
+                .map(|d| d.as_u64().expect("a dimension") as usize)
+                .collect(),
+        ),
+        other => panic!("the oracle gives the space {other}"),
+    }
+}
+
+pub fn int_of(j: &Json) -> i128 {
+    j.as_i64()
+        .map(i128::from)
+        .or_else(|| j.as_u64().map(i128::from))
+        .unwrap_or_else(|| panic!("{j} is not an integer"))
+}
+
+// ---------------------------------------------------------------- V17 payloads made at test time (IP-13)
+
+use build_log_io::adapters::v17::layout;
+use hdf5::Group;
+
+pub fn monitoring(mount: &Group) -> Group {
+    mount
+        .create_group(layout::MONITORING_DATA)
+        .expect("the layers' group")
+}
+
+pub fn layer(monitoring: &Group, id: u32) -> Group {
+    monitoring
+        .create_group(&format!("{}{id}", layout::LAYER_PREFIX))
+        .expect("a layer's group")
+}
+
+pub fn dataset<T: hdf5::H5Type>(group: &Group, name: &str, samples: usize) {
+    group
+        .new_dataset::<T>()
+        .shape(samples)
+        .create(name)
+        .expect("a dataset");
+}
+
+/// A laser in a layer with all eight channels of `samples` samples each: the power as `float32`, the state as `uint8`, the positions as `int32`.
+pub fn laser(layer: &Group, number: u32, samples: usize, window: Option<(i64, i64)>) -> Group {
+    let group = layer
+        .create_group(&format!("{}{number}", layout::LASER_PREFIX))
+        .expect("a laser's group");
+    if let Some((start, end)) = window {
+        put_array(&group, layout::START_LASER_TIME, &[start]);
+        put_array(&group, layout::END_LASER_TIME, &[end]);
+    }
+    let data = group
+        .create_group(layout::LASER_DATA)
+        .expect("the group of the power");
+    dataset::<f32>(&data, layout::LASER_POWER, samples);
+    dataset::<u8>(&data, layout::LASER_STATE, samples);
+    let position = group
+        .create_group(layout::POSITION)
+        .expect("the group of the positions");
+    for name in [
+        layout::ACTUAL_X,
+        layout::ACTUAL_Y,
+        layout::ACTUAL_Z,
+        layout::COMMANDED_X,
+        layout::COMMANDED_Y,
+        layout::COMMANDED_Z,
+    ] {
+        dataset::<i32>(&position, name, samples);
+    }
+    group
+}
+
+/// A scanner card with a sample period, in the optical train `train`.
+pub fn scanner_card(mount: &Group, train: u32, period: f32) {
+    let calibration = mount
+        .create_group(layout::CALIBRATION_DATA)
+        .or_else(|_| mount.group(layout::CALIBRATION_DATA))
+        .expect("the calibration group");
+    let train = calibration
+        .create_group(&format!("{}{train}", layout::OPTICAL_TRAIN_PREFIX))
+        .expect("an optical train");
+    let card = train
+        .create_group(layout::SCANNER_CARD)
+        .expect("a scanner card");
+    put_array(&card, layout::SAMPLE_PERIOD, &[period]);
+}
+
+// ---------------------------------------------------------------- a fixed-seed generator and ranges for the property tests (IP-03 phase 3F, IP-06 phase 6B)
+
+use std::ops::Range;
+
+/// A fixed-seed generator: the property test is the same on every run.
+pub struct Rng(pub u64);
+
+impl Rng {
+    pub fn next(&mut self) -> u64 {
+        self.0 ^= self.0 << 13;
+        self.0 ^= self.0 >> 7;
+        self.0 ^= self.0 << 17;
+        self.0
+    }
+
+    /// A number from 0 to `n`, both included.
+    pub fn up_to(&mut self, n: usize) -> usize {
+        (self.next() % (n as u64 + 1)) as usize
+    }
+}
+
+/// A range of rows that often starts or ends on, or next to, a block boundary.
+pub fn pick_rows(rng: &mut Rng, rows: usize, size: usize) -> Range<usize> {
+    let marks = [
+        0,
+        1,
+        size.saturating_sub(1),
+        size,
+        size + 1,
+        2 * size - 1,
+        2 * size,
+        2 * size + 1,
+        rows.saturating_sub(1),
+        rows,
+    ];
+    let one = |rng: &mut Rng| {
+        if rng.up_to(2) == 0 {
+            rng.up_to(rows)
+        } else {
+            marks[rng.up_to(marks.len() - 1)].min(rows)
+        }
+    };
+    let (a, b) = (one(rng), one(rng));
+    a.min(b)..a.max(b)
+}
+
+pub fn pick_any(rng: &mut Rng, length: usize) -> Range<usize> {
+    let (a, b) = (rng.up_to(length), rng.up_to(length));
+    a.min(b)..a.max(b)
+}
+
+// ---------------------------------------------------------------- a locator over one file, for the column engine and its cache (IP-06 phases 6B and 6C)
+
+/// The version a test locator names in its errors.
+pub const LOCATOR_VERSION: &str = "test-version";
+
+/// A locator over one file: the channel of a request is the path of a dataset in it, so that nothing of any version's layout is in the engine or in its tests.
+pub struct FileLocator {
+    pub file: File,
+    asked: std::sync::atomic::AtomicUsize,
+}
+
+impl FileLocator {
+    pub fn new(file: File) -> Self {
+        FileLocator {
+            file,
+            asked: std::sync::atomic::AtomicUsize::new(0),
+        }
+    }
+
+    /// How many times the engine asked this locator for a dataset.
+    pub fn asked(&self) -> usize {
+        self.asked.load(std::sync::atomic::Ordering::SeqCst)
+    }
+}
+
+impl build_log_io::columns::Locator for FileLocator {
+    fn version(&self) -> &str {
+        LOCATOR_VERSION
+    }
+
+    fn locate(
+        &self,
+        request: &build_log_model::ColumnRequest,
+    ) -> Result<build_log_io::columns::Located, build_log_model::Error> {
+        self.asked.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let path = request.channel.segments.join("/");
+        self.file
+            .dataset(&path)
+            .map(build_log_io::columns::Located::new)
+            .map_err(|_| {
+                build_log_model::Error::new(build_log_model::ErrorKind::NotPresent {
+                    what: format!("the dataset {path}"),
+                })
+            })
+    }
+}
+
+/// A file with the datasets that `write` makes in its one group, opened for reading through a locator.
+pub fn locator_over(label: &str, write: impl FnOnce(&hdf5::Group)) -> (TempH5, FileLocator) {
+    let on_disk = temp_h5(label, write);
+    let locator = FileLocator::new(File::open(&on_disk.0).expect("the file opens"));
+    (on_disk, locator)
+}
+
+/// A one-dimensional dataset of `values`, in chunks of `chunk` values with gzip if there is a chunk size, and in one piece if there is none.
+pub fn put<T: hdf5::H5Type>(group: &hdf5::Group, name: &str, values: &[T], chunk: Option<usize>) {
+    let builder = group.new_dataset::<T>().shape(values.len());
+    let dataset = match chunk {
+        Some(c) => builder.chunk(c).deflate(6).create(name),
+        None => builder.create(name),
+    }
+    .expect("a dataset");
+    if !values.is_empty() {
+        dataset.write_raw(values).expect("its values");
+    }
+}
+
+// ---------------------------------------------------------------- V16 payloads made at test time (IP-12)
+
+/// Small V16 mounts, made with the binding and read with the adapter's own reader. Every name comes from the V16 layout, so that these files are V16's and not V17's by accident.
+pub mod v16 {
+    use build_log_io::adapters::v16::{self, layout};
+    use build_log_model::{BuildMeta, Error};
+    use hdf5::Group;
+
+    use super::{dataset, put_scalar, put_text, temp_h5, TempH5};
+
+    /// A file with a V16 mount, `Mount`, with only what the build level requires (the marker, the build's id and the layers' group), that `write` adds to.
+    pub fn mount_file(label: &str, write: impl FnOnce(&Group)) -> TempH5 {
+        temp_h5(label, |mount| {
+            put_scalar(mount, layout::MARKER, 16i32);
+            put_text(mount, layout::BUILD_ID, "a build");
+            mount
+                .create_group(layout::MONITORING_DATA)
+                .expect("the layers' group");
+            write(mount);
+        })
+    }
+
+    /// The same, read by the adapter.
+    pub fn made(label: &str, write: impl FnOnce(&Group)) -> Result<BuildMeta, Error> {
+        let on_disk: TempH5 = mount_file(label, write);
+        let file = hdf5::File::open(&on_disk.0).expect("the file opens");
+        let mount = file.group("Mount").expect("the mount");
+        v16::read::read_build(&mount)
+    }
+
+    pub fn monitoring(mount: &Group) -> Group {
+        mount
+            .group(layout::MONITORING_DATA)
+            .expect("the layers' group")
+    }
+
+    pub fn layer(monitoring: &Group, id: u32) -> Group {
+        monitoring
+            .create_group(&format!("{}{id}", layout::LAYER_PREFIX))
+            .expect("a layer's group")
+    }
+
+    /// The two groups of channels of a laser, with no channel in them: what V16 keeps for a laser that did not fire.
+    pub fn empty_laser(layer: &Group, number: u32) -> Group {
+        let group = layer
+            .create_group(&format!("{}{number}", layout::LASER_PREFIX))
+            .expect("a laser's group");
+        group
+            .create_group(layout::LASER_DATA)
+            .expect("the group of the power");
+        group
+            .create_group(layout::POSITION)
+            .expect("the group of the positions");
+        group
+    }
+
+    /// The calibration group of laser `number`, in the mount's calibration group (which is made if it is not there yet).
+    pub fn calibration(mount: &Group, number: u32) -> Group {
+        let data = mount
+            .create_group(layout::CALIBRATION_DATA)
+            .or_else(|_| mount.group(layout::CALIBRATION_DATA))
+            .expect("the calibration group");
+        data.create_group(&format!("{}{number}", layout::CALIBRATION_PREFIX))
+            .expect("a laser's calibration")
+    }
+
+    /// A build whose first layer holds the lasers `numbers`, each with a few samples, and that `write` adds to (the calibrations, the bit resolutions).
+    pub fn with_lasers(
+        label: &str,
+        numbers: &[u32],
+        write: impl FnOnce(&Group),
+    ) -> Result<BuildMeta, Error> {
+        made(label, |mount| {
+            let first = layer(&monitoring(mount), 1);
+            for &number in numbers {
+                laser(&first, number, 3);
+            }
+            write(mount);
+        })
+    }
+
+    /// A laser in a layer with all eight channels of `samples` samples each: the power as `float32`, the state as `uint8`, the positions as `int32`.
+    pub fn laser(layer: &Group, number: u32, samples: usize) -> Group {
+        let group = empty_laser(layer, number);
+        let data = group
+            .group(layout::LASER_DATA)
+            .expect("the group of the power");
+        dataset::<f32>(&data, layout::LASER_POWER, samples);
+        dataset::<u8>(&data, layout::LASER_STATE, samples);
+        let position = group
+            .group(layout::POSITION)
+            .expect("the group of the positions");
+        for name in [
+            layout::ACTUAL_X,
+            layout::ACTUAL_Y,
+            layout::ACTUAL_Z,
+            layout::COMMANDED_X,
+            layout::COMMANDED_Y,
+            layout::COMMANDED_Z,
+        ] {
+            dataset::<i32>(&position, name, samples);
+        }
+        group
+    }
+}

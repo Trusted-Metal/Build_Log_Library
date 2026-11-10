@@ -18,6 +18,7 @@ build-log-model = { path = "rust/model", version = "0.0.0" }
 build-log-io = { path = "rust/io", version = "0.0.0" }
 build-log-processing = { path = "rust/processing", version = "0.0.0" }
 build-log-testkit = { path = "rust/testkit", version = "0.0.0" }
+build-log-conformance = { path = "rust/conformance", version = "0.0.0" }
 
 # The HDF5 binding, pinned once. `hdf5-metno` 0.12 is the version the consumer apps pin; renamed so the code says `hdf5::`. Its `-sys` crate (0.12.x) comes with it.
 hdf5 = { package = "hdf5-metno", version = "0.12" }

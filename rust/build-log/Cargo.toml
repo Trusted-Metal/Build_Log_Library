@@ -18,6 +18,11 @@ specta = []
 static-hdf5 = ["hdf5", "build-log-io/static-hdf5"]
 # RULE: no feature changes the on-disk schema. A feature adds or removes code, never what a file means or contains.
 
+# The consumer example is written against the facade only, and the facade opens files only with the IO layer
+[[example]]
+name = "mock_consumer"
+required-features = ["hdf5"]
+
 [dependencies]
 build-log-model = { workspace = true }
 build-log-io = { workspace = true, optional = true }
