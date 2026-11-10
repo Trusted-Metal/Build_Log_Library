@@ -1,7 +1,8 @@
 //! The Common Data Model of the Build Log Library: plain Rust types for a build, its layers, lasers and channels, and the requests that reach their samples.
 //!
 //! The types are version-neutral: the adapter of each file version fills them, and no type names a group or an attribute of any file. `docs/models/cdm.md`
-//! has the map of the modules and the rules for changing them, and the shapes stay provisional until the first consumers have read them.
+//! has the map of the modules and the rules for changing them. The read surface (the names, types, errors and request shapes that Vision's trial read V16 and V17 through) was frozen on
+//! 2026-11-05 (decision D24-20): an additive change is logged, and a change to a frozen item needs a recorded decision. Still provisional: the query tier (not built), sensors and the V18-only fields.
 //!
 //! * **Layer:** the Model, the bottom of the library. Plain data types, no I/O.
 //! * **May depend on:** no other crate of this workspace (in tests only: `build-log-testkit`), and **no HDF5**. It must build for `wasm32`.

@@ -18,7 +18,8 @@
 //! * **Precision is the caller's choice and is never silent.** `Native` returns what is stored. `F32` and `F64` convert numbers as asked, rounding to the
 //!   nearest where a value cannot be exact; a caller that needs the exact stored value asks for `Native`.
 //! * **Discovery reads no samples.** [`BuildSource`] says what a build holds (its metadata, layers, lasers, channels) and carries a [`Revision`] that changes when a
-//!   live source grows. It is a **provisional sketch** (task T02.28), written so that the read API can be reviewed before a file-backed implementation exists.
+//!   live source grows. Every file adapter and the in-memory source implement it, and it is part of the read surface that was frozen after Vision's trial read V16 and V17
+//!   through it (decision D24-20): an additive change is logged, and a change to what it already offers needs a recorded decision.
 //! * **The in-memory source** serves columns that are already in memory, in blocks, with the same checks and reports as a file-backed source would make.
 //!   It is how the traits are proved without HDF5, and how tests and non-file sources work (BL-FA-01).
 
@@ -600,8 +601,8 @@ impl Revision {
     }
 }
 
-/// Discovery: what a build holds, without reading a sample. **A provisional sketch** (task T02.28): it is here so that the read API can be reviewed by the tauri
-/// and Vision owners before any file-backed implementation exists (IP-06, IP-07), and it may change after that review.
+/// Discovery: what a build holds, without reading a sample. Every file adapter and [`InMemorySource`] implement it. It is part of the read surface that was frozen on
+/// 2026-11-05 (decision D24-20): an additive change is logged, and a change to what it already offers needs a recorded decision.
 ///
 /// A source that can be discovered can also be read, so this extends [`ColumnSource`]. An implementation needs only [`BuildSource::build`] and
 /// [`BuildSource::revision`]; the rest are derived from the metadata. **None of these methods takes a range or a context**, so none of them can read samples.

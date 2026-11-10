@@ -1,4 +1,4 @@
-//! The parameter snapshot: per-laser parameters, equations as a type plus named constants, and (later) the descriptors of correction grids and files.
+//! The parameter snapshot: per-laser parameters, equations as a type plus named constants, and the descriptors of a laser's correction grids.
 //!
 //! * **Layer:** the Model: plain types, no I/O, no HDF5, and nothing that names a group or path of a file. **Group (decision G1):** streams.
 //! * **Constructed by:** library (`LaserParameters` and the parts it holds, `Equation`, `NamedConstant`); the enums `GalvoProtocol`, `EquationKind` and `ParameterValue`.
@@ -6,13 +6,14 @@
 //!   knows: a value added later must not break a producer's build. Decision D13-25.)
 //! * **Requirement:** BL-CD-12.
 //!
-//! # What is here so far
+//! # What is here
 //!
-//! The part of IP-02 phase 2N that IP-13 phase 13H needs: what a V17 file holds for a laser, which is the calibration of its optical train. **Parameters are held per
-//! laser** (decision D13-18), with the number of the optical train kept as a label. The snapshot has the scanner, the three galvos, the scanner card, the light source
-//! (with the volts-to-watts equation as named constants) and the optics of the train. **The correction grids and the correction file are not here:** what a grid is
-//! indexed by and how it is laid out is the open question Q2-5 (c), so they stay kept, untyped, in `extra`. ADC scale and the decode conventions come with the versions
-//! that record them.
+//! What a file holds for a laser: the calibration of its optical train. **Parameters are held per laser** (decision D13-18), with the number of the optical train kept as a
+//! label. The snapshot has the scanner, the three galvos, the scanner card, the light source (with the volts-to-watts equation as named constants), the optics of the train and
+//! **the descriptors of the laser's correction grids** ([`LaserParameters::grids`], whose type is in the module `grids`; IP-24 phase 24B). **A grid's values are not here:** they are
+//! bulk data and are read through `ColumnSource::read_grid`, as stored. What a grid is indexed by and how its axes run is stated by no file, so the descriptor says
+//! `GridInterpretation::Unrecorded` and the library does not interpret it (decision D24-11). **A correction file, as distinct from the grids, has no type:** if a file holds one it is kept,
+//! untyped, in `extra`. The ADC scale and the decode conventions come with the versions that record them.
 //!
 //! # What this module claims
 //!
