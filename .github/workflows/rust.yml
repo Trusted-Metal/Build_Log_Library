@@ -9,6 +9,7 @@ name: Rust
 #   Feature matrix  the facade builds with each feature combination of BL-AR-07.
 #   Commit messages commitlint over the commits of the change.
 #   WebAssembly check (advisory) and Static libhdf5 (advisory) are not part of the required check: they show on the pull request but never block it.
+#   Release         after `Test`, on a push to `main` or `release` only (IP-26 phase 26I): a candidate or a stable version. A manual run is a dry run.
 #
 # HDF5: Linux installs libhdf5-dev with apt; Windows installs hdf5 with vcpkg. Only vcpkg's *archives* are cached, never `installed/`: a cached
 # `installed/` went stale when the runner's compiler changed (Machine_Config_Library, 2026-08). A failure that looks like "Unable to locate HDF5 root
@@ -24,7 +25,8 @@ on:
         options: [none, fail-lint, skip-lint]
         default: none
   push:
-    branches: ["main"]
+    # `release` is where stable versions are made (docs/release-process.md). A tag push is not a trigger: the release job's own tags never start a run.
+    branches: ["main", "release"]
   pull_request:
 
 permissions:
@@ -255,9 +257,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Node 22: the tooling now includes semantic-release, which needs 22.14 or later (the release job below uses the same).
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       # --ignore-scripts: the `prepare` script would install the husky hooks, which a CI run must not do.
@@ -347,3 +350,62 @@ jobs:
             echo "::error::a job that gates the merge did not succeed (a skipped or cancelled job counts as a failure)"
             exit 1
           fi
+
+  # Release automation (IP-26 phase 26I, decisions D26-4 and D26-13; docs/release-process.md). A push to `main` makes a release candidate (v0.y.z-rc.N, a
+  # GitHub pre-release) and a push to `release` makes a stable version, each ONLY when the required check above succeeded (a job whose `needs` failed or
+  # was skipped does not run) and only when a commit since the last release says so: feat, fix, perf, refactor, revert, or a breaking change. docs, ci,
+  # test, build, style and chore release nothing. The job commits the new version to Cargo.toml and Cargo.lock ("chore(release): ... [skip ci]", which
+  # starts no run), tags it and creates the GitHub release; it pushes with a deploy key because the rulesets on `main` and `release` take pull requests only.
+  #
+  # A MANUAL run (workflow_dispatch) is always a DRY RUN: it prints the version that would be released and creates nothing. It is how the configuration
+  # and the deploy key are proved, and with `simulate` set it shows that a failed required check stops the release.
+  release:
+    name: Release
+    needs: [required-check]
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/release')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # the GitHub release (the version commit and the tag go with the deploy key)
+    # One release at a time across both branches: a candidate and a stable version must not push together, and a run is never cancelled half way.
+    concurrency:
+      group: release
+      cancel-in-progress: false
+    env:
+      HUSKY: "0"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # semantic-release reads the whole history and every tag
+          persist-credentials: false # the push uses the deploy key, never this job's token
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # --ignore-scripts: the `prepare` script would install the husky hooks, which a release job must not do.
+      - name: Install the release tooling
+        run: npm ci --ignore-scripts
+
+      - name: Configure the deploy key for git push
+        env:
+          RELEASE_DEPLOY_KEY: ${{ secrets.RELEASE_DEPLOY_KEY }}
+        run: bash .github/scripts/configure-deploy-key-git.sh
+
+      - name: Run semantic-release
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          flags=""
+          if [ "$EVENT" = "workflow_dispatch" ]; then flags="--dry-run"; fi
+          npx --no-install semantic-release --repository-url "${SEMANTIC_RELEASE_REPOSITORY_URL}" $flags
+
+      # After a stable version only (Q26-7): the stable tag has to be in the history of `main`, or the next candidate would be numbered from the old version.
+      - name: Merge release back into main
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/release' && steps.release.outputs.version != '' }}
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: bash .github/scripts/back-merge.sh "$VERSION"
