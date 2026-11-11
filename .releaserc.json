@@ -1,0 +1,63 @@
+{
+  "_comment": "Release rules (IP-26 phase 26I, decisions D26-4 and D26-13). A candidate v0.y.z-rc.N is made on a push to main and a stable version on a push to release, each only after the required check. THE PRE-FREEZE RULE: the last rule of the commit-analyzer, a breaking change, says minor. At the freeze (parent plan M6) change its release to major, in the same pull request that creates the release branch. See docs/release-process.md.",
+  "branches": [
+    "release",
+    {
+      "name": "main",
+      "prerelease": "rc"
+    }
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "feat",     "release": "minor" },
+          { "type": "fix",      "release": "patch" },
+          { "type": "perf",     "release": "patch" },
+          { "type": "revert",   "release": "patch" },
+          { "type": "refactor", "release": "patch" },
+          { "type": "docs",     "release": false   },
+          { "type": "style",    "release": false   },
+          { "type": "test",     "release": false   },
+          { "type": "build",    "release": false   },
+          { "type": "ci",       "release": false   },
+          { "type": "chore",    "release": false   },
+          { "breaking": true,   "release": "minor" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "node .github/scripts/guard-version.mjs ${nextRelease.version}",
+        "prepareCmd": "node .github/scripts/sync-version.mjs ${nextRelease.version} && cargo tree --locked --workspace --depth 0"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "Cargo.toml",
+          "Cargo.lock"
+        ],
+        "message": "chore(release): bump version to ${nextRelease.version} [skip ci]"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failComment": false,
+        "releasedLabels": false
+      }
+    ]
+  ]
+}

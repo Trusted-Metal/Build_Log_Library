@@ -1,0 +1,7 @@
+{
+  "name": "npm",
+  "version": "11.21.2",
+  "private": true,
+  "description": "A stub that replaces the full npm CLI package, which @semantic-release/npm (a dependency of semantic-release that this repository does not use) would otherwise pull in with its bundled glob and minimatch, both with open advisories. The same stub as the Machine Config Library's. The version is the current npm release so that a range check does not treat the stub as an old npm. The release job runs the npm on PATH; this package has no bin and no code.",
+  "license": "UNLICENSED"
+}

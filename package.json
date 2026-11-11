@@ -1,7 +1,7 @@
 {
   "name": "lbl-tooling",
   "version": "0.0.0",
-  "description": "Repo tooling root (commit-message linting, future release automation) — not published, no runtime code.",
+  "description": "Repo tooling root (commit-message linting and release automation) — not published, no runtime code. The version in this file is not the library's version: that is in Cargo.toml.",
   "private": true,
   "scripts": {
     "prepare": "husky"
@@ -9,6 +9,17 @@
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
-    "husky": "^9.0.0"
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^11.0.1",
+    "@semantic-release/github": "^12.0.10",
+    "@semantic-release/release-notes-generator": "^14.1.1",
+    "conventional-changelog-conventionalcommits": "^9.3.1",
+    "husky": "^9.0.0",
+    "npm": "file:tooling/npm-cli-stub",
+    "semantic-release": "^25.0.9"
+  },
+  "overrides": {
+    "npm": "$npm"
   }
 }

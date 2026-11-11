@@ -1,11 +1,11 @@
 // Commit conventions (BL-TV-08, IP-01 T01.12). Commits follow Conventional Commits: `type(scope): subject`.
 //
-// Release mapping (the automation that acts on it is IP-23, decision D01-9; until then it is documentation):
+// Release mapping (semantic-release acts on it in the release job of rust.yml, IP-26 phase 26I; the rules are in .releaserc.json and mirror this):
 //   feat                                         -> minor release
 //   fix, perf, revert, refactor                  -> patch release
 //   docs, style, test, build, ci, chore          -> no release
-//   a breaking change (a `BREAKING CHANGE:` footer, or `!` after the type or scope) -> major release;
-//   IP-23 chooses the exact preset.
+//   a breaking change (a `BREAKING CHANGE:` footer, or `!` after the type or scope) -> counts as MINOR until the freeze (decision D26-13), major after it;
+//   the preset is `conventionalcommits`, which reads both forms of a breaking change.
 //
 // An unknown type is an error. An unknown scope is only a warning. Merge commits are ignored.
 module.exports = {
@@ -45,6 +45,7 @@ module.exports = {
     "tools",      // scripts under tools/
     "fixtures",   // fixture handling: manifest, parity, fixture documents
     "testdata",   // the committed miniatures in testdata/
+    "release",    // the release automation's own commits (chore(release): ...) and its configuration
       ],
     ],
     "subject-case": [0],       // allow any case in subject
