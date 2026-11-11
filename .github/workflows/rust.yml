@@ -11,7 +11,8 @@ name: Rust
 #   WebAssembly check (advisory) and Static libhdf5 (advisory) are not part of the required check: they show on the pull request but never block it.
 #   Release         after `Test`, on a push to `main` or `release` only (IP-26 phase 26I): a candidate or a stable version. A manual run is a dry run.
 #
-# HDF5: Linux installs libhdf5-dev with apt; Windows installs hdf5 with vcpkg. Only vcpkg's *archives* are cached, never `installed/`: a cached
+# HDF5: Linux installs libhdf5-dev with apt (each such step is limited to 5 minutes: on 2026-11-11 the Ubuntu runners could not resolve the Ubuntu mirrors
+# and apt kept retrying for over half an hour, so a stall now fails the job in minutes); Windows installs hdf5 with vcpkg. Only vcpkg's *archives* are cached, never `installed/`: a cached
 # `installed/` went stale when the runner's compiler changed (Machine_Config_Library, 2026-08). A failure that looks like "Unable to locate HDF5 root
 # directory and/or headers" (the binding's build script) or "Could NOT find HDF5" (CMake) after a runner image update means vcpkg's archive folder or
 # the HDF5_DIR step needs another look.
@@ -55,6 +56,7 @@ jobs:
 
       # clippy compiles every crate, and the IO crate's build script needs the HDF5 headers.
       - name: Install libhdf5
+        timeout-minutes: 5
         run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
 
       - uses: dtolnay/rust-toolchain@stable
@@ -92,6 +94,7 @@ jobs:
 
       - name: Install libhdf5 (Linux)
         if: runner.os == 'Linux'
+        timeout-minutes: 5
         run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
 
       - name: Record how libhdf5 was installed (Linux)
@@ -193,6 +196,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install libhdf5
+        timeout-minutes: 5
         run: apt-get update && apt-get install -y libhdf5-dev pkg-config
 
       - name: Record how libhdf5 was installed
@@ -232,6 +236,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install libhdf5
+        timeout-minutes: 5
         run: sudo apt-get update && sudo apt-get install -y libhdf5-dev
 
       - uses: dtolnay/rust-toolchain@stable
