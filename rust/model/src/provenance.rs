@@ -151,6 +151,22 @@ impl Origins {
     }
 }
 
+/// The word that begins the key of a channel in the side table of a laser in a layer: the channel `Laser_Power` is `channel Laser_Power` there.
+const CHANNEL_KEY_PREFIX: &str = "channel ";
+
+/// The key under which the side table of a laser in a layer names the channel `channel` (the channel's own name: for the channels of a laser, the name of its dataset).
+///
+/// **This is the one place that spells the convention** (IP-26 phase 26C, finding F16 of IP-24): the adapters record with it, the model reads with it, and a consumer asks
+/// through [`crate::LaserLayerMeta::channel_origin`] and never builds the text. The text itself is unchanged, so what a consumer that built it by hand finds is still there.
+pub(crate) fn channel_key(channel: &str) -> String {
+    format!("{CHANNEL_KEY_PREFIX}{channel}")
+}
+
+/// The channel that a key of that side table names, or `None` for a key that is not a channel's (`laser`, `stored_samples`, `parameters`).
+pub(crate) fn channel_of_key(field: &str) -> Option<&str> {
+    field.strip_prefix(CHANNEL_KEY_PREFIX)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -246,5 +262,23 @@ mod tests {
             origins.get("channel A_Channel"),
             Some(&Origin::NullDataspace)
         );
+    }
+
+    #[test]
+    fn the_key_of_a_channel_is_the_text_that_consumers_already_use_and_is_read_back_from_it() {
+        // IP-26 phase 26C (finding F16): the convention is spelled once; its text is what a consumer that built it by hand finds
+        assert_eq!(channel_key("A_Channel"), "channel A_Channel");
+        assert_eq!(channel_of_key("channel A_Channel"), Some("A_Channel"));
+        assert_eq!(channel_of_key(&channel_key("a b")), Some("a b"));
+        // a key that is not a channel's names no channel
+        for other in [
+            "laser",
+            "stored_samples",
+            "parameters",
+            "channels x",
+            "channel",
+        ] {
+            assert_eq!(channel_of_key(other), None, "{other}");
+        }
     }
 }

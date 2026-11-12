@@ -27,7 +27,7 @@ use crate::events::EventSeries;
 use crate::extra::Extra;
 use crate::identity::{ByLayer, LaserKey, LayerId, Presence};
 use crate::params::{LaserParameters, ParameterValue};
-use crate::provenance::{Origin, Origins, Provenance};
+use crate::provenance::{channel_key, Origin, Origins, Provenance};
 use crate::quality::QualityRecord;
 use crate::time::{TimeAxis, TimeValue};
 use crate::units::Quantity;
@@ -175,6 +175,22 @@ impl LaserLayerMeta {
     pub fn with_complete(mut self, flag: Option<bool>) -> Self {
         self.complete = flag;
         self
+    }
+
+    /// The origin recorded for the channel `channel` on this laser in this layer, or `None` when the channel was read as the file has it.
+    ///
+    /// `channel` is the channel's own name: for the channels of a laser, the name of its dataset in the file, such as `Laser_Power`. **This is the typed way to ask what
+    /// `origins` holds under the text key `channel <name>`; a consumer never builds that key** (finding F16 of IP-24, IP-26 phase 26C). What an origin can say about a
+    /// channel: [`Origin::NullDataspace`] (the dataset is recorded and empty because its dataspace is null, which is not the same as a length of zero) and
+    /// [`Origin::NotRead`] (the channel is in the file and was not read, with the cause and the reason).
+    pub fn channel_origin(&self, channel: &str) -> Option<&Origin> {
+        self.origins.get(&channel_key(channel))
+    }
+
+    /// Records the origin of a channel on this laser in this layer and returns the origin it replaced. This is for the adapters; a consumer reads with
+    /// [`LaserLayerMeta::channel_origin`].
+    pub fn record_channel_origin(&mut self, channel: &str, origin: Origin) -> Option<Origin> {
+        self.origins.record(channel_key(channel), origin)
     }
 }
 
@@ -565,5 +581,50 @@ mod tests {
         assert_eq!(odd.date.as_deref(), Some("2026-03-20 20:37:57 UTC-05:00"));
         let build = BuildMeta::new(odd.clone());
         assert_eq!(build.identity, odd);
+    }
+
+    #[test]
+    fn the_typed_lookup_of_a_channels_origin_returns_what_the_text_key_holds() {
+        // IP-26 phase 26C (finding F16): no change in behaviour, and a consumer never builds the key
+        let corrupt = Error::new(ErrorKind::Corrupt {
+            detail: "x".to_string(),
+        });
+        let mut entry = LaserLayerMeta::new(Presence::RecordedEmpty);
+        // one origin recorded by the typed method, one by the text the adapters used to build by hand
+        assert_eq!(
+            entry.record_channel_origin("A_Channel", Origin::NullDataspace),
+            None
+        );
+        entry
+            .origins
+            .record("channel B_Channel", Origin::not_read(&corrupt));
+        for (name, text) in [
+            ("A_Channel", "channel A_Channel"),
+            ("B_Channel", "channel B_Channel"),
+            ("C_Channel", "channel C_Channel"),
+        ] {
+            assert_eq!(
+                entry.channel_origin(name),
+                entry.origins.get(text),
+                "{name}"
+            );
+        }
+        assert_eq!(
+            entry.channel_origin("A_Channel"),
+            Some(&Origin::NullDataspace)
+        );
+        assert!(matches!(
+            entry.channel_origin("B_Channel"),
+            Some(Origin::NotRead { .. })
+        ));
+        assert_eq!(entry.channel_origin("C_Channel"), None);
+        // a key that is not a channel's is never found as a channel
+        entry.origins.record("laser", Origin::not_read(&corrupt));
+        assert_eq!(entry.channel_origin("laser"), None);
+        // recording again returns what it replaced
+        assert_eq!(
+            entry.record_channel_origin("A_Channel", Origin::Inferred),
+            Some(Origin::NullDataspace)
+        );
     }
 }

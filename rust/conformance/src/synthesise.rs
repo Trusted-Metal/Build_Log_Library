@@ -113,6 +113,7 @@ fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
     let mut meta = LaserMeta::new(key);
     meta.parameters = crate::parameters::synthesise(laser.get("parameters"))?;
 
+    // (the layer, the channel's name, the name of its origin)
     let mut channel_origins: Vec<(LayerId, String, String)> = Vec::new();
     for channel in array(laser, "channels")? {
         let kind = kind_from(
@@ -150,7 +151,7 @@ fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
             presence.insert(id, presence_of(entry)?);
             // D07-2: a channel that is empty because its dataspace is null says so, on the laser's entry for the layer (made below)
             if let Some(origin) = opt_text(entry, "origin")? {
-                channel_origins.push((id, format!("channel {source_name}"), origin));
+                channel_origins.push((id, source_name.to_string(), origin));
             }
         }
         meta.channels.push(descriptor.with_presence(presence));
@@ -167,9 +168,9 @@ fn laser_from(laser: &Value) -> Result<LaserMeta, String> {
         if let Some(name) = opt_text(entry, "stored_samples_origin")? {
             layer.origins.record("stored_samples", origin_from(&name)?);
         }
-        for (id, field, name) in &channel_origins {
+        for (id, channel, name) in &channel_origins {
             if i64::from(id.0) == int(entry, "layer")? {
-                layer.origins.record(field.clone(), origin_from(name)?);
+                layer.record_channel_origin(channel, origin_from(name)?);
             }
         }
         if let Some(inputs) = entry.get("time_axis_inputs").filter(|v| !v.is_null()) {

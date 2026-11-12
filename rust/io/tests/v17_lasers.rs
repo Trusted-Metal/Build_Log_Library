@@ -387,6 +387,13 @@ fn a_laser_that_cannot_be_read_is_recorded_as_not_read_and_the_build_still_opens
     let in_second = first.layers.get(LayerId(2)).unwrap();
     assert_eq!(in_second.presence.samples(), Some(4));
     for channel in ["channel Actual_X", "channel Laser_Power"] {
+        // the typed lookup holds the same origin as the text key (IP-26 phase 26C)
+        let name = channel.strip_prefix("channel ").unwrap();
+        assert_eq!(
+            in_second.channel_origin(name),
+            in_second.origins.get(channel),
+            "{channel}"
+        );
         match in_second.origins.get(channel) {
             Some(Origin::NotRead { cause, .. }) => {
                 assert_eq!(*cause, build_log_model::NotReadCause::Fault, "{channel}")

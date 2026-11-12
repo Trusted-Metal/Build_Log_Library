@@ -28,7 +28,7 @@
 use crate::error::Location;
 use crate::identity::{ChannelKey, Presence};
 use crate::meta::BuildMeta;
-use crate::provenance::{NotReadCause, Origin, Origins};
+use crate::provenance::{channel_of_key, NotReadCause, Origin, Origins};
 
 /// How serious a finding is: whether it says something is worth knowing, that the data is suspect, or that something was not read.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -272,7 +272,7 @@ fn not_read(build: &BuildMeta, found: &mut Vec<Finding>) {
                 ),
                 _ => (FindingCode::NotRead, "not read"),
             };
-            let location = match field.strip_prefix("channel ") {
+            let location = match channel_of_key(field) {
                 Some(name) => at.clone().with_channel(ChannelKey::new([name])),
                 None => at.clone(),
             };
