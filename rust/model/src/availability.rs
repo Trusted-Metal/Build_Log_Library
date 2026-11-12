@@ -28,7 +28,7 @@ use crate::channel::ChannelDescriptor;
 use crate::error::{Error, ErrorKind, Location, Violation};
 use crate::identity::{Availability, ChannelKey, LaserKey, LayerId, Presence};
 use crate::meta::BuildMeta;
-use crate::provenance::{NotReadCause, Origin};
+use crate::provenance::{channel_of_key, NotReadCause, Origin};
 use crate::validation::{Severity, ValidationReport};
 
 /// The kind of an item.
@@ -300,7 +300,7 @@ pub fn availability_of(
                     };
                     let at = item.location();
                     (item, at)
-                } else if let Some(name) = field.strip_prefix("channel ") {
+                } else if let Some(name) = channel_of_key(field) {
                     let item = Item::Channel {
                         layer,
                         laser: Some(laser.key.clone()),

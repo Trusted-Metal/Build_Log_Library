@@ -617,7 +617,7 @@ fn channels(laser: &LaserMeta, expected: &[Value], found: &mut Vec<String>) -> R
                 laser
                     .layers
                     .get(id)
-                    .and_then(|entry| entry.origins.get(&format!("channel {source}")).cloned()),
+                    .and_then(|entry| entry.channel_origin(source).cloned()),
                 opt_text(e, "origin")?
                     .map(|name| origin_from(&name))
                     .transpose()?,

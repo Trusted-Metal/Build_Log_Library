@@ -314,11 +314,18 @@ fn a_null_dataspace_channel_is_recorded_empty_with_an_origin() {
             Some(&Origin::NullDataspace),
             "{name}"
         );
+        // the typed lookup holds the same origin as the text key (IP-26 phase 26C)
+        assert_eq!(
+            entry.channel_origin(name),
+            Some(&Origin::NullDataspace),
+            "{name}"
+        );
     }
     // the others have no origin, and the stream is theirs, with the origin that the channels differ
     for name in Part::Actual.names() {
         assert_eq!(channel(&build, name), Some(recorded(N)), "{name}");
         assert!(entry.origins.get(&format!("channel {name}")).is_none());
+        assert!(entry.channel_origin(name).is_none(), "{name}");
     }
     assert_eq!(entry.presence, recorded(N));
     assert_eq!(

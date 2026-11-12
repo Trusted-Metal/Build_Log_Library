@@ -281,6 +281,17 @@ fn a_null_dataspace_is_a_recorded_empty_channel_and_a_table_is_not_read() {
             .get(&format!("channel {}", layout::LASER_POWER)),
         Some(&Origin::NullDataspace)
     );
+    // the typed lookup holds the same origins as the text keys (IP-26 phase 26C)
+    assert_eq!(
+        entry.channel_origin(layout::LASER_POWER),
+        Some(&Origin::NullDataspace)
+    );
+    assert_eq!(
+        entry.channel_origin(layout::COMMANDED_Z),
+        entry
+            .origins
+            .get(&format!("channel {}", layout::COMMANDED_Z))
+    );
     match entry
         .origins
         .get(&format!("channel {}", layout::COMMANDED_Z))

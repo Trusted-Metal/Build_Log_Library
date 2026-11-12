@@ -412,17 +412,12 @@ fn read_laser_in_layer(
             Ok(facts) => {
                 // a dataset with a null dataspace is recorded and empty, and says so (D07-2)
                 if facts.null {
-                    entry
-                        .origins
-                        .record(format!("channel {}", spec.dataset), Origin::NullDataspace);
+                    entry.record_channel_origin(spec.dataset, Origin::NullDataspace);
                 }
                 found.push((spec, facts.dtype, facts.samples));
             }
             Err(error) => {
-                entry.origins.record(
-                    format!("channel {}", spec.dataset),
-                    Origin::not_read(&error),
-                );
+                entry.record_channel_origin(spec.dataset, Origin::not_read(&error));
             }
         }
         keep_dataset_remainder(
@@ -456,10 +451,7 @@ fn read_laser_in_layer(
         match merge(laser, spec, dtype, count, layer) {
             Ok(()) => {}
             Err(error) if is_about_the_content(&error) => {
-                entry.origins.record(
-                    format!("channel {}", spec.dataset),
-                    Origin::not_read(&error),
-                );
+                entry.record_channel_origin(spec.dataset, Origin::not_read(&error));
             }
             Err(error) => return Err(error),
         }
