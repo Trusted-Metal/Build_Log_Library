@@ -83,7 +83,7 @@ pub fn example_config(protocol: Protocol) -> TauriConfig {
 /// `BuildIdentity` from tauri's configuration. Every field is stated, so a new field of the CDM breaks this function and makes tauri decide (decision D02-2).
 pub fn build_identity(config: &TauriConfig) -> BuildIdentity {
     BuildIdentity {
-        build_id: config.build_id.clone(),
+        build_id: Some(config.build_id.clone()),
         date: Some(config.date.clone()),
         username: Some(config.operator.clone()),
         alloy: Some(config.alloy.clone()),
@@ -255,7 +255,10 @@ fn main() {
         );
         println!(
             "{protocol:?}: build {} with {} lasers and {} layer(s)",
-            meta.identity.build_id,
+            meta.identity
+                .build_id
+                .as_deref()
+                .unwrap_or("(not recorded)"),
             meta.lasers().len(),
             meta.layers_present()
         );

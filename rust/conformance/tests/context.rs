@@ -187,7 +187,7 @@ fn an_origin_about_the_context_that_was_not_expected_is_reported() {
 fn an_expectation_that_lists_no_context_expects_an_empty_one() {
     let bare = Expectation::parse(r#"{"expectations_version": 1, "build": {}}"#).expect("parses");
     let empty = BuildMeta::new(BuildIdentity {
-        build_id: "a build".into(),
+        build_id: Some("a build".into()),
         date: None,
         username: None,
         alloy: None,

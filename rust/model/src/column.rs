@@ -1406,7 +1406,7 @@ mod tests {
     /// A build with two lasers, layers 1 and 3 (a gap), and one channel for the first laser.
     fn discoverable() -> InMemorySource {
         let mut build = BuildMeta::new(BuildIdentity {
-            build_id: "build-1".into(),
+            build_id: Some("build-1".into()),
             date: None,
             username: None,
             alloy: None,
@@ -1443,7 +1443,10 @@ mod tests {
     fn in_memory_source_implements_build_source() {
         // it is a trait object, and the one object discovers and reads
         let source: Box<dyn BuildSource> = Box::new(discoverable());
-        assert_eq!(source.build().unwrap().identity.build_id, "build-1");
+        assert_eq!(
+            source.build().unwrap().identity.build_id.as_deref(),
+            Some("build-1")
+        );
         assert_eq!(source.layers().unwrap(), [LayerId(1), LayerId(3)]);
         assert_eq!(source.lasers_in_layer(LayerId(1)).unwrap().len(), 2);
         assert_eq!(source.lasers_in_layer(LayerId(3)).unwrap(), [laser()]);

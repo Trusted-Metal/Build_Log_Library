@@ -89,8 +89,16 @@ fn without_last_laser(meta: &BuildMeta) -> Option<BuildMeta> {
 fn mutations() -> Vec<Mutation> {
     vec![
         ("the build id changes", |m| {
-            m.identity.build_id.push('x');
-            true
+            match m.identity.build_id.as_mut() {
+                Some(id) => {
+                    id.push('x');
+                    true
+                }
+                None => false,
+            }
+        }),
+        ("the build id is lost", |m| {
+            m.identity.build_id.take().is_some()
         }),
         ("the build date is normalised", |m| {
             match m.identity.date.as_mut() {
@@ -1011,7 +1019,12 @@ fn a_part_reports_only_its_own_disagreements() {
         .find(|e| e.miniature() == "v17_mock.h5")
         .expect("the mock capture");
     let mut meta = synthesise(expectation).unwrap();
-    meta.identity.build_id.push('x'); // a fault of the build level
+    // a fault of the build level
+    meta.identity
+        .build_id
+        .as_mut()
+        .expect("the mock capture records a build id")
+        .push('x');
     edit_laser(&mut meta, 0, |laser| {
         laser.channels.remove(0); // and one of the lasers
         true
@@ -1038,7 +1051,11 @@ fn the_check_lists_every_disagreement_and_says_what_it_found_and_expected() {
         .find(|e| e.miniature() == "v17_mock.h5")
         .expect("the mock capture");
     let mut meta = synthesise(expectation).unwrap();
-    meta.identity.build_id.push('x');
+    meta.identity
+        .build_id
+        .as_mut()
+        .expect("the mock capture records a build id")
+        .push('x');
     meta.layers_declared = Some(99);
     edit_laser(&mut meta, 0, |laser| {
         laser.channels.remove(0);

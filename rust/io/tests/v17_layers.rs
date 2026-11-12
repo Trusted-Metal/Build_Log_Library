@@ -22,7 +22,7 @@ use common::{put_array, put_scalar, put_text, temp_h5};
 
 fn empty_build() -> BuildMeta {
     BuildMeta::new(BuildIdentity {
-        build_id: "a build".into(),
+        build_id: Some("a build".into()),
         date: None,
         username: None,
         alloy: None,

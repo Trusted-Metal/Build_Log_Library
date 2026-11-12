@@ -173,7 +173,7 @@ fn identity(meta: &BuildMeta, expected: &Value, found: &mut Vec<String>) -> Resu
     same(
         found,
         "the build id",
-        Some(id.build_id.clone()),
+        id.build_id.clone(),
         opt_text(expected, "build_id")?,
     );
     same(

@@ -51,7 +51,7 @@ fn the_facade_opens_the_mock_version_through_an_injected_registry() {
     assert_eq!(opened.adapter(), "mock");
     assert_eq!(*opened.capabilities(), Capabilities::new());
     let build = opened.source().build().expect("the metadata");
-    assert_eq!(build.identity.build_id, "a build");
+    assert_eq!(build.identity.build_id.as_deref(), Some("a build"));
     assert_eq!(build.layers_declared, Some(4));
     assert_eq!(opened.source().layers().expect("the layers").len(), 4);
     assert_eq!(opened.into_source().build().expect("the metadata"), build);

@@ -92,7 +92,7 @@ fn read(mount: &Group) -> Result<Box<dyn BuildSource>, Error> {
         }
     };
     let mut meta = BuildMeta::new(BuildIdentity {
-        build_id,
+        build_id: Some(build_id),
         date: None,
         username: None,
         alloy: None,

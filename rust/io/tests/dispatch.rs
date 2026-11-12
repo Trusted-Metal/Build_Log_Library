@@ -20,7 +20,7 @@ use hdf5::Group;
 
 fn identity(id: &str) -> BuildIdentity {
     BuildIdentity {
-        build_id: id.to_string(),
+        build_id: Some(id.to_string()),
         date: None,
         username: None,
         alloy: None,
@@ -82,7 +82,7 @@ fn the_mock_version_reads_into_the_cdm() {
     let file = mock_file("mock-reads", "mock-build-1", 3);
     let opened = open(&mock_registry(), &file.0).expect("the mock file opens");
     let build = opened.source().build().expect("the metadata");
-    assert_eq!(build.identity.build_id, "mock-build-1");
+    assert_eq!(build.identity.build_id.as_deref(), Some("mock-build-1"));
     assert_eq!(build.layers_declared, Some(3));
     assert_eq!(
         opened.source().layers().expect("the layers"),
@@ -109,8 +109,14 @@ fn open_registry_dispatches_via_injected_test_file() {
     // with the mock in the registry the mock adapter reads the file
     let from_mock = open(&mock_registry(), &file.0).expect("opens");
     assert_eq!(
-        from_mock.source().build().unwrap().identity.build_id,
-        "mock-build-2"
+        from_mock
+            .source()
+            .build()
+            .unwrap()
+            .identity
+            .build_id
+            .as_deref(),
+        Some("mock-build-2")
     );
     // with another adapter registered for the same version and place, that adapter reads it: the registry is consulted, nothing is hard-coded
     let injected = Registry::new()
@@ -118,8 +124,14 @@ fn open_registry_dispatches_via_injected_test_file() {
         .unwrap();
     let from_fake = open(&injected, &file.0).expect("opens");
     assert_eq!(
-        from_fake.source().build().unwrap().identity.build_id,
-        "from-the-fake"
+        from_fake
+            .source()
+            .build()
+            .unwrap()
+            .identity
+            .build_id
+            .as_deref(),
+        Some("from-the-fake")
     );
     assert_eq!(from_fake.adapter(), "fake-9001");
     assert_eq!(

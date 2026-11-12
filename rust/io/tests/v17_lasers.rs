@@ -22,7 +22,7 @@ use hdf5::Group;
 
 fn empty_build() -> BuildMeta {
     BuildMeta::new(BuildIdentity {
-        build_id: "a build".into(),
+        build_id: Some("a build".into()),
         date: None,
         username: None,
         alloy: None,
