@@ -339,7 +339,7 @@ mod tests {
 
     fn build() -> BuildMeta {
         BuildMeta::new(BuildIdentity {
-            build_id: "a build".into(),
+            build_id: Some("a build".into()),
             date: None,
             username: None,
             alloy: None,

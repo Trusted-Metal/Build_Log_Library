@@ -25,7 +25,7 @@ pub fn synthesise(expectation: &Expectation) -> Result<BuildMeta, String> {
     let build = field(root, "build")?;
     let identity = field(build, "identity")?;
     let mut meta = BuildMeta::new(BuildIdentity {
-        build_id: text(identity, "build_id")?.to_string(),
+        build_id: opt_text(identity, "build_id")?,
         date: opt_text(identity, "date")?,
         username: opt_text(identity, "username")?,
         alloy: opt_text(identity, "alloy")?,

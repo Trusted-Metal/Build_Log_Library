@@ -15,7 +15,11 @@ pub fn describe(opened: &Opened) -> Result<String, Error> {
     Ok(format!(
         "{}\nbuild {} with {} layers",
         opened.report(),
-        build.identity.build_id,
+        build
+            .identity
+            .build_id
+            .as_deref()
+            .unwrap_or("(not recorded)"),
         layers.len()
     ))
 }

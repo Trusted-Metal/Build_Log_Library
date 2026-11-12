@@ -43,7 +43,7 @@ fn source_over(label: &str, write: impl FnOnce(&Group)) -> (common::TempH5, V17S
     let file = hdf5::File::open(&on_disk.0).expect("the file opens");
     let mount = file.group("Mount").expect("the mount");
     let mut build = BuildMeta::new(BuildIdentity {
-        build_id: "a build".into(),
+        build_id: Some("a build".into()),
         date: None,
         username: None,
         alloy: None,

@@ -23,7 +23,7 @@ fn a_producer_built_like_taurus_writer_hands_over_a_valid_cdm_for_both_protocols
             (1_792_165_086_845_000, 1_792_165_087_746_592),
         );
         // the identity is what tauri has, and what it has not is stated as absent
-        assert_eq!(meta.identity.build_id, "example-build");
+        assert_eq!(meta.identity.build_id.as_deref(), Some("example-build"));
         assert_eq!(
             meta.identity.date.as_deref(),
             Some("2026-10-16 15:38:06 UTC+00:00")

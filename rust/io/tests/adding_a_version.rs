@@ -42,7 +42,7 @@ fn read_second(mount: &Group) -> Result<Box<dyn BuildSource>, Error> {
         }
     };
     let mut build = BuildMeta::new(BuildIdentity {
-        build_id: title,
+        build_id: Some(title),
         date: None,
         username: None,
         alloy: None,
@@ -103,7 +103,10 @@ fn adding_a_version_touches_only_its_own_adapter() {
     assert_eq!(opened.key().as_str(), "9002");
     assert_eq!(opened.adapter(), "second");
     let build = opened.source().build().expect("the metadata");
-    assert_eq!(build.identity.build_id, "the second version's build");
+    assert_eq!(
+        build.identity.build_id.as_deref(),
+        Some("the second version's build")
+    );
     assert_eq!(opened.source().layers().expect("layers").len(), 5);
 
     // the version that was there is untouched: its files read as before, through the same registry
@@ -114,8 +117,14 @@ fn adding_a_version_touches_only_its_own_adapter() {
     let opened = open(&registry, &first.0).expect("the old version still opens");
     assert_eq!(opened.key().as_str(), "9001");
     assert_eq!(
-        opened.source().build().unwrap().identity.build_id,
-        "the first version's build"
+        opened
+            .source()
+            .build()
+            .unwrap()
+            .identity
+            .build_id
+            .as_deref(),
+        Some("the first version's build")
     );
 
     // a mount of the new version nested at any depth reads the same, because the adapter reads relative to its mount

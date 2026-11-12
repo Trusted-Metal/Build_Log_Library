@@ -12,12 +12,13 @@ use super::layout;
 use super::parameters;
 use crate::hdf5::{keep_other_attributes, keep_other_nodes};
 use crate::toolkit::context;
-use crate::toolkit::values::{optional_integer, optional_text, required_text};
+use crate::toolkit::values::{optional_integer, optional_text};
 
 /// The build level of the build whose data is under `mount`.
 pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
     let identity = BuildIdentity {
-        build_id: required_text(mount, layout::BUILD_ID)?,
+        // a build with no id is read as it is: a missing attribute is not an error (decision D26-17), and an empty text is a value
+        build_id: optional_text(mount, layout::BUILD_ID)?,
         // the date is the string the file gives, with the offset label it carries: nothing is corrected (CT-UC-12)
         date: optional_text(mount, layout::DATE)?,
         username: optional_text(mount, layout::USERNAME)?,

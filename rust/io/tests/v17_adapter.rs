@@ -201,7 +201,6 @@ fn text_stored_as_variable_or_fixed_length_reads_the_same() {
                 values::optional_text(g, "empty").unwrap().as_deref(),
                 Some("")
             );
-            assert_eq!(values::required_text(g, "variable").unwrap(), "IN718");
         },
     );
 }
@@ -222,12 +221,6 @@ fn an_absent_optional_attribute_is_none_and_not_a_default() {
             assert_eq!(values::optional_float(g, "missing").unwrap(), None);
             assert_eq!(values::optional_text(g, "missing").unwrap(), None);
             assert_eq!(values::optional_integer(g, "no_elements").unwrap(), None);
-            // a text that must be there is an error that names it
-            let error = values::required_text(g, "missing").unwrap_err();
-            match error.kind() {
-                ErrorKind::Corrupt { detail } => assert!(detail.contains("missing"), "{detail}"),
-                other => panic!("expected Corrupt, got {other:?}"),
-            }
         },
     );
 }

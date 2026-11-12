@@ -264,7 +264,7 @@ const CHECKLIST: &[(&str, &str, &[&str])] = &[
 /// 2; laser `L2` cannot be read in layer 3; and no laser is recorded in layer 5. **Every one of the seven rules fires once on it, and every one of the five states occurs.**
 fn a_build_in_which_every_rule_fires() -> InMemorySource {
     let mut build = BuildMeta::new(BuildIdentity {
-        build_id: "a build".into(),
+        build_id: Some("a build".into()),
         date: None,
         username: None,
         alloy: None,

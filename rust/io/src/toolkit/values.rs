@@ -188,9 +188,3 @@ pub fn optional_text(location: &Location, name: &str) -> Result<Option<String>, 
         other => Err(wrong_kind(name, other, "text")),
     }
 }
-
-/// Text that the object must have: an absent attribute is `Corrupt`.
-pub fn required_text(location: &Location, name: &str) -> Result<String, Error> {
-    optional_text(location, name)?
-        .ok_or_else(|| corrupt(format!("the attribute `{name}` is missing")))
-}

@@ -36,7 +36,9 @@ use crate::units::Quantity;
 // constructed-by: producer
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BuildIdentity {
-    pub build_id: String,
+    /// The id the file gives the build, exactly as written. `None` if the file records none: a missing attribute is not an error and absent is
+    /// absent (decisions D02-4 and D26-17). An empty text is a value (`Some("")`) and is kept as it is. A writer needs an id; the Model does not.
+    pub build_id: Option<String>,
     /// The build date exactly as the file gave it (decision: the CDM does not parse it). `None` if the file has none.
     pub date: Option<String>,
     pub username: Option<String>,
@@ -353,7 +355,7 @@ mod tests {
 
     fn identity() -> BuildIdentity {
         BuildIdentity {
-            build_id: "build-1".into(),
+            build_id: Some("build-1".into()),
             date: Some("2026-08-18 16:48:25 UTC+00:00".into()),
             username: None,
             alloy: None,
