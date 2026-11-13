@@ -7,15 +7,17 @@
 use std::sync::Arc;
 
 use build_log_model::{
-    AvailabilityReport, BuildMeta, BuildSource, CacheStats, ColumnData, ColumnRequest,
-    ColumnSource, Error, EventColumns, EventRequest, GridData, GridRequest, ImageData,
-    ImageRequest, ReadContext, Revision, ValidationReport,
+    AvailabilityReport, BuildMeta, BuildOverview, BuildSource, CacheStats, ColumnData,
+    ColumnRequest, ColumnSource, Error, EventColumns, EventRequest, GridData, GridRequest,
+    ImageData, ImageRequest, LaserKey, LayerDetail, LayerId, ReadContext, Revision,
+    ValidationReport,
 };
 use hdf5::Group;
 
 use super::columns::V17Locator;
 use super::event_columns;
 use super::image_regions;
+use crate::toolkit::meta::Meta;
 use crate::toolkit::source::SampleSource;
 
 /// A V17 build: the toolkit's source, with V17's events and images.
@@ -24,12 +26,34 @@ pub struct V17Source {
 }
 
 impl V17Source {
+    /// A source of a build that is already whole.
     pub fn new(build: BuildMeta, mount: Group) -> Self {
         let build = Arc::new(build);
         let locator = V17Locator::new(Arc::clone(&build), mount);
         V17Source {
             inner: SampleSource::new(build, locator),
         }
+    }
+
+    /// The source of the build under `mount`, whose metadata is read as it is asked for (IP-26 phase 26K, decision D26-19): **the build's own level and the list of the layers,
+    /// and no layer.** Faults in either are reported here. [`V17Source::meta`] says how much has been read since.
+    pub fn open(mount: &Group) -> Result<Self, Error> {
+        let walk = super::walk::V17Walk::open(mount)?;
+        let meta = Meta::lazy(Arc::new(walk))?;
+        Ok(V17Source::with_meta(meta, mount.clone()))
+    }
+
+    /// A source whose metadata is read as it is asked for (IP-26 phase 26K): the locator shares `meta`.
+    pub fn with_meta(meta: Arc<Meta>, mount: Group) -> Self {
+        let locator = V17Locator::with_meta(Arc::clone(&meta), mount);
+        V17Source {
+            inner: SampleSource::with_meta(meta, locator),
+        }
+    }
+
+    /// The metadata of the source, with what has been read of it (for the tests that show a request does not walk more than it needs).
+    pub fn meta(&self) -> &Arc<Meta> {
+        self.inner.meta()
     }
 }
 
@@ -72,6 +96,22 @@ impl BuildSource for V17Source {
 
     fn revision(&self) -> Result<Revision, Error> {
         self.inner.revision()
+    }
+
+    fn layers(&self) -> Result<Vec<LayerId>, Error> {
+        self.inner.layers()
+    }
+
+    fn lasers_in_layer(&self, layer: LayerId) -> Result<Vec<LaserKey>, Error> {
+        self.inner.lasers_in_layer(layer)
+    }
+
+    fn overview(&self) -> Result<Arc<BuildOverview>, Error> {
+        self.inner.overview()
+    }
+
+    fn layer_meta(&self, layer: LayerId) -> Result<Arc<LayerDetail>, Error> {
+        self.inner.layer_meta(layer)
     }
 
     fn validate(&self) -> Result<Arc<ValidationReport>, Error> {

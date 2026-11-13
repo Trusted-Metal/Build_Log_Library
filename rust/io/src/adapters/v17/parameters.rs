@@ -24,14 +24,15 @@ use std::collections::BTreeSet;
 
 use build_log_model::{
     parse_embedded, BuildMeta, CorrectionGrid, Equation, EquationKind, Error, ErrorKind,
-    GalvoProtocol, GridRole, LaserParameters, Origin, ParameterValue, Quantity,
+    GalvoProtocol, GridRole, LaserKey, LaserMeta, LaserParameters, Origin, ParameterValue,
+    Quantity,
 };
 use hdf5::Group;
 
 use super::layout;
 use super::KEY;
 use crate::columns::describe_grid;
-use crate::hdf5::{keep_group_remainder, keep_other_attributes, keep_other_nodes};
+use crate::hdf5::{from_binding, keep_group_remainder, keep_other_attributes, keep_other_nodes};
 use crate::toolkit::content::is_about_the_content;
 use crate::toolkit::values::{
     optional_integer, optional_number, optional_text, optional_written, Written,
@@ -627,6 +628,30 @@ fn read_equation(
             .record("light_source.volts_to_watts", Origin::DeclaredByAdapter);
     }
     parameters.light_source.volts_to_watts = Some(equation);
+    Ok(())
+}
+
+/// Adds to `build` a laser for each optical train that the calibration holds (IP-26 phase 26K, decision D26-19): the lasers that the build's own level names, before any
+/// layer is read, as Vision lists the trains of the calibration. A mount with no calibration group adds none. [`read_all`] then gives each its parameters.
+pub fn add_calibrated_lasers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
+    let Some(calibration) = child(mount, layout::CALIBRATION_DATA)? else {
+        return Ok(());
+    };
+    let names = calibration
+        .member_names()
+        .map_err(|e| from_binding("listing the optical trains", e))?;
+    let mut numbers: Vec<u32> = names
+        .iter()
+        .filter_map(|name| name.strip_prefix(layout::OPTICAL_TRAIN_PREFIX))
+        .filter(|digits| !digits.is_empty() && digits.chars().all(|c| c.is_ascii_digit()))
+        .filter_map(|digits| digits.parse().ok())
+        .collect();
+    numbers.sort_unstable();
+    numbers.dedup();
+    for number in numbers {
+        let key = LaserKey::new(format!("{}{number}", layout::LASER_PREFIX), number);
+        build.add_laser(LaserMeta::new(key));
+    }
     Ok(())
 }
 

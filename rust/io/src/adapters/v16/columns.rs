@@ -13,6 +13,8 @@
 use std::sync::Arc;
 
 use build_log_model::{BuildMeta, ColumnRequest, Error, GridRequest};
+
+use crate::toolkit::meta::Meta;
 use hdf5::Group;
 
 use super::grids::GRID_HOME;
@@ -25,15 +27,21 @@ use crate::toolkit::lasers::LaserLayout;
 
 /// Finds the datasets of the columns of a V16 build: its metadata says what is recorded, and its mount says where.
 pub struct V16Locator {
-    build: Arc<BuildMeta>,
+    meta: Arc<Meta>,
     mount: Group,
     layout: LaserLayout,
 }
 
 impl V16Locator {
+    /// A locator for a build that is already whole.
     pub fn new(build: Arc<BuildMeta>, mount: Group) -> Self {
+        V16Locator::with_meta(Meta::eager(build), mount)
+    }
+
+    /// A locator that shares the metadata of its source (IP-26 phase 26K): a request for a column asks it for the layer it names and no other.
+    pub fn with_meta(meta: Arc<Meta>, mount: Group) -> Self {
         V16Locator {
-            build,
+            meta,
             mount,
             layout: laser_layout(),
         }
@@ -46,10 +54,11 @@ impl Locator for V16Locator {
     }
 
     fn locate(&self, request: &ColumnRequest) -> Result<Located, Error> {
-        locate(&self.build, &self.mount, &self.layout, request)
+        let layer = self.meta.layer(request.layer)?;
+        locate(layer.as_deref(), &self.mount, &self.layout, request)
     }
 
     fn locate_grid(&self, request: &GridRequest) -> Result<Located, Error> {
-        locate_grid(&self.build, &self.mount, &GRID_HOME, request)
+        locate_grid(&self.meta.overview(), &self.mount, &GRID_HOME, request)
     }
 }

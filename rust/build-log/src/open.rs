@@ -64,6 +64,11 @@ pub struct LibraryVersions {
 
 /// Opens the file at `path`, read-only, and reads it with the adapter of the version it says it is. `Unversioned` if it says nothing, `UnsupportedVersion` if
 /// no adapter reads that version.
+///
+/// **The open reads the build's own level and lists the layers, and no layer** (IP-26 phase 26K, decision D26-19): a layer's metadata is read when it is asked for
+/// ([`BuildSource::layer_meta`]), and the whole build the first time [`BuildSource::build`] (or `validate` or `availability`) is called. A fault inside a layer is
+/// therefore reported when that layer, or the whole build, is read, and not here. **A build file must not be modified while a source of it is open**: the source does
+/// not check, and what it has read stays as it was.
 pub fn open(path: impl AsRef<Path>) -> Result<Opened, Error> {
     open_with(dispatch::production(), path)
 }

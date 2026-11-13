@@ -18,15 +18,17 @@
 //! Every name comes from [`super::layout`]; the names that the CDM gives are the Model's.
 
 use build_log_model::{
-    BuildMeta, CorrectionGrid, Error, ErrorKind, LaserParameters, Origin, ParameterValue, Quantity,
-    BIT_RESOLUTION_GLOBAL, SCAN_HEAD_OFFSET_SIGN_OPPOSITE,
+    BuildMeta, CorrectionGrid, Error, ErrorKind, LaserKey, LaserMeta, LaserParameters, Origin,
+    ParameterValue, Quantity, BIT_RESOLUTION_GLOBAL, SCAN_HEAD_OFFSET_SIGN_OPPOSITE,
 };
 use hdf5::{Group, Location};
 
 use super::layout;
 use super::KEY;
 use crate::columns::describe_grid;
-use crate::hdf5::{keep_group_remainder, keep_node, keep_other_attributes, keep_other_nodes};
+use crate::hdf5::{
+    from_binding, keep_group_remainder, keep_node, keep_other_attributes, keep_other_nodes,
+};
 use crate::toolkit::content::is_about_the_content;
 use crate::toolkit::values::{optional_integer, optional_number, optional_text};
 
@@ -278,6 +280,30 @@ fn give_bit_resolutions(parameters: &mut LaserParameters, bits: &[BitResolution]
         given.push(gave);
     }
     given
+}
+
+/// Adds to `build` a laser for each calibration that the calibration group holds (IP-26 phase 26K, decision D26-19): the lasers that the build's own level names, before any
+/// layer is read, as Vision lists the trains of the calibration. A mount with no calibration group adds none. [`read_all`] then gives each its parameters.
+pub fn add_calibrated_lasers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
+    let Some(calibration) = child(mount, layout::CALIBRATION_DATA)? else {
+        return Ok(());
+    };
+    let names = calibration
+        .member_names()
+        .map_err(|e| from_binding("listing the calibrations", e))?;
+    let mut numbers: Vec<u32> = names
+        .iter()
+        .filter_map(|name| name.strip_prefix(layout::CALIBRATION_PREFIX))
+        .filter(|digits| !digits.is_empty() && digits.chars().all(|c| c.is_ascii_digit()))
+        .filter_map(|digits| digits.parse().ok())
+        .collect();
+    numbers.sort_unstable();
+    numbers.dedup();
+    for number in numbers {
+        let key = LaserKey::new(format!("{}{number}", layout::LASER_PREFIX), number);
+        build.add_laser(LaserMeta::new(key));
+    }
+    Ok(())
 }
 
 /// Reads the snapshot of every laser that has a calibration, and says what was taken from the file. A calibration that cannot be read is reported on its laser and kept whole by

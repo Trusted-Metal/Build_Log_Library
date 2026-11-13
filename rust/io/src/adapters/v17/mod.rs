@@ -23,6 +23,7 @@ pub mod layout;
 pub mod parameters;
 pub mod read;
 pub mod source;
+mod walk;
 
 use build_log_model::{BuildSource, Capabilities, Direction, Error, Feature};
 use hdf5::Group;
@@ -55,8 +56,9 @@ pub fn adapter_set() -> AdapterSet {
         .expect("the V17 adapter set is whole")
 }
 
-/// The reader: the build of the mount, as a source of metadata.
+/// The reader: the build of the mount, as a source of metadata and of samples. **It reads the build's own level and lists the layers, and no layer** (IP-26 phase 26K,
+/// decision D26-19): a layer is read when it is asked for, and the whole build when `build()` is first called. Faults in the build's own level or in the list of the layers
+/// are reported here, when the file is opened.
 fn reader(mount: &Group) -> Result<Box<dyn BuildSource>, Error> {
-    let build = read::read_build(mount)?;
-    Ok(Box::new(V17Source::new(build, mount.clone())))
+    Ok(Box::new(V17Source::open(mount)?))
 }

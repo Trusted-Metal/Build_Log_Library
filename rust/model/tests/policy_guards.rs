@@ -20,7 +20,7 @@ use std::fs;
 use std::path::PathBuf;
 
 /// The modules of the Common Data Model (IP-02 Appendix A). Each is a file in `src/`, and each is scanned.
-const CDM_MODULES: [&str; 20] = [
+const CDM_MODULES: [&str; 21] = [
     "availability",
     "capabilities",
     "channel",
@@ -35,6 +35,7 @@ const CDM_MODULES: [&str; 20] = [
     "image_regions",
     "json",
     "meta",
+    "overview",
     "params",
     "provenance",
     "quality",

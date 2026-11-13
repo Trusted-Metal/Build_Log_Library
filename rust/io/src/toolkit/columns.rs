@@ -13,7 +13,7 @@
 //! * **A column that the metadata says is recorded but the file does not hold is `Corrupt`**, located by the engine, and the other channels of the laser still read (BL-FA-09).
 //! * **Nothing is repaired and nothing is cached here.** The cache is phase 6C, and the engine opens the dataset for each read (D06-10).
 
-use build_log_model::{BuildMeta, ChannelKey, ColumnRequest, Error, ErrorKind, Presence};
+use build_log_model::{ChannelKey, ColumnRequest, Error, ErrorKind, LayerDetail, Presence};
 use hdf5::Group;
 
 use super::lasers::{channel_dataset, LaserLayout};
@@ -29,7 +29,7 @@ fn corrupt(detail: String) -> Error {
 
 /// The dataset that holds the column `request` names, in the build whose metadata is `build` and whose data is under `mount`, for a version laid out as `layout` says.
 pub fn locate(
-    build: &BuildMeta,
+    layer: Option<&LayerDetail>,
     mount: &Group,
     layout: &LaserLayout,
     request: &ColumnRequest,
@@ -40,14 +40,16 @@ pub fn locate(
             layout.label
         )));
     };
-    let laser = build
+    // the metadata of the layer that the request names, and of no other (IP-26 phase 26K): a layer the build does not hold has none
+    let detail = layer.ok_or_else(|| not_present("the layer"))?;
+    let laser = detail
         .laser(laser_key)
-        .ok_or_else(|| not_present("the laser"))?;
+        .ok_or_else(|| not_present("the laser in this layer"))?;
     let channel = laser
         .channels
         .iter()
         .find(|channel| channel.key == request.channel)
-        .ok_or_else(|| not_present("the channel of this laser"))?;
+        .ok_or_else(|| not_present("the channel of this laser in this layer"))?;
     match channel.presence.get(request.layer) {
         Some(Presence::Recorded { .. }) | Some(Presence::RecordedEmpty) => {}
         _ => return Err(not_present("the channel in this layer")),

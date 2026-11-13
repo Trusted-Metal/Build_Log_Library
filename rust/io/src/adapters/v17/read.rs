@@ -4,7 +4,9 @@
 //!
 //! Every path is relative to the mount (decision D04-9), and every name comes from [`super::layout`].
 
-use build_log_model::{BuildIdentity, BuildMeta, Error, JoinStatus, Outcome, Quantity};
+use build_log_model::{
+    BuildIdentity, BuildMeta, BuildOverview, Error, JoinStatus, LayerId, Outcome, Quantity,
+};
 use hdf5::Group;
 
 use super::events::Events;
@@ -17,8 +19,9 @@ use crate::hdf5::{
 use crate::toolkit::context;
 use crate::toolkit::values::{optional_float, optional_integer, optional_text};
 
-/// The build level of the build whose data is under `mount`.
-pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
+/// The build's own level, with no layer, no laser and no parameters (IP-26 phase 26K): the identity, the declared layer count, the layer thickness, the outcome, the
+/// provenance, the context, and what the mount holds that is not typed. **The whole walk and the overview both start from this.**
+fn read_build_level(mount: &Group) -> Result<BuildMeta, Error> {
     let identity = BuildIdentity {
         // a build with no id is read as it is: a missing attribute is not an error (decision D26-17), and an empty text is a value
         build_id: optional_text(mount, layout::BUILD_ID)?,
@@ -46,6 +49,21 @@ pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
     let mut typed: Vec<&str> = layout::TYPED_ON_THE_MOUNT.to_vec();
     typed.extend(context::read(mount, &mut build, &layout::CONTEXT_TABLE));
     keep_other_attributes(mount, &typed, &mut build.extra)?;
+    Ok(build)
+}
+
+/// The overview of the build whose data is under `mount` (IP-26 phase 26K): its own level, the ids of its layers (`layers`, from [`super::layers::layer_names`]) and the
+/// lasers that the calibration names, with their parameters. **It reads no layer.**
+pub fn read_overview(mount: &Group, layers: Vec<LayerId>) -> Result<BuildOverview, Error> {
+    let mut level = read_build_level(mount)?;
+    parameters::add_calibrated_lasers(mount, &mut level)?;
+    parameters::read_all(mount, &mut level)?;
+    Ok(BuildOverview::from_level(&level, layers))
+}
+
+/// The whole build whose data is under `mount`: its own level, and every layer, laser and channel.
+pub fn read_build(mount: &Group) -> Result<BuildMeta, Error> {
+    let mut build = read_build_level(mount)?;
     let mut events = Events::new();
     read_layers_with(mount, &mut build, &mut events)?;
     let trains = parameters::read_all(mount, &mut build)?;
