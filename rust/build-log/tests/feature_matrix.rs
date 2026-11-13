@@ -35,11 +35,15 @@ fn cargo(args: &[&str]) -> (bool, String, String) {
 }
 
 /// The feature sets of the matrix, as the arguments that choose them.
-const MATRIX: [(&str, &[&str]); 4] = [
+const MATRIX: [(&str, &[&str]); 5] = [
     ("the default features", &[]),
     (
         "no default features (the Model only)",
         &["--no-default-features"],
+    ),
+    (
+        "the archive without the IO layer",
+        &["--no-default-features", "--features", "archive"],
     ),
     (
         "the Processing layer without the IO layer",
@@ -112,10 +116,19 @@ fn no_default_features_leaves_the_model_only() {
 }
 
 #[test]
-fn the_default_features_add_the_io_layer_and_the_processing_feature_adds_processing() {
+fn the_default_features_add_the_archive_and_io_layers_and_the_processing_feature_adds_processing() {
     assert_eq!(
         layers_in(&[]),
-        vec!["build-log", "build-log-io", "build-log-model"]
+        vec![
+            "build-log",
+            "build-log-archive",
+            "build-log-io",
+            "build-log-model"
+        ]
+    );
+    assert_eq!(
+        layers_in(&["--no-default-features", "--features", "archive"]),
+        vec!["build-log", "build-log-archive", "build-log-model"]
     );
     assert_eq!(
         layers_in(&["--no-default-features", "--features", "processing"]),
@@ -125,6 +138,7 @@ fn the_default_features_add_the_io_layer_and_the_processing_feature_adds_process
         layers_in(&["--features", "processing"]),
         vec![
             "build-log",
+            "build-log-archive",
             "build-log-io",
             "build-log-model",
             "build-log-processing"

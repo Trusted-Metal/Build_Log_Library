@@ -15,8 +15,8 @@
 //! adapter it reads **every path relative to its mount**, so the same data opened standalone or nested at any depth gives the same build (decision D04-9).
 
 use build_log_model::{
-    BuildIdentity, BuildMeta, BuildSource, Capabilities, Error, ErrorKind, InMemorySource, LayerId,
-    LayerMeta, Violation,
+    BuildIdentity, BuildMeta, BuildSource, Capabilities, ContainerKind, Error, ErrorKind,
+    InMemorySource, LayerId, LayerMeta, Violation,
 };
 use hdf5::types::VarLenUnicode;
 use hdf5::Group;
@@ -45,7 +45,13 @@ pub fn mount_for(key: &str) -> String {
 
 /// The registration unit of the mock version `key`, any key from 9000 to 9999 (the range reserved for test-only versions, decision D00-4). Every mock version
 /// reads the same layout, and differs in its key and its mount; a test uses a second one to show that a new version needs no change on a consumer's side.
+/// It lives in a bare HDF5 file, like every version before V18; [`adapter_set_in`] makes one that lives in an archive.
 pub fn adapter_set_for(key: &str) -> Result<AdapterSet, Error> {
+    adapter_set_in(key, ContainerKind::BareHdf5)
+}
+
+/// [`adapter_set_for`] for a mock version that lives in `container`: how the tests of the container rules stand in for a version of V18's kind before V18's adapter exists.
+pub fn adapter_set_in(key: &str, container: ContainerKind) -> Result<AdapterSet, Error> {
     let in_range = key.parse::<u32>().is_ok_and(|n| (9000..=9999).contains(&n));
     if !in_range {
         return Err(Error::new(ErrorKind::ValidationError {
@@ -60,6 +66,7 @@ pub fn adapter_set_for(key: &str) -> Result<AdapterSet, Error> {
         format!("{NAME}-{key}")
     };
     AdapterSet::builder(key, name, MarkerPlace::new(mount_for(key), MARKER))
+        .container(container)
         .capabilities(Capabilities::new())
         .reader(read)
         .without_writer("the mock version has no writer")

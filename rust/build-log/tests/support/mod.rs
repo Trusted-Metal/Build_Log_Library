@@ -15,13 +15,15 @@ use serde_json::Value;
 pub const FACADE: &str = "build-log";
 pub const MODEL: &str = "build-log-model";
 pub const IO: &str = "build-log-io";
+pub const ARCHIVE: &str = "build-log-archive";
 pub const PROCESSING: &str = "build-log-processing";
 pub const TESTKIT: &str = "build-log-testkit";
 pub const CONFORMANCE: &str = "build-log-conformance";
 
-/// The five crates every checkout has, and where each lives (decisions D01-1 and D01-2).
-pub const LAYERS: [(&str, &str); 6] = [
+/// The crates every checkout has, and where each lives (decisions D01-1 and D01-2).
+pub const LAYERS: [(&str, &str); 7] = [
     (MODEL, "rust/model"),
+    (ARCHIVE, "rust/archive"),
     (IO, "rust/io"),
     (PROCESSING, "rust/processing"),
     (FACADE, "rust/build-log"),
