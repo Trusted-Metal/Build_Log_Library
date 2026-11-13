@@ -26,6 +26,7 @@ mod identity;
 mod image_regions;
 mod json;
 mod meta;
+mod overview;
 mod params;
 mod provenance;
 mod quality;
@@ -58,6 +59,7 @@ pub use grids::{CorrectionGrid, GridData, GridInterpretation, GridRequest, GridR
 pub use identity::{Availability, ByLayer, ChannelKey, LaserKey, LayerId, Presence};
 pub use image_regions::{ImageData, ImageRegion, ImageRequest};
 pub use meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
+pub use overview::{BuildOverview, LaserInLayer, LaserOverview, LayerDetail};
 pub use params::{
     Equation, EquationKind, GalvoParameters, GalvoProtocol, LaserParameters, LightSourceParameters,
     NamedConstant, OpticalTrainParameters, ParameterValue, ScannerCardParameters,

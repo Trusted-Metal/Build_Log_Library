@@ -8,7 +8,7 @@
 //!   the metadata lists and the file does not hold is `Corrupt`.
 //! * **Nothing is interpreted.** Which grid it is, its domain and the order of its axes are not stated by any file, and nothing here decides them.
 
-use build_log_model::{BuildMeta, Error, ErrorKind, GridRequest};
+use build_log_model::{BuildOverview, Error, ErrorKind, GridRequest};
 use hdf5::Group;
 
 use crate::columns::Located;
@@ -27,13 +27,16 @@ fn not_present(what: &str) -> Error {
 
 /// The dataset that holds the grid `request` names, in the build whose metadata is `build` and whose data is under `mount`, for a version that keeps its grids as `home` says.
 pub fn locate_grid(
-    build: &BuildMeta,
+    overview: &BuildOverview,
     mount: &Group,
     home: &GridHome,
     request: &GridRequest,
 ) -> Result<Located, Error> {
-    let laser = build
-        .laser(&request.laser)
+    // a laser's grids are listed in its parameters, which the build's own level holds (IP-26 phase 26K): no layer is needed
+    let laser = overview
+        .lasers
+        .iter()
+        .find(|laser| laser.key == request.laser)
         .ok_or_else(|| not_present("the laser"))?;
     let listed = laser
         .parameters

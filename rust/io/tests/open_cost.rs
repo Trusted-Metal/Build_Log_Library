@@ -192,6 +192,8 @@ fn the_open_of_the_many_layer_file_is_timed() {
     for (name, layers) in [
         ("extracts/v17_1000_layers.h5", 1_000usize),
         ("extracts/v17_many_layers.h5", 2_110),
+        // the original of the 2,110-layer build (83 GiB, on the owner's share): point BUILD_LOG_FIXTURES_DIR at its folder; skipped where it is not
+        ("V17_fixture.h5", 2_110),
     ] {
         let Some(path) = large_fixture(name) else {
             eprintln!(
@@ -203,21 +205,27 @@ fn the_open_of_the_many_layer_file_is_timed() {
         // the first open in this process, and a second one of the same file (the library has loaded, and so has the system's cache)
         let (first, opened) = timed(|| open(production(), &path).expect("the file opens"));
         let source = opened.source();
-        let (build_first, build) = timed(|| source.build().expect("the metadata"));
-        assert_eq!(build.layers.len(), layers, "{name}");
+        // since IP-26 phase 26K the open reads the build's own level and lists the layers: what a view of the build needs comes before the whole walk
+        let (overview_ms, overview) = timed(|| source.overview().expect("the overview"));
+        let (layers_ms, ids) = timed(|| source.layers().expect("the layers"));
+        assert_eq!(ids.len(), layers);
+        assert_eq!(overview.layers.len(), layers, "{name}");
+        let (layer_first, _) = timed(|| source.layer_meta(ids[0]).expect("the first layer"));
+        let (layer_second, _) = timed(|| source.layer_meta(ids[0]).expect("the first layer again"));
+        let (lasers_ms, _) = timed(|| source.lasers_in_layer(ids[0]).expect("the lasers"));
         let (second_open, again) =
             timed(|| open(production(), &path).expect("the file opens again"));
         drop(again);
+        // the whole build: the walk of every layer, once
+        let (build_first, build) = timed(|| source.build().expect("the metadata"));
+        assert_eq!(build.layers.len(), layers, "{name}");
         // what warm is: the second ask of an open source
         let (build_second, build_again) = timed(|| source.build().expect("the metadata"));
         assert!(
             Arc::ptr_eq(&build, &build_again),
             "{name}: the same snapshot"
         );
-        let (layers_ms, ids) = timed(|| source.layers().expect("the layers"));
-        assert_eq!(ids.len(), layers);
         let laser = build.lasers().first().expect("a laser").key.clone();
-        let (lasers_ms, _) = timed(|| source.lasers_in_layer(ids[0]).expect("the lasers"));
         let (channels_ms, _) = timed(|| source.channels(&laser).expect("the channels"));
         let (validate_first, validation) = timed(|| source.validate().expect("the findings"));
         let (validate_second, _) = timed(|| source.validate().expect("the findings"));
@@ -236,12 +244,16 @@ fn the_open_of_the_many_layer_file_is_timed() {
             "   open, the second                     {second_open:9.1} ms  ({:.2} ms a layer)",
             second_open / layers as f64
         );
-        eprintln!("   build(), the first ask               {build_first:9.4} ms");
-        eprintln!("   build(), the second ask              {build_second:9.4} ms");
-        eprintln!("   layers()                             {layers_ms:9.4} ms");
         eprintln!(
-            "   lasers_in_layer(), channels()        {lasers_ms:9.4} ms, {channels_ms:9.4} ms"
+            "   overview(), layers()                 {overview_ms:9.4} ms, {layers_ms:9.4} ms"
         );
+        eprintln!(
+            "   layer_meta(first), the second ask    {layer_first:9.4} ms, {layer_second:9.4} ms"
+        );
+        eprintln!("   lasers_in_layer(first)               {lasers_ms:9.4} ms");
+        eprintln!("   build(), the first ask (every layer) {build_first:9.1} ms");
+        eprintln!("   build(), the second ask              {build_second:9.4} ms");
+        eprintln!("   channels()                           {channels_ms:9.4} ms");
         eprintln!("   validate(), first and second ask     {validate_first:9.3} ms, {validate_second:9.4} ms  ({} findings)", validation.findings.len());
         eprintln!("   availability(), first and second ask {availability_first:9.3} ms, {availability_second:9.4} ms");
     }

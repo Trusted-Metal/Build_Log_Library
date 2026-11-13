@@ -11,12 +11,17 @@
 //! This reads what V16 holds and shares nothing with the layers of V17 yet: the toolkit's seam is the laser reader (decision D12-1), and a second copy of the layers' loop is the cost of
 //! adding a version without touching another's folder (BL-VA-05); the third version shows whether it belongs in the toolkit.
 
-use build_log_model::{BuildMeta, Error, ErrorKind, LayerId, LayerMeta, Location, TimeValue};
+use std::collections::BTreeMap;
+
+use build_log_model::{
+    BuildMeta, Error, ErrorKind, LayerDetail, LayerId, LayerMeta, Location, TimeValue,
+};
 use hdf5::Group;
 
 use super::lasers;
 use super::layout;
 use crate::hdf5::{from_binding, keep_group_remainder, keep_other_attributes, keep_other_nodes};
+use crate::toolkit::lasers::Lasers;
 use crate::toolkit::values::{optional_float, optional_integer};
 
 fn corrupt(detail: String) -> Error {
@@ -69,14 +74,7 @@ pub fn read_layers(mount: &Group, build: &mut BuildMeta) -> Result<(), Error> {
                 .with_layer(id)
                 .with_operation("reading a layer"))
         };
-        let group = monitoring
-            .group(name)
-            .map_err(|e| located(from_binding("opening a layer", e)))?;
-        let mut layer = read_layer(&group, id).map_err(located)?;
-        // the children of the layer that are typed: the lasers. Whatever else the layer holds is kept.
-        let typed = lasers.read_layer(&group, &mut layer).map_err(located)?;
-        let typed: Vec<&str> = typed.iter().map(String::as_str).collect();
-        keep_other_nodes(&group, &typed, &[], &mut layer.extra).map_err(located)?;
+        let layer = read_one(&monitoring, name, id, &mut lasers)?;
         if build.layers.insert(id, layer).is_some() {
             return Err(located(corrupt(format!(
                 "two groups are named for the layer {id}"
@@ -108,6 +106,72 @@ fn the_period_is_given(build: &BuildMeta) -> bool {
             .iter()
             .any(|(_, entry)| entry.time_axis.period.is_some())
     })
+}
+
+/// One layer as the whole walk reads it: the layer's group, its own attributes and its lasers (into the collector that the caller keeps), and, in `extra`, whatever else the
+/// group holds. **The whole walk and the read of one layer both use this**, so a layer is read the same way by either.
+fn read_one(
+    monitoring: &Group,
+    name: &str,
+    id: LayerId,
+    lasers: &mut Lasers,
+) -> Result<LayerMeta, Error> {
+    let located = |error: Error| {
+        error.at(Location::new()
+            .with_layer(id)
+            .with_operation("reading a layer"))
+    };
+    let group = monitoring
+        .group(name)
+        .map_err(|e| located(from_binding("opening a layer", e)))?;
+    let mut layer = read_layer(&group, id).map_err(located)?;
+    // the children of the layer that are typed: the lasers. Whatever else the layer holds is kept.
+    let typed = lasers.read_layer(&group, &mut layer).map_err(located)?;
+    let typed: Vec<&str> = typed.iter().map(String::as_str).collect();
+    keep_other_nodes(&group, &typed, &[], &mut layer.extra).map_err(located)?;
+    Ok(layer)
+}
+
+/// The layers that the mount holds, by id, with the name of each one's group (IP-26 phase 26K): one listing of the layers' group, and no layer is opened. A mount without
+/// its layers' group is `Corrupt`, and so are two groups named for one layer.
+pub fn layer_names(mount: &Group) -> Result<BTreeMap<LayerId, String>, Error> {
+    if !mount.link_exists(layout::MONITORING_DATA) {
+        return Err(corrupt(format!(
+            "the build has no `{}` group, which holds its layers",
+            layout::MONITORING_DATA
+        )));
+    }
+    let monitoring = mount
+        .group(layout::MONITORING_DATA)
+        .map_err(|e| from_binding("opening the group of the layers", e))?;
+    let names = monitoring
+        .member_names()
+        .map_err(|e| from_binding("listing the layers", e))?;
+    let mut found = BTreeMap::new();
+    for name in names {
+        let Some(id) = layer_id_of(&name)? else {
+            continue;
+        };
+        if found.insert(id, name).is_some() {
+            return Err(
+                corrupt(format!("two groups are named for the layer {id}")).at(Location::new()
+                    .with_layer(id)
+                    .with_operation("reading a layer")),
+            );
+        }
+    }
+    Ok(found)
+}
+
+/// One layer by itself (IP-26 phase 26K): what the whole walk reads for it, with a collector of its own, so that nothing of another layer is read. `name` is the name of
+/// the layer's group, from [`layer_names`].
+pub fn read_layer_detail(mount: &Group, id: LayerId, name: &str) -> Result<LayerDetail, Error> {
+    let monitoring = mount
+        .group(layout::MONITORING_DATA)
+        .map_err(|e| from_binding("opening the group of the layers", e))?;
+    let mut lasers = lasers::collector(mount);
+    let layer = read_one(&monitoring, name, id, &mut lasers)?;
+    Ok(LayerDetail::new(layer, lasers.into_layer_parts(id)))
 }
 
 /// One layer: its times, its two thicknesses and, in `extra`, what else its group holds.

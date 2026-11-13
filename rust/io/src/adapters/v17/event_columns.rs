@@ -50,8 +50,8 @@ struct Datasets {
 impl V17Locator {
     /// The datasets of the columns of the place a request names. The metadata says whether the series is recorded there; the file says where.
     fn locate_events(&self, request: &EventRequest) -> Result<Datasets, Error> {
-        let series = self
-            .build
+        let build = self.build()?;
+        let series = build
             .events
             .iter()
             .find(|series| series.kind == request.kind && series.path == request.path)

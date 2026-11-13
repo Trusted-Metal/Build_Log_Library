@@ -26,8 +26,8 @@ use std::collections::BTreeMap;
 
 use build_log_model::{
     Accuracy, BuildMeta, ChannelDType, ChannelDescriptor, ChannelKey, ChannelKind, ClockClass,
-    EnumLabels, Error, ErrorKind, LaserKey, LaserLayerMeta, LaserMeta, LayerId, LayerMeta, Origin,
-    Presence, Quantity, TimeAxis, TimeValue, TimeWindow, Unit, UnitSource,
+    EnumLabels, Error, ErrorKind, LaserInLayer, LaserKey, LaserLayerMeta, LaserMeta, LayerId,
+    LayerMeta, Origin, Presence, Quantity, TimeAxis, TimeValue, TimeWindow, Unit, UnitSource,
 };
 use hdf5::{Dataset, Group};
 
@@ -334,6 +334,23 @@ impl Lasers {
                 .sort_by_key(|c| layout.channels.iter().position(|s| s.kind == c.kind));
             build.add_laser(laser);
         }
+    }
+
+    /// What the lasers collected from the layer `layer` alone say of it (IP-26 phase 26K): for each laser recorded in the layer, in numeric order, its entry there and its
+    /// channels in the order of the layout, each with the layer alone in its presence. It is what [`Lasers::finish`] leaves in the build for that layer, without the merge
+    /// of the layers.
+    pub fn into_layer_parts(self, layer: LayerId) -> Vec<LaserInLayer> {
+        let Lasers { layout, lasers, .. } = self;
+        lasers
+            .into_values()
+            .filter_map(|mut laser| {
+                let entry = laser.layers.get(layer)?.clone();
+                laser
+                    .channels
+                    .sort_by_key(|c| layout.channels.iter().position(|s| s.kind == c.kind));
+                Some(LaserInLayer::new(laser.key.clone(), entry, laser.channels))
+            })
+            .collect()
     }
 }
 

@@ -27,6 +27,8 @@ pub mod grids;
 #[doc(hidden)]
 pub mod lasers;
 #[doc(hidden)]
+pub mod meta;
+#[doc(hidden)]
 pub mod source;
 #[doc(hidden)]
 pub mod values;

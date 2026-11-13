@@ -35,8 +35,8 @@ fn not_present(what: &str) -> Error {
 impl V17Locator {
     /// The dataset that holds the frame a request names. The metadata says whether it is recorded; the file says where.
     fn locate_image(&self, request: &ImageRequest) -> Result<Dataset, Error> {
-        let channel = self
-            .build
+        let build = self.build()?;
+        let channel = build
             .sensors
             .iter()
             .find(|channel| channel.key == request.channel && channel.kind == ChannelKind::Image)

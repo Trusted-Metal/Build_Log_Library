@@ -38,6 +38,7 @@ use crate::grids::{GridData, GridRequest};
 use crate::identity::{ChannelKey, LaserKey, LayerId};
 use crate::image_regions::{ImageData, ImageRegion, ImageRequest};
 use crate::meta::BuildMeta;
+use crate::overview::{BuildOverview, LayerDetail};
 use crate::time::{index_range, Segment, TimeValue};
 use crate::validation::{validate_build, ValidationReport};
 
@@ -604,6 +605,11 @@ impl Revision {
 /// Discovery: what a build holds, without reading a sample. Every file adapter and [`InMemorySource`] implement it. It is part of the read surface that was frozen on
 /// 2026-11-05 (decision D24-20): an additive change is logged, and a change to what it already offers needs a recorded decision.
 ///
+/// **What costs what (IP-26 phase 26K, decision D26-19).** A file-backed source reads lazily: [`BuildSource::overview`] and [`BuildSource::layers`] cost nothing once the source
+/// is open; [`BuildSource::layer_meta`] and [`BuildSource::lasers_in_layer`] read one layer, once, and keep it for as long as the source lives;
+/// **[`BuildSource::build`], [`BuildSource::validate`], [`BuildSource::availability`] and [`BuildSource::channels`] need every layer** and read all of them the first time,
+/// once. A view that wants its answer quickly asks for the first four. **A build file must not be modified while a source of it is open**; a source does not check.
+///
 /// A source that can be discovered can also be read, so this extends [`ColumnSource`]. An implementation needs only [`BuildSource::build`] and
 /// [`BuildSource::revision`]; the rest are derived from the metadata. **None of these methods takes a range or a context**, so none of them can read samples.
 pub trait BuildSource: ColumnSource {
@@ -665,6 +671,29 @@ pub trait BuildSource: ColumnSource {
             .at(Location::new()
                 .with_laser(laser.clone())
                 .with_operation("discover"))),
+        }
+    }
+
+    /// The build's own level and the ids of its layers (IP-26 phase 26K, decision D26-19): the identity, the context, the outcome, the provenance, and the lasers that
+    /// the build's calibration names with their parameters. **It reads no layer.** A source that reads lazily gives it without walking every layer; the default
+    /// derives it from [`BuildSource::build`], which a source that holds its whole metadata already has. The lasers *recorded in the layers*, and the channels across
+    /// layers, are in [`BuildSource::build`] and, for one layer, in [`BuildSource::layer_meta`].
+    fn overview(&self) -> Result<Arc<BuildOverview>, Error> {
+        let build = self.build()?;
+        Ok(Arc::new(BuildOverview::from_build(&build)))
+    }
+
+    /// One layer's own metadata (IP-26 phase 26K): its times, thicknesses and untyped extras, and each laser recorded in it with its entry and the channels it has
+    /// there. A source that reads lazily reads that layer and no other, once, and keeps it for as long as the source lives; the default cuts the slice from
+    /// [`BuildSource::build`]. A layer the build does not hold is an `InvalidIndex` error.
+    fn layer_meta(&self, layer: LayerId) -> Result<Arc<LayerDetail>, Error> {
+        let build = self.build()?;
+        match LayerDetail::from_build(&build, layer) {
+            Some(detail) => Ok(Arc::new(detail)),
+            None => Err(Error::new(ErrorKind::InvalidIndex {
+                what: "a layer that the build does not hold".to_string(),
+            })
+            .at(Location::new().with_layer(layer).with_operation("discover"))),
         }
     }
 }
