@@ -4,7 +4,10 @@
   "allowed": [
     { "from": "build-log-model", "to": "build-log-testkit", "kinds": ["dev"] },
 
+    { "from": "build-log-archive", "to": "build-log-model", "kinds": ["normal"] },
+
     { "from": "build-log-io", "to": "build-log-model", "kinds": ["normal"] },
+    { "from": "build-log-io", "to": "build-log-archive", "kinds": ["normal"] },
     { "from": "build-log-io", "to": "build-log-testkit", "kinds": ["dev"] },
     { "from": "build-log-io", "to": "build-log-conformance", "kinds": ["dev"] },
 
@@ -13,6 +16,7 @@
     { "from": "build-log-processing", "to": "build-log-conformance", "kinds": ["dev"] },
 
     { "from": "build-log", "to": "build-log-model", "kinds": ["normal"] },
+    { "from": "build-log", "to": "build-log-archive", "kinds": ["normal"], "optional": true },
     { "from": "build-log", "to": "build-log-io", "kinds": ["normal"], "optional": true },
     { "from": "build-log", "to": "build-log-processing", "kinds": ["normal"], "optional": true },
     { "from": "build-log", "to": "build-log-testkit", "kinds": ["dev"] },
