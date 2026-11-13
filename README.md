@@ -9,6 +9,7 @@ A versioned library for the per-build records of laser powder bed fusion (LPBF) 
 | Path | What |
 |---|---|
 | [`rust/model`](rust/model) | `build-log-model`: the Model, plain data types with no HDF5. Builds for wasm32. |
+| [`rust/archive`](rust/archive) | `build-log-archive`: the `.lbl` archive of V18 on (a stored ZIP64 file with the HDF5 file as its first member, readable by stock HDF5 through a userblock). Reading, sealing, packing; no HDF5. See [`docs/archive.md`](docs/archive.md). |
 | [`rust/io`](rust/io) | `build-log-io`: the IO layer, HDF5 files to and from the Model. So far the HDF5 binding and a check of which libhdf5 is linked; the file adapters are not written. |
 | [`rust/processing`](rust/processing) | `build-log-processing`: derived computation over Model data. A skeleton. |
 | [`rust/build-log`](rust/build-log) | `build-log`: the public entry point; the one crate consumers depend on. Features choose the layers. Its tests are the architecture guards. |
@@ -91,6 +92,7 @@ The advisory jobs show on a pull request but never block it.
 - **Pull requests** use [the template](.github/pull_request_template.md).
 - **Test data**: the miniatures in [`testdata/`](testdata/README.md) are never rebuilt; the originals they were cut from are not in this repository.
 - **The Model** (the Common Data Model) is documented, with its modules and the rules for changing it, in [`docs/models/cdm.md`](docs/models/cdm.md).
+- **Where a build lives**: V17 and earlier are bare `.h5`/`.hdf5` files; V18 and later are `.lbl` archives. The format and the life of an archive are in [`docs/archive.md`](docs/archive.md).
 
 ## License
 
