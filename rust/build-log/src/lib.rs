@@ -8,7 +8,8 @@
 //!
 //! | Feature | What it adds |
 //! |---|---|
-//! | `hdf5` (default) | opening a build: [`open`], [`open_at`], [`supported_versions`], [`library_versions`]; the HDF5 binding as `hdf5`; the module `io`; `testing` |
+//! | `archive` | the `.lbl` archive of V18 on, as the module `archive`: reading its members, sealing a working file into one, packing a bare file into one. No HDF5; builds for `wasm32` without its file part |
+//! | `hdf5` (default) | opening a build: [`open`], [`open_at`], [`supported_versions`], [`library_versions`]; the HDF5 binding as `hdf5`; the module `io`; `testing`; implies `archive` |
 //! | `processing` | the Processing layer, as the module `processing` |
 //! | `jobs` | placeholder for the job layer (IP-15); implies `hdf5` |
 //! | `specta` | placeholder for TypeScript type generation (IP-02) |
@@ -23,6 +24,12 @@
 //! types, the version of the file, the adapter that read it, what that version can do and [`Opened::report`], the three version numbers. The library chooses the
 //! adapter from the file's own version marker, so **a consumer holds no code that depends on a version, and a new version needs no change in it**. Nothing here
 //! reaches an adapter or a group name: the adapters are not part of this crate's surface, and a guard test checks that.
+//!
+//! # Where a build lives
+//!
+//! A build of V17 or earlier is a bare HDF5 file (`.h5`, `.hdf5`); a build of V18 or later is an **`.lbl` archive** (see `docs/archive.md`). [`open`] takes either, tells which it is from the content, and refuses a file that is the wrong kind for its version
+//! ([`ErrorKind::WrongContainer`]) or an archive that has not been sealed ([`ErrorKind::Unsealed`]). [`Opened::container`] says which it was, and for an archive [`Opened::archive`] gives its members (the machine configuration, logs, images, which this
+//! library does not read) and [`Opened::check_file`] says whether the file is still the one that was opened. A writer of a version that lives in an archive starts with [`io::create_working_file`] and ends with [`archive::seal`].
 //!
 //! The production registry holds the versions that have an adapter: V17 (IP-13) and V16 (IP-12, read-only) so far, then V18. [`open`] on a file of another version answers
 //! `UnsupportedVersion` and names the versions it can read. [`testing`] holds the mock version, so a consumer can be written and tried against a file of a
@@ -39,6 +46,11 @@ pub const PACKAGE_VERSION: &str = env!("CARGO_PKG_VERSION");
 #[cfg(feature = "hdf5")]
 pub use build_log_io::binding as hdf5;
 
+/// The `.lbl` archive of V18 on: reading its members by range, checking their CRC-32, sealing a working file into an archive, unsealing one to change its HDF5 member, and packing a bare HDF5 file into one. No HDF5 here: the HDF5 member is bytes.
+/// `docs/archive.md` describes the format and the life of an archive.
+#[cfg(feature = "archive")]
+pub use build_log_archive as archive;
+
 #[cfg(feature = "hdf5")]
 mod open;
 #[cfg(feature = "hdf5")]
@@ -52,10 +64,11 @@ pub use open::{
     Opened,
 };
 
-/// The part of the IO layer that a consumer sees: which libhdf5 is linked and whether it is new enough. The adapters and the dispatch core are not here:
+/// The part of the IO layer that a consumer sees: which libhdf5 is linked and whether it is new enough, and the working file that a writer of a version that lives in an archive starts with. The adapters and the dispatch core are not here:
 /// [`open`] is the way in.
 #[cfg(feature = "hdf5")]
 pub mod io {
+    pub use build_log_io::container::{create_working_file, create_working_file_with_minimum};
     pub use build_log_io::{
         check_libhdf5, check_linked_libhdf5, libhdf5_version, Libhdf5Version,
         ParseLibhdf5VersionError, LIBHDF5_MINIMUM,

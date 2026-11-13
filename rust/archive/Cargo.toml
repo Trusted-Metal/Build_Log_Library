@@ -1,0 +1,21 @@
+[package]
+name = "build-log-archive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+description = "The container of a Build Log from V18 on: an .lbl archive, a ZIP file whose members are stored without compression. Reads it with random access, seals the working file of a build into it, and has no HDF5."
+
+[dependencies]
+build-log-model = { workspace = true }
+# the CRC-32 that a ZIP member carries
+crc32fast = "1"
+# the manifest member of an archive
+serde_json = "1"
+
+# What tells whether a path still names the file that was opened (a file replaced by a new version, or removed). Not on wasm32, which has no file system.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+same-file = "1"
+
+[lints]
+workspace = true

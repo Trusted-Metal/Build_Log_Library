@@ -8,7 +8,9 @@ use std::path::Path;
 
 use build_log_io::binding::Group;
 use build_log_io::dispatch;
-use build_log_model::{BuildSource, Capabilities, Error, VersionReport, CDM_VERSION};
+use build_log_model::{
+    BuildSource, Capabilities, ContainerKind, Error, VersionReport, CDM_VERSION,
+};
 
 use crate::{Registry, VersionKey, PACKAGE_VERSION};
 
@@ -47,6 +49,22 @@ impl Opened {
     /// The three version numbers and the adapter in use (BL-AR-08): the version of the file, of the Common Data Model and of this package.
     pub fn report(&self) -> VersionReport {
         self.inner.report(PACKAGE_VERSION)
+    }
+
+    /// The kind of file the build was read from: a bare HDF5 file (V17 and earlier) or an `.lbl` archive (V18 and later). For a build opened with [`open_at`] it is the kind the version declares, since the caller's file is not looked at.
+    pub fn container(&self) -> ContainerKind {
+        self.inner.container()
+    }
+
+    /// The archive the build was read from, with its members and its manifest: the machine configuration, logs and images that travel with the build, which this library keeps and does not read. `None` for a bare HDF5 file.
+    pub fn archive(&self) -> Option<&crate::archive::FileArchive> {
+        self.inner.archive()
+    }
+
+    /// Whether the archive is still the file that was opened: `Unchanged`, `Superseded` (a new version was put in its place; this build still reads the consistent file it opened), `Removed`, or `Modified` (changed in place: the source answers
+    /// [`crate::ErrorKind::FileChanged`], and the file must be opened again). `None` for a bare HDF5 file, which is not watched. On Windows an open archive keeps writers out, so `Modified` cannot happen there.
+    pub fn check_file(&self) -> Option<crate::archive::FileState> {
+        self.inner.check_file()
     }
 }
 

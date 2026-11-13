@@ -33,10 +33,16 @@ fn healthy() -> Workspace {
     let members = vec![
         package(MODEL, "rust/model", vec![]),
         package(
+            ARCHIVE,
+            "rust/archive",
+            vec![dep(MODEL, Kind::Normal, false)],
+        ),
+        package(
             IO,
             "rust/io",
             vec![
                 dep(MODEL, Kind::Normal, false),
+                dep(ARCHIVE, Kind::Normal, false),
                 dep(TESTKIT, Kind::Dev, false),
             ],
         ),
@@ -53,6 +59,7 @@ fn healthy() -> Workspace {
             "rust/build-log",
             vec![
                 dep(MODEL, Kind::Normal, false),
+                dep(ARCHIVE, Kind::Normal, true),
                 dep(IO, Kind::Normal, true),
                 dep(PROCESSING, Kind::Normal, true),
                 dep(TESTKIT, Kind::Dev, false),
@@ -66,7 +73,7 @@ fn healthy() -> Workspace {
         ),
     ];
     let mut members = members;
-    members[3].lib_name = Some("build_log".to_string());
+    members[4].lib_name = Some("build_log".to_string());
     let mut graph: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for p in &members {
         graph
@@ -79,6 +86,7 @@ fn healthy() -> Workspace {
         graph,
         lock_packages: [
             MODEL,
+            ARCHIVE,
             IO,
             PROCESSING,
             FACADE,
@@ -91,6 +99,7 @@ fn healthy() -> Workspace {
         .collect(),
         rust_versions: BTreeMap::new(),
         rust_dirs: [
+            "archive",
             "build-log",
             "io",
             "model",
@@ -189,7 +198,7 @@ fn each_guard_rejects_a_synthetic_violation() {
         "nothing inside the workspace may depend on the facade",
     ));
     let mut ws = healthy();
-    ws.members[3].dependencies[1].optional = false;
+    ws.members[4].dependencies[2].optional = false;
     cases.push((
         "the facade's IO dependency is not optional",
         ws,
@@ -197,7 +206,23 @@ fn each_guard_rejects_a_synthetic_violation() {
         "build-log -> build-log-io (normal): must be optional",
     ));
     let mut ws = healthy();
-    ws.members[1].dependencies[1].kind = Kind::Normal;
+    ws.members[4].dependencies[1].optional = false;
+    cases.push((
+        "the facade's archive dependency is not optional",
+        ws,
+        allowed_layering,
+        "build-log -> build-log-archive (normal): must be optional",
+    ));
+    let mut ws = healthy();
+    add_dependency(&mut ws, ARCHIVE, dep(IO, Kind::Normal, false));
+    cases.push((
+        "the archive depends on the IO layer",
+        ws,
+        allowed_layering,
+        "build-log-archive -> build-log-io (normal): this dependency is not allowed",
+    ));
+    let mut ws = healthy();
+    ws.members[2].dependencies[2].kind = Kind::Normal;
     cases.push((
         "IO depends on the test kit outside tests",
         ws,
@@ -301,7 +326,7 @@ fn each_guard_rejects_a_synthetic_violation() {
         "package `build-log-model` declares no rust-version",
     ));
     let mut ws = healthy();
-    ws.members[1].rust_version = Some("1.80.0".to_string());
+    ws.members[2].rust_version = Some("1.80.0".to_string());
     cases.push((
         "a crate declares another rust-version",
         ws,
@@ -336,7 +361,7 @@ fn each_guard_rejects_a_synthetic_violation() {
         "package `build-log-model` is publishable",
     ));
     let mut ws = healthy();
-    ws.members[3].lib_name = Some("facade".to_string());
+    ws.members[4].lib_name = Some("facade".to_string());
     cases.push((
         "the facade's library is misnamed",
         ws,

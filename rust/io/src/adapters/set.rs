@@ -4,13 +4,16 @@
 //! key, the place of the marker, the capabilities, and the reader, the writer and the patcher, each of which is **provided or declared unsupported with a
 //! reason**. Its builder refuses to build while a surface is left undeclared.
 //!
+//! **The container is declared too** (V18 on): the kind of file the version lives in, a bare HDF5 file or an `.lbl` archive. It is the adapter's data, as the place of the marker is, so that the dispatcher holds no list of versions and a new version says
+//! where it lives with one line; a file of the other kind is refused with `WrongContainer`. A set that does not say lives in a bare HDF5 file, which is what every version before V18 does.
+//!
 //! Only the reader can be provided in this plan: the writer and the patcher are typed `Surface<Infallible>` for now, which has no provided value, so a
 //! version can only declare them unsupported until IP-08 and IP-11 give them a constructor type. A version that never has a writer (V16) declares it
 //! unsupported for good.
 
 use std::convert::Infallible;
 
-use build_log_model::{BuildSource, Capabilities, Error, ErrorKind, Violation};
+use build_log_model::{BuildSource, Capabilities, ContainerKind, Error, ErrorKind, Violation};
 use hdf5::Group;
 
 use crate::dispatch::VersionKey;
@@ -69,6 +72,7 @@ pub struct AdapterSet {
     key: VersionKey,
     name: String,
     marker: MarkerPlace,
+    container: ContainerKind,
     capabilities: Capabilities,
     reader: Surface<ReaderFn>,
     writer: Surface<Infallible>,
@@ -87,6 +91,7 @@ impl AdapterSet {
             key: key.into(),
             name: name.into(),
             marker,
+            container: ContainerKind::BareHdf5,
             capabilities: Capabilities::new(),
             reader: None,
             writer: None,
@@ -106,6 +111,11 @@ impl AdapterSet {
 
     pub fn marker(&self) -> &MarkerPlace {
         &self.marker
+    }
+
+    /// The kind of file this version lives in. A file of the other kind is not a build of this version.
+    pub fn container(&self) -> ContainerKind {
+        self.container
     }
 
     pub fn capabilities(&self) -> &Capabilities {
@@ -135,6 +145,7 @@ pub struct AdapterSetBuilder {
     key: String,
     name: String,
     marker: MarkerPlace,
+    container: ContainerKind,
     capabilities: Capabilities,
     reader: Option<Surface<ReaderFn>>,
     writer: Option<Surface<Infallible>>,
@@ -143,6 +154,12 @@ pub struct AdapterSetBuilder {
 }
 
 impl AdapterSetBuilder {
+    /// The kind of file the version lives in (default: a bare HDF5 file). V18 and later say `ContainerKind::Archive`.
+    pub fn container(mut self, container: ContainerKind) -> Self {
+        self.container = container;
+        self
+    }
+
     pub fn capabilities(mut self, capabilities: Capabilities) -> Self {
         self.capabilities = capabilities;
         self
@@ -227,6 +244,7 @@ impl AdapterSetBuilder {
                     key,
                     name: self.name,
                     marker: self.marker,
+                    container: self.container,
                     capabilities: self.capabilities,
                     reader,
                     writer,
