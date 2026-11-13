@@ -38,7 +38,9 @@ mod validation;
 pub use availability::{
     availability_of, AvailabilityCounts, AvailabilityReport, Item, ItemAvailability, ItemKind,
 };
-pub use capabilities::{Capabilities, Direction, Feature, VersionReport, CDM_VERSION};
+pub use capabilities::{
+    Capabilities, ContainerKind, Direction, Feature, VersionReport, CDM_VERSION,
+};
 pub use channel::{
     Axis, CapturedEncoding, CapturedWidth, ChannelDType, ChannelDescriptor, ChannelKind,
     ClockClass, EnumLabel, EnumLabels, ImageFormat, NumericType, Renderability,
