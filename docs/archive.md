@@ -11,7 +11,7 @@ An `.lbl` file is a **ZIP archive whose members are stored, never compressed**. 
 | 17 and earlier | a bare HDF5 file, never in an archive | `.h5`, `.hdf5` | `ContainerKind::BareHdf5` (the default) |
 | 18 and later | an `.lbl` archive, never as a bare file | `.lbl` | `ContainerKind::Archive` |
 
-**The rule is data, not code.** Versions are matched exactly, with no ordering, so the dispatcher holds no "18 or higher": each version's `AdapterSet` declares the container it lives in (`AdapterSetBuilder::container`), and a test, `every_production_version_lives_in_the_container_its_number_says`, holds the production list to the table above. A file of the other kind is refused with `ErrorKind::WrongContainer`, which names both kinds. The extension is checked too: a bare HDF5 file named `.lbl`, and an archive named `.h5` or `.hdf5`, are `WrongContainer`. Any other extension (a download in progress, a temporary name) lets the content decide.
+**The rule is data, not code.** Versions are matched exactly, with no ordering, so the dispatcher holds no "18 or higher": each version's `AdapterSet` declares the container it lives in (`AdapterSetBuilder::container`), and a test, `production_versions_live_in_the_container_their_number_says`, holds the production list to the table above. A file of the other kind is refused with `ErrorKind::WrongContainer`, which names both kinds. The extension is checked too: a bare HDF5 file named `.lbl`, and an archive named `.h5` or `.hdf5`, are `WrongContainer`. Any other extension (a download in progress, a temporary name) lets the content decide.
 
 ## Layout
 
