@@ -375,6 +375,15 @@ impl Extra {
         self.attributes.iter().map(|(name, a)| (name.as_str(), a))
     }
 
+    /// The attributes alone, without the nodes: what the build's own level keeps untyped (IP-26 phase 26C2). A build's nodes (groups and datasets that no field holds) are
+    /// found by walking the file, so they belong to the whole build and not to its overview.
+    pub fn attributes_only(&self) -> Extra {
+        Extra {
+            attributes: self.attributes.clone(),
+            nodes: BTreeMap::new(),
+        }
+    }
+
     /// Keeps an unmapped node, and returns the one at the same path that it replaced.
     pub fn add_node(&mut self, node: UnknownNode) -> Option<UnknownNode> {
         self.nodes.insert(node.path.clone(), node)
