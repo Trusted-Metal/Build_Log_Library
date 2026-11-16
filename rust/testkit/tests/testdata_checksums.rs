@@ -152,6 +152,55 @@ fn testdata_matches_checksums() {
     assert!(!listed.is_empty(), "{SUMS} lists nothing");
 }
 
+/// The vectors of the stage packages (IP-27, decision D27-15) are held to `testdata/vectors/SHA256SUMS` in the same way: a vector that differs from its hash, is not listed, or is
+/// listed and missing fails. They are generated in Vision and copied here; a change is a reviewed diff and a new line in the sums file.
+#[test]
+fn the_vectors_match_their_checksums() {
+    let dir = testdata_dir().join("vectors");
+    skip_unless!(
+        dir.join(SUMS).is_file(),
+        "{} is not there",
+        dir.join(SUMS).display()
+    );
+    let listed = parse_sums(&fs::read_to_string(dir.join(SUMS)).expect("SHA256SUMS can be read"))
+        .expect("SHA256SUMS parses");
+    assert!(!listed.is_empty(), "{SUMS} lists nothing");
+    let mut problems = Vec::new();
+    let mut present = BTreeSet::new();
+    for entry in fs::read_dir(&dir).expect("a readable folder").flatten() {
+        let name = entry.file_name().to_string_lossy().to_string();
+        if !name.ends_with(".json") {
+            continue;
+        }
+        match listed.get(&name) {
+            None => problems.push(format!("{name} is not listed in {SUMS}")),
+            Some(expected) => match sha256_hex(&entry.path()) {
+                Ok(actual) if &actual == expected => {}
+                Ok(actual) => problems.push(format!(
+                    "{name} is not the approved file (SHA-256 {actual}, approved {expected})"
+                )),
+                Err(e) => problems.push(format!("{name} cannot be read: {e}")),
+            },
+        }
+        present.insert(name);
+    }
+    problems.extend(
+        listed
+            .keys()
+            .filter(|n| !present.contains(*n))
+            .map(|n| format!("{n} is listed in {SUMS} but not in the folder")),
+    );
+    assert!(
+        problems.is_empty(),
+        "testdata/vectors/ is not as approved:
+  - {}",
+        problems.join(
+            "
+  - "
+        )
+    );
+}
+
 // ---------------------------------------------------------------- the checker is checked: a folder made to be wrong is refused
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
