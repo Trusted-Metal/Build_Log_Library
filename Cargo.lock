@@ -40,7 +40,7 @@ dependencies = [
 
 [[package]]
 name = "build-log"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "build-log-archive",
  "build-log-io",
@@ -52,7 +52,7 @@ dependencies = [
 
 [[package]]
 name = "build-log-archive"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "build-log-model",
  "crc32fast",
@@ -62,7 +62,7 @@ dependencies = [
 
 [[package]]
 name = "build-log-conformance"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "build-log-model",
  "serde_json",
@@ -71,7 +71,7 @@ dependencies = [
 
 [[package]]
 name = "build-log-io"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "build-log-archive",
  "build-log-conformance",
@@ -83,11 +83,11 @@ dependencies = [
 
 [[package]]
 name = "build-log-model"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 
 [[package]]
 name = "build-log-processing"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "build-log-model",
  "build-log-testkit",
@@ -95,7 +95,7 @@ dependencies = [
 
 [[package]]
 name = "build-log-testkit"
-version = "0.1.0-rc.5"
+version = "0.1.0-rc.6"
 dependencies = [
  "sha2",
 ]
