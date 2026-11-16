@@ -39,6 +39,9 @@ use crate::identity::{ChannelKey, LaserKey, LayerId};
 use crate::image_regions::{ImageData, ImageRegion, ImageRequest};
 use crate::meta::BuildMeta;
 use crate::overview::{BuildOverview, LayerDetail};
+use crate::selection::{
+    laser_rows, read_rows, read_selected, LaserRows, NativeIndex, ReadSelection, SelectedColumn,
+};
 use crate::time::{index_range, Segment, TimeValue};
 use crate::validation::{validate_build, ValidationReport};
 
@@ -187,6 +190,29 @@ impl ColumnData {
             let mut out = Vec::with_capacity(ranges.iter().map(|r| r.len()).sum());
             for range in ranges {
                 out.extend_from_slice(v.as_slice().get(range.clone())?);
+            }
+            Shared::new(out)
+        }))
+    }
+
+    /// The values at the rows of `rows` (places in the column), in order, as a new buffer (a copy): what a read selection kept. The rows are matched once, and the values are
+    /// taken in a loop over the column's slice. `None` if a row is outside the column.
+    pub(crate) fn pick(&self, rows: &NativeIndex) -> Option<ColumnData> {
+        Some(rewrap!(self, v => {
+            let values = v.as_slice();
+            let mut out = Vec::with_capacity(rows.len());
+            match rows {
+                NativeIndex::Strided { step, len } => {
+                    for i in 0..*len {
+                        let at = usize::try_from(i.checked_mul(*step)?).ok()?;
+                        out.push(values.get(at)?.to_owned());
+                    }
+                }
+                NativeIndex::Listed(list) => {
+                    for native in list.as_slice() {
+                        out.push(values.get(usize::try_from(*native).ok()?)?.to_owned());
+                    }
+                }
             }
             Shared::new(out)
         }))
@@ -672,6 +698,51 @@ pub trait BuildSource: ColumnSource {
                 .with_laser(laser.clone())
                 .with_operation("discover"))),
         }
+    }
+
+    /// Reads the column a request names, **keeping only the samples a selection keeps** (IP-27 phase 27C): every `stride`-th sample of the native grid, then the strided
+    /// rows that the laser's state selects, with **the native index of each kept sample**. The semantics and the answers at the edges are in the module `selection`.
+    ///
+    /// Provided over [`ColumnSource::read`] and [`BuildSource::layer_meta`] (which finds the laser's state channel in that one layer), so every source has it and no adapter changed; an
+    /// adapter that can cut while it decodes may override it. The default selection is the read that [`ColumnSource::read`] already does. The request must name a laser and no range.
+    /// **To read several channels of a laser, choose the rows once** with [`BuildSource::laser_rows`] and cut each channel with [`BuildSource::read_rows`]: this method chooses them again
+    /// for every call. Errors: `InvalidIndex` for a request that names a range or no laser, `NotPresent` for a filter on a laser that has no state channel in the layer, `Corrupt` for a
+    /// state that is not whole numbers or flags, and what [`ColumnSource::read`] gives for the column itself. Every error carries the layer, laser, channel and the operation
+    /// `read_selected`.
+    fn read_selected(
+        &self,
+        request: &ColumnRequest,
+        selection: &ReadSelection,
+        context: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        read_selected(self, request, selection, context)
+    }
+
+    /// Chooses the rows that a selection keeps of one laser in one layer, **once**, to cut each of the laser's channels with ([`BuildSource::read_rows`]; decision D27-17). A stride alone
+    /// reads nothing; a filter reads the laser's state, once, and keeps it so that a request for the state channel does not read it again. Errors: `NotPresent` for a filter on a laser
+    /// that has no state channel in the layer, `InvalidIndex` for a layer the build does not hold, `Corrupt` for a state that is not whole numbers or flags, `Cancelled` when the token
+    /// fires. Every error carries the layer, the laser and the operation `laser_rows`.
+    fn laser_rows(
+        &self,
+        layer: LayerId,
+        laser: &LaserKey,
+        selection: &ReadSelection,
+        context: &ReadContext,
+    ) -> Result<LaserRows, Error> {
+        laser_rows(self, layer, laser, selection, context)
+    }
+
+    /// Reads the column a request names and keeps the rows that [`BuildSource::laser_rows`] chose, with the native index of each (sharing the rows' buffer). A column shorter than the
+    /// state gets the rows that exist in it. The request must name the laser and the layer that the rows were chosen for, and no range. Errors: `InvalidIndex` for a request that names
+    /// a range, no laser, or another laser or layer than the rows, and what [`ColumnSource::read`] gives for the column. Every error carries the layer, laser, channel and the operation
+    /// `read_rows`.
+    fn read_rows(
+        &self,
+        request: &ColumnRequest,
+        rows: &LaserRows,
+        context: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        read_rows(self, request, rows, context)
     }
 
     /// The build's own level and the ids of its layers (IP-26 phase 26K, decision D26-19): the identity, the context, the outcome, the provenance, and the lasers that
