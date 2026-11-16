@@ -47,6 +47,7 @@ fn unsafe_code_is_forbidden_where_the_decision_says() {
     let root = repo_root();
     for dir in [
         "rust/model",
+        "rust/archive",
         "rust/processing",
         "rust/build-log",
         "rust/conformance",

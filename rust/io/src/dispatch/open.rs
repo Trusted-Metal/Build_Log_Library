@@ -11,21 +11,25 @@
 //!   that registered a probe may recognise its own version by structure. A probe runs only when the caller asks, and only if no marker was found.
 
 use std::path::Path;
+use std::sync::Arc;
 
-use build_log_model::{BuildSource, Capabilities, Error, ErrorKind, VersionReport};
+use build_log_model::{BuildSource, Capabilities, ContainerKind, Error, ErrorKind, VersionReport};
 use hdf5::Group;
 
 use super::marker::{peek_marker, VersionKey};
 use super::registry::{resolve, Registry};
 use crate::adapters::{AdapterSet, Surface};
+use crate::container::{detect, Detected, FileArchive, FileState, GuardedSource};
 use crate::hdf5::{from_binding, open_file};
 
-/// A build that was opened through the registry: the source, which version it is, the adapter that reads it and what that version can do.
+/// A build that was opened through the registry: the source, which version it is, the adapter that reads it, what that version can do, and the kind of file it came from (for an archive, the archive).
 pub struct Opened {
     source: Box<dyn BuildSource>,
     key: VersionKey,
     adapter: String,
     capabilities: Capabilities,
+    container: ContainerKind,
+    archive: Option<Arc<FileArchive>>,
 }
 
 impl Opened {
@@ -34,7 +38,7 @@ impl Opened {
         self.source.as_ref()
     }
 
-    /// The same, handed over.
+    /// The same, handed over. For a build read from an archive the source keeps the archive open and guarded for as long as it lives.
     pub fn into_source(self) -> Box<dyn BuildSource> {
         self.source
     }
@@ -54,6 +58,22 @@ impl Opened {
         &self.capabilities
     }
 
+    /// The kind of file the build was read from: a bare HDF5 file or an `.lbl` archive. For a build opened with [`open_at`] (a group of a file the caller holds) it is the kind the version declares, since the caller's file is not looked at.
+    pub fn container(&self) -> ContainerKind {
+        self.container
+    }
+
+    /// The archive the build was read from, with its members (the machine configuration, logs, images, which this library does not read) and its manifest; `None` for a bare HDF5 file.
+    pub fn archive(&self) -> Option<&FileArchive> {
+        self.archive.as_deref()
+    }
+
+    /// Whether the file is still the one that was opened: `Unchanged`, `Superseded` (a new version was put in its place; this source still reads the consistent file it opened), `Removed`, or `Modified` (changed in place: results are not reliable,
+    /// and the source answers `FileChanged`). `None` for a bare HDF5 file, which is not watched.
+    pub fn check_file(&self) -> Option<FileState> {
+        self.archive.as_ref().map(|a| a.check())
+    }
+
     /// The three version numbers and the adapter (BL-AR-08). The package version is the one of the package the application depends on, which is the
     /// facade's to give.
     pub fn report(&self, package_version: impl Into<String>) -> VersionReport {
@@ -67,6 +87,7 @@ impl std::fmt::Debug for Opened {
             .field("key", &self.key)
             .field("adapter", &self.adapter)
             .field("capabilities", &self.capabilities)
+            .field("container", &self.container)
             .finish_non_exhaustive()
     }
 }
@@ -114,14 +135,30 @@ fn unversioned(registry: &Registry) -> Error {
 }
 
 /// Hands the mount to the adapter of `key`. `marker_expected` is true when the version came from a marker, and then the marker must be where this version
-/// keeps it; it is false for a version chosen by a probe, whose file has none.
+/// keeps it; it is false for a version chosen by a probe, whose file has none. `detected` is what the file was found to be (`None` for [`open_at`], where the
+/// caller holds the file and nothing is looked at): **the version's container must be the file's kind**, which the adapter's set declares, and a build read from
+/// an archive is guarded against a change of the file under it.
 fn hand_over(
     registry: &Registry,
     mount: &Group,
     key: &VersionKey,
     marker_expected: bool,
+    detected: Option<&Detected>,
 ) -> Result<Opened, Error> {
     let set = resolve(registry, key)?;
+    if let Some(found) = detected {
+        if found.kind != set.container() {
+            return Err(Error::new(ErrorKind::WrongContainer {
+                found: found.kind,
+                expected: set.container(),
+                detail: format!(
+                    "the version {key} lives in {}, and this file is {}",
+                    set.container(),
+                    found.kind
+                ),
+            }));
+        }
+    }
     if marker_expected {
         let own = [set.marker().attribute.as_str()];
         if peek_marker(mount, &own)?.as_ref() != Some(key) {
@@ -140,27 +177,38 @@ fn hand_over(
             }))
         }
     };
+    let archive = detected.and_then(|d| d.archive.clone());
+    let source = reader(mount)?;
+    let source: Box<dyn BuildSource> = match &archive {
+        Some(archive) => Box::new(GuardedSource::new(source, Arc::clone(archive))),
+        None => source,
+    };
     Ok(Opened {
-        source: reader(mount)?,
+        source,
         key: key.clone(),
         adapter: set.name().to_string(),
         capabilities: set.capabilities().clone(),
+        container: detected.map_or(set.container(), |d| d.kind),
+        archive,
     })
 }
 
 /// Opens the build whose data is under `mount`, whatever the mount is called and wherever it sits: reads the marker, chooses the adapter, hands it the mount.
+/// The file is the caller's, so its container is not looked at and the source is not guarded against a change of it.
 pub fn open_at(registry: &Registry, mount: &Group) -> Result<Opened, Error> {
     if registry.is_empty() {
         return Err(nothing_registered());
     }
     let attributes = attributes_of(registry);
     match peek_marker(mount, &as_strs(&attributes))? {
-        Some(key) => hand_over(registry, mount, &key, true),
+        Some(key) => hand_over(registry, mount, &key, true, None),
         None => Err(unversioned(registry)),
     }
 }
 
 /// Opens a file by its path: read-only, with the libhdf5 minimum checked first, the mount found among the root's children by the registered places.
+/// A path that is an `.lbl` archive is opened through its HDF5 member: the member starts where HDF5 looks for a superblock, so the stock library reads it.
+/// The kind of file must be the one the version lives in (`WrongContainer`), and an archive that has not been sealed is `Unsealed`.
 pub fn open(registry: &Registry, path: impl AsRef<Path>) -> Result<Opened, Error> {
     open_in(registry, path.as_ref(), false)
 }
@@ -172,6 +220,8 @@ pub fn open_probing(registry: &Registry, path: impl AsRef<Path>) -> Result<Opene
 }
 
 fn open_in(registry: &Registry, path: &Path, probing: bool) -> Result<Opened, Error> {
+    // what kind of file it is comes first: an archive is held open from here on, and a file of the wrong kind or an unsealed one is refused before anything is read
+    let detected = detect(path)?;
     let file = open_file(path)?;
     if registry.is_empty() {
         return Err(nothing_registered());
@@ -205,7 +255,7 @@ fn open_in(registry: &Registry, path: &Path, probing: bool) -> Result<Opened, Er
     }
     match marked.as_slice() {
         [] => {}
-        [(_, key, group)] => return hand_over(registry, group, key, true),
+        [(_, key, group)] => return hand_over(registry, group, key, true, detected.as_ref()),
         several => {
             let names: Vec<&str> = several.iter().map(|(m, _, _)| m.as_str()).collect();
             return Err(corrupt(format!(
@@ -216,7 +266,7 @@ fn open_in(registry: &Registry, path: &Path, probing: bool) -> Result<Opened, Er
         }
     }
     if probing {
-        if let Some(opened) = probe_pass(registry, &root, &members)? {
+        if let Some(opened) = probe_pass(registry, &root, &members, detected.as_ref())? {
             return Ok(opened);
         }
     }
@@ -228,6 +278,7 @@ fn probe_pass(
     registry: &Registry,
     root: &Group,
     members: &[String],
+    detected: Option<&Detected>,
 ) -> Result<Option<Opened>, Error> {
     let mut matched: Vec<(&AdapterSet, Group)> = Vec::new();
     for set in registry.sets() {
@@ -243,7 +294,7 @@ fn probe_pass(
     }
     match matched.as_slice() {
         [] => Ok(None),
-        [(set, group)] => hand_over(registry, group, set.key(), false).map(Some),
+        [(set, group)] => hand_over(registry, group, set.key(), false, detected).map(Some),
         several => {
             let keys: Vec<String> = several.iter().map(|(s, _)| s.key().to_string()).collect();
             Err(corrupt(format!(

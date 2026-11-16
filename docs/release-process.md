@@ -24,7 +24,7 @@ If there is something to release, the job, in this order:
 
 1. works out the next version from the tags and the commit types;
 2. checks that it follows the series (the guard, below);
-3. sets the version in the root `Cargo.toml` (the workspace version and the five workspace dependency versions) and in `Cargo.lock`, and checks that `cargo tree --locked` accepts the result;
+3. sets the version in the root `Cargo.toml` (the workspace version and the six workspace dependency versions) and in `Cargo.lock`, and checks that `cargo tree --locked` accepts the result;
 4. commits that as `chore(release): bump version to X [skip ci]` on `main` (the `[skip ci]` starts no run), tags the commit `vX`, and creates the GitHub release with notes generated from the commits.
 
 **The tag always equals the version in `Cargo.toml`**, so `build_log::library_versions()` reports the version of the tag a consumer pinned.

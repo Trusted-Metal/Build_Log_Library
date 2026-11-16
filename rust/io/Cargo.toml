@@ -13,6 +13,7 @@ static-hdf5 = ["hdf5/static", "hdf5/zlib"]
 
 [dependencies]
 build-log-model = { workspace = true }
+build-log-archive = { workspace = true }
 hdf5 = { workspace = true }
 
 [dev-dependencies]

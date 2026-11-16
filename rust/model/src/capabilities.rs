@@ -1,7 +1,7 @@
 //! Versioning as a consumer sees it: what a version can do, and which versions are in play (IP-04 phase 4A; decisions D04-5 and D04-12).
 //!
 //! * **Layer:** the Model: plain types, no I/O, no HDF5, and nothing that names a group or path of a file. **Group (decision G1):** shared.
-//! * **Constructed by:** library (`Capabilities`, `VersionReport`); the enums `Feature` and `Direction`.
+//! * **Constructed by:** library (`Capabilities`, `VersionReport`); the enums `Feature`, `Direction` and `ContainerKind`.
 //! * **Requirement:** BL-AR-08 (three version numbers, readable at runtime) and BL-VA-12 (capability flags per adapter set).
 //!
 //! # What this module claims
@@ -55,6 +55,27 @@ pub enum Feature {
 pub enum Direction {
     Read,
     Write,
+}
+
+/// What a build log file is: the kind of file a version lives in. **A version lives in exactly one kind** (the adapter of the version declares which), so a file of the other kind is
+/// refused with [`crate::ErrorKind::WrongContainer`]: V17 and earlier are bare HDF5 files, V18 and later are `.lbl` archives.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[non_exhaustive]
+pub enum ContainerKind {
+    /// A plain HDF5 file (`.h5`, `.hdf5`): the build is the file.
+    BareHdf5,
+    /// A Lossless Build Log archive (`.lbl`): a ZIP file whose members are stored without compression, one of which is the HDF5 file with the build. The others (the machine
+    /// configuration, logs, images) are opaque to this library.
+    Archive,
+}
+
+impl fmt::Display for ContainerKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ContainerKind::BareHdf5 => f.write_str("a bare HDF5 file"),
+            ContainerKind::Archive => f.write_str("an .lbl archive"),
+        }
+    }
 }
 
 /// What a version can do, by feature and by direction. Nothing is supported until an adapter says so.

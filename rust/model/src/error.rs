@@ -18,6 +18,7 @@ use std::error::Error as StdError;
 use std::fmt;
 use std::sync::Arc;
 
+use crate::capabilities::ContainerKind;
 use crate::identity::{ChannelKey, LaserKey, LayerId};
 
 /// Where something happened: the layer, laser and channel it concerns and the operation that was running. Every part is optional.
@@ -169,6 +170,18 @@ pub enum ErrorKind {
     BudgetExceeded { limit_bytes: u64, needed_bytes: u64 },
     /// The file is damaged or breaks the rules of its own version.
     Corrupt { detail: String },
+    /// The file is a build log in the wrong kind of file: the version that its marker names lives in `expected`, and this is `found` (a V18 build as a bare `.h5`, a V17 build inside an
+    /// `.lbl` archive), or the extension names one kind and the content is the other (an `.lbl` that is a bare HDF5 file). `detail` says which.
+    WrongContainer {
+        found: ContainerKind,
+        expected: ContainerKind,
+        detail: String,
+    },
+    /// The file is an `.lbl` that has not been sealed: it holds an HDF5 file in the place of an archive's first member, but no archive directory yet. It is the working file of a build that
+    /// is being captured, or one whose sealing was interrupted. It becomes a build log when it is sealed.
+    Unsealed { detail: String },
+    /// The file was modified, replaced or removed after it was opened, so what an open source has read may no longer be what the file holds. Close it and open the file again.
+    FileChanged { detail: String },
 }
 
 impl ErrorKind {
@@ -182,16 +195,24 @@ impl ErrorKind {
             ErrorKind::NotPresent { .. }
             | ErrorKind::Unversioned { .. }
             | ErrorKind::ValidationError { .. }
-            | ErrorKind::OutOfWidth { .. } => ErrorClass::Validation,
-            ErrorKind::IoError { .. } | ErrorKind::BudgetExceeded { .. } => ErrorClass::Io,
+            | ErrorKind::OutOfWidth { .. }
+            | ErrorKind::WrongContainer { .. }
+            | ErrorKind::Unsealed { .. } => ErrorClass::Validation,
+            ErrorKind::IoError { .. }
+            | ErrorKind::BudgetExceeded { .. }
+            | ErrorKind::FileChanged { .. } => ErrorClass::Io,
             ErrorKind::Corrupt { .. } => ErrorClass::LibraryOrFile,
         }
     }
 
-    /// Can trying again help? Cancelling and a budget can be retried, an I/O failure when its cause is transient, and nothing else.
+    /// Can trying again help? Cancelling and a budget can be retried, an I/O failure when its cause is transient, a file that is not sealed yet (it can be once the build ends) and a file
+    /// that changed (open it again), and nothing else.
     pub fn default_retryable(&self) -> bool {
         match self {
-            ErrorKind::Cancelled | ErrorKind::BudgetExceeded { .. } => true,
+            ErrorKind::Cancelled
+            | ErrorKind::BudgetExceeded { .. }
+            | ErrorKind::Unsealed { .. }
+            | ErrorKind::FileChanged { .. } => true,
             ErrorKind::IoError { transient, .. } => *transient,
             _ => false,
         }
@@ -248,6 +269,18 @@ impl fmt::Display for ErrorKind {
                 "budget exceeded: {needed_bytes} bytes needed, {limit_bytes} allowed"
             ),
             ErrorKind::Corrupt { detail } => write!(f, "corrupt file: {detail}"),
+            ErrorKind::WrongContainer {
+                found,
+                expected,
+                detail,
+            } => write!(
+                f,
+                "the file is {found}, but {expected} is expected: {detail}"
+            ),
+            ErrorKind::Unsealed { detail } => write!(f, "the archive is not sealed: {detail}"),
+            ErrorKind::FileChanged { detail } => {
+                write!(f, "the file changed after it was opened: {detail}")
+            }
         }
     }
 }
@@ -461,6 +494,17 @@ mod tests {
                 LibraryOrFile,
                 false,
             ),
+            (
+                ErrorKind::WrongContainer {
+                    found: ContainerKind::BareHdf5,
+                    expected: ContainerKind::Archive,
+                    detail: "x".into(),
+                },
+                Validation,
+                false,
+            ),
+            (ErrorKind::Unsealed { detail: "x".into() }, Validation, true),
+            (ErrorKind::FileChanged { detail: "x".into() }, Io, true),
         ];
         for (kind, class, retryable) in table {
             let error = Error::new(kind.clone());
