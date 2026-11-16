@@ -42,9 +42,12 @@ fn read_build_level(mount: &Group) -> Result<(BuildMeta, Vec<&'static str>), Err
 /// The overview of the build whose data is under `mount` (IP-26 phase 26K): its own level, the ids of its layers (`layers`, from [`super::layers::layer_names`]) and the
 /// lasers that the calibration names, with their parameters. **It reads no layer.**
 pub fn read_overview(mount: &Group, layers: Vec<LayerId>) -> Result<BuildOverview, Error> {
-    let (mut level, _) = read_build_level(mount)?;
+    let (mut level, mut typed) = read_build_level(mount)?;
     parameters::add_calibrated_lasers(mount, &mut level)?;
-    parameters::read_all(mount, &mut level)?;
+    let taken = parameters::read_all(mount, &mut level)?;
+    // the attributes of the mount that no field and no parameter took, as the whole walk keeps them (its nodes are the whole build's)
+    typed.extend(&taken.mount_attributes);
+    keep_other_attributes(mount, &typed, &mut level.extra)?;
     Ok(BuildOverview::from_level(&level, layers))
 }
 

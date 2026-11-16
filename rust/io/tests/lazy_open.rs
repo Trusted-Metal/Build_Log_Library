@@ -93,6 +93,8 @@ fn the_overview_is_the_build_level_of_the_whole() {
         assert_eq!(overview.provenance, derived.provenance, "{name}");
         assert_eq!(overview.context, derived.context, "{name}");
         assert_eq!(overview.origins, derived.origins, "{name}");
+        // the attributes of the build's own level that no field holds (the nodes are the whole build's)
+        assert_eq!(overview.extra, derived.extra, "{name}");
         // the lasers that the calibration names, each with the parameters that the whole build gives it
         for laser in &overview.lasers {
             let in_whole = derived

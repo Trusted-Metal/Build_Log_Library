@@ -18,6 +18,7 @@
 
 use crate::channel::ChannelDescriptor;
 use crate::context::BuildContext;
+use crate::extra::Extra;
 use crate::identity::{ByLayer, LaserKey, LayerId};
 use crate::meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
 use crate::params::LaserParameters;
@@ -59,6 +60,10 @@ pub struct BuildOverview {
     /// The machine, the material, the starting height and the build plate.
     pub context: BuildContext,
     pub origins: Origins,
+    /// The attributes of the build's own level that no field above holds, kept as the file wrote them (nothing is dropped): what a consumer that shows "everything the file
+    /// says" about the build reads beside the typed fields. **Where a value lives depends on the file:** a bit resolution that a V17 file gives per galvo is a laser's parameter, and
+    /// the build-level text that duplicates it is here. **The nodes** that the build keeps untyped (groups and datasets) **are in [`BuildMeta::extra`]**, read with the whole build.
+    pub extra: Extra,
 }
 
 impl LaserOverview {
@@ -85,6 +90,7 @@ impl BuildOverview {
             provenance: Provenance::default(),
             context: BuildContext::default(),
             origins: Origins::new(),
+            extra: Extra::new(),
         }
     }
 
@@ -109,6 +115,7 @@ impl BuildOverview {
             provenance: level.provenance.clone(),
             context: level.context.clone(),
             origins: level.origins.clone(),
+            extra: level.extra.attributes_only(),
         }
     }
 
@@ -226,6 +233,41 @@ mod tests {
         assert_eq!(overview.identity, build.identity);
         assert_eq!(overview.lasers.len(), 1);
         assert_eq!(overview.lasers[0].key, LaserKey::new("the_laser", 1));
+    }
+
+    #[test]
+    fn the_overview_keeps_the_attributes_of_the_build_level_and_not_its_nodes() {
+        use crate::extra::{AttrValue, ExtraAttribute, StoredAs, UnknownNode};
+
+        let mut build = BuildMeta::new(identity());
+        build
+            .extra
+            .set_attribute(
+                "An_Attribute",
+                ExtraAttribute::new(
+                    AttrValue::Text(vec!["20".to_string()]),
+                    StoredAs::variable_text(None),
+                ),
+            )
+            .expect("a small attribute is kept");
+        build
+            .extra
+            .add_node(UnknownNode::group(vec!["A_Group".to_string()]));
+
+        let overview = BuildOverview::from_build(&build);
+
+        // the attribute is there as the file gave it; the node is the whole build's
+        assert_eq!(
+            overview.extra.attribute("An_Attribute"),
+            build.extra.attribute("An_Attribute")
+        );
+        assert_eq!(overview.extra.attributes().count(), 1);
+        assert_eq!(overview.extra.nodes().count(), 0);
+        assert_eq!(build.extra.nodes().count(), 1);
+        // a build that keeps nothing has an overview that keeps nothing
+        assert!(BuildOverview::from_build(&BuildMeta::new(identity()))
+            .extra
+            .is_empty());
     }
 
     #[test]
