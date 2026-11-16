@@ -21,7 +21,8 @@ use build_log_model::{
     AvailabilityReport, BuildMeta, BuildOverview, BuildSource, CacheStats, ChannelDescriptor,
     ChannelKey, ColumnData, ColumnRequest, ColumnSource, ContainerKind, Error, ErrorKind,
     EventColumns, EventKind, EventPlace, EventRequest, GridData, GridRequest, ImageData,
-    ImageRequest, LaserKey, LayerDetail, LayerId, ReadContext, Revision, ValidationReport,
+    ImageRequest, LaserKey, LaserRows, LayerDetail, LayerId, ReadContext, ReadSelection, Revision,
+    SelectedColumn, ValidationReport,
 };
 use hdf5::File;
 
@@ -782,6 +783,34 @@ impl BuildSource for Recording {
         self.note("layer_meta");
         Err(Error::new(ErrorKind::Cancelled))
     }
+    fn read_selected(
+        &self,
+        _: &ColumnRequest,
+        _: &ReadSelection,
+        _: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.note("read_selected");
+        Err(Error::new(ErrorKind::Cancelled))
+    }
+    fn laser_rows(
+        &self,
+        _: LayerId,
+        _: &LaserKey,
+        _: &ReadSelection,
+        _: &ReadContext,
+    ) -> Result<LaserRows, Error> {
+        self.note("laser_rows");
+        Err(Error::new(ErrorKind::Cancelled))
+    }
+    fn read_rows(
+        &self,
+        _: &ColumnRequest,
+        _: &LaserRows,
+        _: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.note("read_rows");
+        Err(Error::new(ErrorKind::Cancelled))
+    }
 }
 
 /// Lets a test see what the wrapped source was asked, after the wrapper has taken it.
@@ -833,6 +862,31 @@ impl BuildSource for Shared {
     fn layer_meta(&self, l: LayerId) -> Result<Arc<LayerDetail>, Error> {
         self.0.layer_meta(l)
     }
+    fn read_selected(
+        &self,
+        r: &ColumnRequest,
+        s: &ReadSelection,
+        c: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.0.read_selected(r, s, c)
+    }
+    fn laser_rows(
+        &self,
+        layer: LayerId,
+        laser: &LaserKey,
+        s: &ReadSelection,
+        c: &ReadContext,
+    ) -> Result<LaserRows, Error> {
+        self.0.laser_rows(layer, laser, s, c)
+    }
+    fn read_rows(
+        &self,
+        r: &ColumnRequest,
+        rows: &LaserRows,
+        c: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.0.read_rows(r, rows, c)
+    }
 }
 
 #[test]
@@ -877,6 +931,17 @@ fn the_guard_delegates_every_method_of_both_traits_to_the_source_it_wraps() {
     let _ = guarded.channels(&laser);
     let _ = guarded.overview();
     let _ = guarded.layer_meta(layer);
+    // the read selection (IP-27 phase 27C, decision D27-17): provided methods, delegated like the others
+    let column = ColumnRequest::new(
+        layer,
+        Some(laser.clone()),
+        ChannelKey::new(["position", "x"]),
+    );
+    let selection = ReadSelection::new().with_stride(2);
+    let _ = guarded.read_selected(&column, &selection, &context);
+    let _ = guarded.laser_rows(layer, &laser, &selection, &context);
+    let rows = LaserRows::new(layer, laser.clone(), selection, None, None);
+    let _ = guarded.read_rows(&column, &rows, &context);
 
     // each call reached the method of the same name, and no call turned into another (a defaulted method that was not delegated would call `build` instead)
     let seen = recording.0.lock().unwrap().clone();
@@ -896,7 +961,10 @@ fn the_guard_delegates_every_method_of_both_traits_to_the_source_it_wraps() {
             "availability",
             "channels",
             "overview",
-            "layer_meta"
+            "layer_meta",
+            "read_selected",
+            "laser_rows",
+            "read_rows"
         ]
     );
 }
