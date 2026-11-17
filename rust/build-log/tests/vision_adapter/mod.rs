@@ -17,6 +17,12 @@ use build_log::{
 };
 use build_log_processing::{resolve_z_calibration, Resolved, StoredWidths, ZConverter, ZSeries};
 
+use build_log::{Shared, TimingOverride};
+use build_log_processing::{
+    resolve_timing, shift_series, timestamps, CardConvention, RecordedTiming, ShiftRefusal,
+    TimingFallbacks, TimingResolution, UnknownUnitAs,
+};
+
 /// Vision's defaults for a Z calibration that the file and the user do not give (Vision's `CalibrationParams::default()`).
 pub const VISION_FIELD_SIZE_Z_MM: f64 = 400.0;
 pub const VISION_OFFSET_Z_MM: f64 = 0.0;
@@ -90,6 +96,8 @@ impl Laser<'_> {
 pub struct KeptLaser {
     /// The position of the laser in the layer's list.
     pub index: usize,
+    /// The file's own name of the laser (`Laser_1`), which Vision's messages use.
+    pub name: String,
     /// How many rows Vision keeps: the shortest of the streams that were asked for.
     pub n: usize,
     /// The commanded Z in millimetres, `n` values (zeros where the laser has fewer codes).
@@ -193,6 +201,7 @@ pub fn kept_layer(
         };
         lasers.push(KeptLaser {
             index,
+            name: found.key.key.clone(),
             n,
             commanded_mm: convert(ChannelKind::CommandedPosition { axis: Axis::Z }, commanded),
             actual_mm: convert(ChannelKind::ActualPosition { axis: Axis::Z }, actual),
@@ -206,5 +215,100 @@ pub fn kept_layer(
     KeptLayer {
         layer_id: format!("Layer_{layer}"),
         lasers,
+    }
+}
+
+// ---------------------------------------------------------------- the time shift, as Vision applies it (IP-27 phase 27F)
+
+/// Vision's answers where the file is silent about the timing (the same decisions as `rust/processing/tests/time_shift_vectors.rs` carries for the pure cases).
+pub fn vision_fallbacks() -> TimingFallbacks {
+    TimingFallbacks {
+        sample_period_s: 1e-5,
+        absent_offset_s: 0.0,
+        unparsed_offset_s: 0.0,
+        unknown_unit: UnknownUnitAs::Steps,
+        unrecognised_protocol: CardConvention::OppositeToShifter,
+    }
+}
+
+/// Vision's mirroring: a commanded override alone is also the actual offset.
+pub fn vision_mirrored(user: &TimingOverride) -> TimingOverride {
+    let mut mirrored = user.clone();
+    if user.commanded_offset_steps.is_some() && user.actual_offset_steps.is_none() {
+        mirrored.actual_offset_steps = user.commanded_offset_steps;
+    }
+    mirrored
+}
+
+/// The native sample period under a stride as Vision takes it: `(native x stride) / stride`, which is one unit in the last place off the plain period for some strides.
+pub fn vision_native_period(native_s: f64, stride: u64) -> f64 {
+    let stride = stride.max(1) as f64;
+    (native_s * stride) / stride
+}
+
+/// What the library resolves for one laser's timing: what the file records, the native period as Vision reads it, and the user's overrides as Vision mirrors them.
+pub fn timing_of(
+    laser: &KeptLaser,
+    period_s: Option<f64>,
+    stride: u64,
+    user: &TimingOverride,
+) -> TimingResolution {
+    let mut recorded = RecordedTiming::from_parameters(laser.parameters.as_ref());
+    if let Some(period) = period_s {
+        recorded = recorded.with_native_period_s(vision_native_period(period, stride));
+    }
+    resolve_timing(&recorded, &vision_mirrored(user), &vision_fallbacks())
+}
+
+/// The shifted Z of a laser in millimetres. A laser of fewer than two samples is not shifted (Vision's use case skips it).
+fn shifted(
+    timing: &TimingResolution,
+    kind: ChannelKind,
+    times: &[f64],
+    values: &[f64],
+) -> Vec<f64> {
+    match shift_series(timing, &kind, times, values) {
+        Ok(series) => series.into_values(),
+        Err(ShiftRefusal::TooFewSamples { .. }) => values.to_vec(),
+        Err(other) => panic!("{kind:?}: {other}"),
+    }
+}
+
+/// A laser's timestamps and its Z after the time shift.
+pub struct ShiftedLaser {
+    /// The time of each kept row: origin 0 (Vision reads `Start_Time`, which no miniature has), the native index and the period of the file.
+    pub times: Vec<f64>,
+    /// The commanded Z in millimetres, shifted by the commanded offset.
+    pub commanded: Vec<f64>,
+    /// The actual Z in millimetres, shifted by the actual offset.
+    pub actual: Vec<f64>,
+}
+
+/// A kept laser's Z, shifted as Vision's Tier 1 shifts it: its timestamps, its timing resolved from the file and the user's overrides, and each Z series by its own offset.
+pub fn shift_laser(laser: &KeptLaser, stride: u64, user: &TimingOverride) -> ShiftedLaser {
+    let period = laser.recorded_period.as_ref().map(vision_period_seconds);
+    let first_n: Vec<u64> = laser.native_index.iter().take(laser.n).collect();
+    let times = timestamps(
+        &NativeIndex::Listed(Shared::new(first_n)),
+        0.0,
+        period.unwrap_or(1e-5),
+    );
+    let timing = timing_of(laser, period, stride, user);
+    let commanded = shifted(
+        &timing,
+        ChannelKind::CommandedPosition { axis: Axis::Z },
+        &times,
+        &laser.commanded_mm,
+    );
+    let actual = shifted(
+        &timing,
+        ChannelKind::ActualPosition { axis: Axis::Z },
+        &times,
+        &laser.actual_mm,
+    );
+    ShiftedLaser {
+        times,
+        commanded,
+        actual,
     }
 }

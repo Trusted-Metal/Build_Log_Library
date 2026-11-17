@@ -13,42 +13,19 @@
 
 mod vision_adapter;
 
-use build_log::{
-    Axis, ChannelKind, NativeIndex, ReadSelection, TimingOverride, ZCalibrationOverride,
-};
+use build_log::{ReadSelection, TimingOverride, ZCalibrationOverride};
 use build_log_conformance::vectors::{
     bits, differences, digest_f64, expected_columns, head_and_tail, load_vectors, opt_f64, whole,
     words, Columns,
 };
-use build_log_processing::{
-    resolve_timing, shift_series, timestamps, CardConvention, RecordedTiming, ShiftRefusal,
-    TimingFallbacks, TimingResolution, UnknownUnitAs,
-};
+use build_log_processing::{resolve_timing, CardConvention, RecordedTiming};
 use serde_json::Value;
 
-use vision_adapter::{kept_layer, rows_of, vision_period_seconds, KeptLaser};
+use vision_adapter::{
+    kept_layer, rows_of, shift_laser, vision_fallbacks, vision_period_seconds, ShiftedLaser,
+};
 
 const CHUNK: &str = "time_shift";
-
-/// Vision's answers where the file is silent (see `rust/processing/tests/time_shift_vectors.rs`, which carries the same decisions for the pure cases).
-fn vision_fallbacks() -> TimingFallbacks {
-    TimingFallbacks {
-        sample_period_s: 1e-5,
-        absent_offset_s: 0.0,
-        unparsed_offset_s: 0.0,
-        unknown_unit: UnknownUnitAs::Steps,
-        unrecognised_protocol: CardConvention::OppositeToShifter,
-    }
-}
-
-/// Vision's mirroring: a commanded override alone is also the actual offset.
-fn vision_mirrored(user: &TimingOverride) -> TimingOverride {
-    let mut mirrored = user.clone();
-    if user.commanded_offset_steps.is_some() && user.actual_offset_steps.is_none() {
-        mirrored.actual_offset_steps = user.commanded_offset_steps;
-    }
-    mirrored
-}
 
 fn override_of(value: &Value) -> TimingOverride {
     let mut o = TimingOverride::new();
@@ -59,40 +36,6 @@ fn override_of(value: &Value) -> TimingOverride {
         o = o.with_actual_offset_steps(steps);
     }
     o
-}
-
-/// The native sample period under a stride as Vision takes it: `(native x stride) / stride`.
-fn vision_native_period(native_s: f64, stride: u64) -> f64 {
-    let stride = stride.max(1) as f64;
-    (native_s * stride) / stride
-}
-
-/// What the library resolves for one laser: what the file records, the native period as Vision reads it, and the user's overrides as Vision mirrors them.
-fn timing_of(
-    laser: &KeptLaser,
-    period_s: Option<f64>,
-    stride: u64,
-    user: &TimingOverride,
-) -> TimingResolution {
-    let mut recorded = RecordedTiming::from_parameters(laser.parameters.as_ref());
-    if let Some(period) = period_s {
-        recorded = recorded.with_native_period_s(vision_native_period(period, stride));
-    }
-    resolve_timing(&recorded, &vision_mirrored(user), &vision_fallbacks())
-}
-
-/// The shifted Z of a laser in millimetres. A laser of fewer than two samples is not shifted (Vision's use case skips it).
-fn shifted(
-    timing: &TimingResolution,
-    kind: ChannelKind,
-    times: &[f64],
-    values: &[f64],
-) -> Vec<f64> {
-    match shift_series(timing, &kind, times, values) {
-        Ok(series) => series.into_values(),
-        Err(ShiftRefusal::TooFewSamples { .. }) => values.to_vec(),
-        Err(other) => panic!("{kind:?}: {other}"),
-    }
 }
 
 fn run_file(inputs: &Value) -> Columns {
@@ -113,27 +56,11 @@ fn run_file(inputs: &Value) -> Columns {
     out.insert("layer_id".into(), words(&[&layer.layer_id]));
     let mut present: Vec<i64> = Vec::new();
     for laser in &layer.lasers {
-        let period = laser.recorded_period.as_ref().map(vision_period_seconds);
-        // the time of each kept row: origin 0, the native index and the period of the file
-        let first_n: Vec<u64> = laser.native_index.iter().take(laser.n).collect();
-        let times = timestamps(
-            &NativeIndex::Listed(build_log::Shared::new(first_n)),
-            0.0,
-            period.unwrap_or(1e-5),
-        );
-        let timing = timing_of(laser, period, stride, &user);
-        let commanded = shifted(
-            &timing,
-            ChannelKind::CommandedPosition { axis: Axis::Z },
-            &times,
-            &laser.commanded_mm,
-        );
-        let actual = shifted(
-            &timing,
-            ChannelKind::ActualPosition { axis: Axis::Z },
-            &times,
-            &laser.actual_mm,
-        );
+        let ShiftedLaser {
+            times,
+            commanded,
+            actual,
+        } = shift_laser(laser, stride, &user);
 
         present.push(laser.index as i64);
         let p = format!("laser{}", laser.index);
