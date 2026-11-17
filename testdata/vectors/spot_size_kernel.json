@@ -1,0 +1,2347 @@
+{
+  "chunk": "spot_size_kernel",
+  "produced_by": { "date": "2026-11-17", "vision_commit": "f4bb83c2674997d841fd251c45139f4e7d9db392" },
+  "cases": [
+    {
+      "case": "file_layer_v16_has_no_beam_so_no_spot_size_and_a_warning",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v16.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_has_spot_size": { "i64": [0] },
+          "lasers_present": { "i64": [0] },
+          "warnings": {
+            "text": [
+              "Laser_1: spot size unavailable — no beam waist stored (Beam_Waist_Major/Minor missing or zero)"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_images_all_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_2026_08_18_images.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [-3092231639867072343] },
+          "laser0_act_area_head": {
+            "f64": [3916.6903007296114, 3916.5759903908383, 3916.5759903908383, 3916.5759903908383],
+            "f64_bits": ["0x40ae99616f18e42c", "0x40ae9926e83666ec", "0x40ae9926e83666ec", "0x40ae9926e83666ec"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [3913.4403306511376, 3913.601201584249, 3913.7051625407116, 3913.809137396693],
+            "f64_bits": ["0x40ae92e17304e420", "0x40ae9333d0b1ad4e", "0x40ae93690b108571", "0x40ae939e4741c189"]
+          },
+          "laser0_act_major_digest": { "i64": [758796427749575381] },
+          "laser0_act_major_head": {
+            "f64": [34.78581567197587, 34.78530804856399, 34.78530804856399, 34.78530804856399],
+            "f64_bits": ["0x404164959ba1e90a", "0x40416484f960ef18", "0x40416484f960ef18", "0x40416484f960ef18"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [34.77138048394214, 34.77209515523735, 34.77255699537867, 34.77301889113256],
+            "f64_bits": ["0x404162bc987fa6ee", "0x404162d40398927e", "0x404162e325cab945", "0x404162f248744d61"]
+          },
+          "laser0_act_minor_digest": { "i64": [-3669459279313205503] },
+          "laser0_cmd_area_digest": { "i64": [-6064679708362295931] },
+          "laser0_cmd_major_digest": { "i64": [1576895109265926277] },
+          "laser0_cmd_major_head": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [-7496395485935710267] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_march_has_no_beam_so_no_spot_size_and_a_warning",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_march.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_has_spot_size": { "i64": [0] },
+          "laser1_has_spot_size": { "i64": [0] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": {
+            "text": [
+              "Laser_1: spot size unavailable — no beam waist stored (Beam_Waist_Major/Minor missing or zero)",
+              "Laser_2: spot size unavailable — no beam waist stored (Beam_Waist_Major/Minor missing or zero)"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_march_overrides_rescue_a_beam_and_a_spot_size_is_made",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_march.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": 66.0,
+          "waist_major_um_bits": "0x4050800000000000",
+          "waist_minor_um": 68.0,
+          "waist_minor_um_bits": "0x4051000000000000",
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [2059758775570332636] },
+          "laser0_act_area_head": {
+            "f64": [4021.4467035802163, 4021.323726915701, 4021.4467035802163, 4021.4467035802163],
+            "f64_bits": ["0x40af6ae4b654e812", "0x40af6aa5bf88c78b", "0x40af6ae4b654e812", "0x40af6ae4b654e812"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [4052.523790800206, 4052.795496934148, 4053.003855175005, 4053.2122545241946],
+            "f64_bits": ["0x40afa90c2e4ec9a9", "0x40afa9974b5fc878", "0x40afaa01f94e3522", "0x40afaa6cac9fffb0"]
+          },
+          "laser0_act_major_digest": { "i64": [-452504433140211457] },
+          "laser0_act_major_head": {
+            "f64": [35.25496707254217, 35.2544264907186, 35.25496707254217, 35.25496707254217],
+            "f64_bits": ["0x4041a0a2c2d31010", "0x4041a0910c186fac", "0x4041a0a2c2d31010", "0x4041a0a2c2d31010"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [35.39131129534074, 35.39250103305587, 35.393413358046544, 35.39432583951297],
+            "f64_bits": ["0x4041b2167d10059e", "0x4041b23d794e4f83", "0x4041b25b5e714f4a", "0x4041b27944e45686"]
+          },
+          "laser0_act_minor_digest": { "i64": [-8310455609203390000] },
+          "laser0_cmd_area_digest": { "i64": [-2446540012426431771] },
+          "laser0_cmd_major_digest": { "i64": [-8121092390788528363] },
+          "laser0_cmd_major_head": {
+            "f64": [35.255237385449675, 35.255237385449675, 35.255237385449675, 35.255237385449675],
+            "f64_bits": ["0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [35.255237385449675, 35.255237385449675, 35.255237385449675, 35.255237385449675],
+            "f64_bits": ["0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88", "0x4041a0ab9e5f9c88"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [663900106875492149] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_area_digest": { "i64": [1242982843787097666] },
+          "laser1_act_area_head": {
+            "f64": [3556.269811829089, 3556.3047970746925, 3556.339801797474, 3556.3748259974354],
+            "f64_bits": ["0x40abc88a24c6ac06", "0x40abc89c0e5cb771", "0x40abc8adfa804e8c", "0x40abc8bfe931715a"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [3535.512970501891, 3535.5175654136906, 3535.513389520132, 3535.517984522345],
+            "f64_bits": ["0x40ab9f06a411d2de", "0x40ab9f08fe557aaf", "0x40ab9f06dafdbe27", "0x40ab9f0935446e9d"]
+          },
+          "laser1_act_major_digest": { "i64": [-6021819197718204677] },
+          "laser1_act_major_head": {
+            "f64": [33.14338060300015, 33.14353999470246, 33.14369947437579, 33.14385904201888],
+            "f64_bits": ["0x4040925a4bac621a", "0x4040925f84bf7521", "0x40409264be8f72bd", "0x40409269f91c5a3d"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [33.04867768280713, 33.048698677054624, 33.04867959731073, 33.04870059197011],
+            "f64_bits": ["0x4040863b11ffd9d1", "0x4040863bc21ca76f", "0x4040863b220f374d", "0x4040863bd22ce75b"]
+          },
+          "laser1_act_minor_digest": { "i64": [-2888889270367203454] },
+          "laser1_cmd_area_digest": { "i64": [7533294426166332853] },
+          "laser1_cmd_major_digest": { "i64": [-6442404825745615819] },
+          "laser1_cmd_major_head": {
+            "f64": [33.05640247688653, 33.05640247688653, 33.05640247688653, 33.05640247688653],
+            "f64_bits": ["0x404087383244d20e", "0x404087383244d20e", "0x404087383244d20e", "0x404087383244d20e"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [33.05640247688653, 33.05640247688653, 33.05640247688653, 33.05640247688653],
+            "f64_bits": ["0x404087383244d20e", "0x404087383244d20e", "0x404087383244d20e", "0x404087383244d20e"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [-2785049496826872011] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_mock_all_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [2572063292124504027] },
+          "laser0_act_area_head": {
+            "f64": [76660.57175200166, 76660.57175200166, 76660.57175200166, 76660.57175200166],
+            "f64_bits": ["0x40f2b74925e56d49", "0x40f2b74925e56d49", "0x40f2b74925e56d49", "0x40f2b74925e56d49"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [76665.07679205343, 76665.07679205343, 76665.07679205343, 76665.07679205343],
+            "f64_bits": ["0x40f2b7913a8a4de1", "0x40f2b7913a8a4de1", "0x40f2b7913a8a4de1", "0x40f2b7913a8a4de1"]
+          },
+          "laser0_act_major_digest": { "i64": [-8766881939220582086] },
+          "laser0_act_major_head": {
+            "f64": [154.8406984125213, 154.8406984125213, 154.8406984125213, 154.8406984125213],
+            "f64_bits": ["0x40635ae7005b7280", "0x40635ae7005b7280", "0x40635ae7005b7280", "0x40635ae7005b7280"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [154.84524871903912, 154.84524871903912, 154.84524871903912, 154.84524871903912],
+            "f64_bits": ["0x40635b0c470aa849", "0x40635b0c470aa849", "0x40635b0c470aa849", "0x40635b0c470aa849"]
+          },
+          "laser0_act_minor_digest": { "i64": [-201983717744591554] },
+          "laser0_cmd_area_digest": { "i64": [-944816164073868987] },
+          "laser0_cmd_major_digest": { "i64": [-6256359785493935915] },
+          "laser0_cmd_major_head": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [-2831618826201742555] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_area_digest": { "i64": [-590488877746460498] },
+          "laser1_act_area_head": {
+            "f64": [83579.20592639118, 83579.20592639118, 83579.20592639118, 83579.20592639118],
+            "f64_bits": ["0x40f467b34b7978b8", "0x40f467b34b7978b8", "0x40f467b34b7978b8", "0x40f467b34b7978b8"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [83583.84342565837, 83583.84342565837, 83583.84342565837, 83583.84342565837],
+            "f64_bits": ["0x40f467fd7eabe735", "0x40f467fd7eabe735", "0x40f467fd7eabe735", "0x40f467fd7eabe735"]
+          },
+          "laser1_act_major_digest": { "i64": [2596318221212677299] },
+          "laser1_act_major_head": {
+            "f64": [161.33596690300806, 161.33596690300806, 161.33596690300806, 161.33596690300806],
+            "f64_bits": ["0x40642ac03da99ea8", "0x40642ac03da99ea8", "0x40642ac03da99ea8", "0x40642ac03da99ea8"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [161.34043841331817, 161.34043841331817, 161.34043841331817, 161.34043841331817],
+            "f64_bits": ["0x40642ae4df19701e", "0x40642ae4df19701e", "0x40642ae4df19701e", "0x40642ae4df19701e"]
+          },
+          "laser1_act_minor_digest": { "i64": [7116698039174219595] },
+          "laser1_cmd_area_digest": { "i64": [3328004392003646165] },
+          "laser1_cmd_major_digest": { "i64": [-8309792442636628427] },
+          "laser1_cmd_major_head": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [346840707965153893] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_mock_overrides_change_the_spot",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": 20.0,
+          "scanner_rotation_deg_bits": "0x4034000000000000",
+          "thermal_shift_mm": 0.5,
+          "thermal_shift_mm_bits": "0x3fe0000000000000",
+          "waist_major_um": 60.0,
+          "waist_major_um_bits": "0x404e000000000000",
+          "waist_minor_um": 62.0,
+          "waist_minor_um_bits": "0x404f000000000000",
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [-7159991874933122274] },
+          "laser0_act_area_head": {
+            "f64": [68581.42750913878, 68581.42750913878, 68581.42750913878, 68581.42750913878],
+            "f64_bits": ["0x40f0be56d713d29d", "0x40f0be56d713d29d", "0x40f0be56d713d29d", "0x40f0be56d713d29d"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [68585.2900812844, 68585.2900812844, 68585.2900812844, 68585.2900812844],
+            "f64_bits": ["0x40f0be94a42c45db", "0x40f0be94a42c45db", "0x40f0be94a42c45db", "0x40f0be94a42c45db"]
+          },
+          "laser0_act_major_digest": { "i64": [-4446237911235851239] },
+          "laser0_act_major_head": {
+            "f64": [145.5725129858214, 145.5725129858214, 145.5725129858214, 145.5725129858214],
+            "f64_bits": ["0x4062325206c0d46c", "0x4062325206c0d46c", "0x4062325206c0d46c", "0x4062325206c0d46c"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [145.5766128841535, 145.5766128841535, 145.5766128841535, 145.5766128841535],
+            "f64_bits": ["0x406232739cdcfc87", "0x406232739cdcfc87", "0x406232739cdcfc87", "0x406232739cdcfc87"]
+          },
+          "laser0_act_minor_digest": { "i64": [-8999726067429735124] },
+          "laser0_cmd_area_digest": { "i64": [-1775949227927175451] },
+          "laser0_cmd_major_digest": { "i64": [2127625362701027909] },
+          "laser0_cmd_major_head": {
+            "f64": [31.367461044466488, 31.367461044466488, 31.367461044466488, 31.367461044466488],
+            "f64_bits": ["0x403f5e11ed50899e", "0x403f5e11ed50899e", "0x403f5e11ed50899e", "0x403f5e11ed50899e"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [31.367461044466488, 31.367461044466488, 31.367461044466488, 31.367461044466488],
+            "f64_bits": ["0x403f5e11ed50899e", "0x403f5e11ed50899e", "0x403f5e11ed50899e", "0x403f5e11ed50899e"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [4812406349744242261] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [20.0], "f64_bits": ["0x4034000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_area_digest": { "i64": [7869928939887671498] },
+          "laser1_act_area_head": {
+            "f64": [64349.70041002257, 64349.70041002257, 64349.70041002257, 64349.70041002257],
+            "f64_bits": ["0x40ef6bb669c24797", "0x40ef6bb669c24797", "0x40ef6bb669c24797", "0x40ef6bb669c24797"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [64353.3389433377, 64353.3389433377, 64353.3389433377, 64353.3389433377],
+            "f64_bits": ["0x40ef6c2ad89fb2d4", "0x40ef6c2ad89fb2d4", "0x40ef6c2ad89fb2d4", "0x40ef6c2ad89fb2d4"]
+          },
+          "laser1_act_major_digest": { "i64": [-8895910265485994315] },
+          "laser1_act_major_head": {
+            "f64": [139.28860503986985, 139.28860503986985, 139.28860503986985, 139.28860503986985],
+            "f64_bits": ["0x4061693c40a2f675", "0x4061693c40a2f675", "0x4061693c40a2f675", "0x4061693c40a2f675"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [139.29253886905116, 139.29253886905116, 139.29253886905116, 139.29253886905116],
+            "f64_bits": ["0x4061695c7a796c46", "0x4061695c7a796c46", "0x4061695c7a796c46", "0x4061695c7a796c46"]
+          },
+          "laser1_act_minor_digest": { "i64": [-2076490572458523736] },
+          "laser1_cmd_area_digest": { "i64": [4290641468690284501] },
+          "laser1_cmd_major_digest": { "i64": [8069830001562249093] },
+          "laser1_cmd_major_head": {
+            "f64": [31.54349876957669, 31.54349876957669, 31.54349876957669, 31.54349876957669],
+            "f64_bits": ["0x403f8b22bc40bf85", "0x403f8b22bc40bf85", "0x403f8b22bc40bf85", "0x403f8b22bc40bf85"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [31.54349876957669, 31.54349876957669, 31.54349876957669, 31.54349876957669],
+            "f64_bits": ["0x403f8b22bc40bf85", "0x403f8b22bc40bf85", "0x403f8b22bc40bf85", "0x403f8b22bc40bf85"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [6825944689114583205] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [20.0], "f64_bits": ["0x4034000000000000"] },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_mock_stride_3_laser_off_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "off",
+        "stride": 3
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [4099973446196705323] },
+          "laser0_act_area_head": {
+            "f64": [76660.57175200166, 76660.57175200166, 76660.57175200166, 76660.57175200166],
+            "f64_bits": ["0x40f2b74925e56d49", "0x40f2b74925e56d49", "0x40f2b74925e56d49", "0x40f2b74925e56d49"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [76660.57175200163, 76660.57175200163, 76660.57175200163, 76660.57175200163],
+            "f64_bits": ["0x40f2b74925e56d47", "0x40f2b74925e56d47", "0x40f2b74925e56d47", "0x40f2b74925e56d47"]
+          },
+          "laser0_act_major_digest": { "i64": [2047642061484030586] },
+          "laser0_act_major_head": {
+            "f64": [154.8406984125213, 154.8406984125213, 154.8406984125213, 154.8406984125213],
+            "f64_bits": ["0x40635ae7005b7280", "0x40635ae7005b7280", "0x40635ae7005b7280", "0x40635ae7005b7280"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [154.84069841252128, 154.84069841252128, 154.84069841252128, 154.84069841252128],
+            "f64_bits": ["0x40635ae7005b727f", "0x40635ae7005b727f", "0x40635ae7005b727f", "0x40635ae7005b727f"]
+          },
+          "laser0_act_minor_digest": { "i64": [7962891798018797642] },
+          "laser0_cmd_area_digest": { "i64": [-959725119698133891] },
+          "laser0_cmd_major_digest": { "i64": [-7795034951963728175] },
+          "laser0_cmd_major_head": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [3240821864403016485] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [334] },
+          "laser1_act_area_digest": { "i64": [-6235831806367416854] },
+          "laser1_act_area_head": {
+            "f64": [83579.20592639118, 83579.20592639118, 83579.20592639118, 83579.20592639118],
+            "f64_bits": ["0x40f467b34b7978b8", "0x40f467b34b7978b8", "0x40f467b34b7978b8", "0x40f467b34b7978b8"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [83579.20592639117, 83579.20592639117, 83579.20592639117, 83579.20592639117],
+            "f64_bits": ["0x40f467b34b7978b7", "0x40f467b34b7978b7", "0x40f467b34b7978b7", "0x40f467b34b7978b7"]
+          },
+          "laser1_act_major_digest": { "i64": [-3564903441001631850] },
+          "laser1_act_major_head": {
+            "f64": [161.33596690300806, 161.33596690300806, 161.33596690300806, 161.33596690300806],
+            "f64_bits": ["0x40642ac03da99ea8", "0x40642ac03da99ea8", "0x40642ac03da99ea8", "0x40642ac03da99ea8"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [161.33596690300803, 161.33596690300803, 161.33596690300803, 161.33596690300803],
+            "f64_bits": ["0x40642ac03da99ea7", "0x40642ac03da99ea7", "0x40642ac03da99ea7", "0x40642ac03da99ea7"]
+          },
+          "laser1_act_minor_digest": { "i64": [6902464979791111717] },
+          "laser1_cmd_area_digest": { "i64": [-2782088831531607727] },
+          "laser1_cmd_major_digest": { "i64": [3525703506692922977] },
+          "laser1_cmd_major_head": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [8197946854154706645] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser1_n": { "i64": [334] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_oct15_all_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_oct15.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [1902220341916688702] },
+          "laser0_act_area_head": {
+            "f64": [3916.7474621528218, 3916.6903007296146, 3916.6903007296146, 3916.6903007296146],
+            "f64_bits": ["0x40ae997eb35bfabc", "0x40ae99616f18e433", "0x40ae99616f18e433", "0x40ae99616f18e433"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [3926.6273791657463, 3926.5998725763893, 3926.630244663334, 3926.6027379758802],
+            "f64_bits": ["0x40aead4137d78e25", "0x40aead33227f92b8", "0x40aead42af6db2ff", "0x40aead349a126ced"]
+          },
+          "laser0_act_major_digest": { "i64": [-676275559007194770] },
+          "laser0_act_major_head": {
+            "f64": [34.786069508675205, 34.78581567197588, 34.78581567197588, 34.78581567197588],
+            "f64_bits": ["0x4041649decf81247", "0x404164959ba1e90c", "0x404164959ba1e90c", "0x404164959ba1e90c"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [34.829915457708175, 34.829793463211736, 34.829928166454245, 34.82980617156725],
+            "f64_bits": ["0x40416a3aab72a697", "0x40416a36ac1576e9", "0x40416a3b160e79a1", "0x40416a3716b0733d"]
+          },
+          "laser0_act_minor_digest": { "i64": [-7978989990801581885] },
+          "laser0_cmd_area_digest": { "i64": [-6064679708362295931] },
+          "laser0_cmd_major_digest": { "i64": [1576895109265926277] },
+          "laser0_cmd_major_head": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [-7496395485935710267] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_oct15_stride_7_laser_on_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_oct15.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "on",
+        "stride": 7
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [-4820865367033127719] },
+          "laser0_act_area_head": {
+            "f64": [3886.898824262649, 3887.3469896028323, 3887.763997771825, 3887.7410541642785],
+            "f64_bits": ["0x40ae5dcc32b199dc", "0x40ae5eb1a89f086f", "0x40ae5f872ab74869", "0x40ae5f7b6b739048"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [3926.7983763735338, 3926.583377968141, 3926.664175202743, 3926.6618571360923],
+            "f64_bits": ["0x40aead98c4c9bc74", "0x40aead2ab0845cbf", "0x40aead540ec5ad31", "0x40aead52def04448"]
+          },
+          "laser0_act_major_digest": { "i64": [160001838999433302] },
+          "laser0_act_major_head": {
+            "f64": [34.65326766607489, 34.65526539569824, 34.657124136539046, 34.65702187202035],
+            "f64_bits": ["0x4041539e465ea9b7", "0x404153dfbc8a5cba", "0x4041541ca4c9ec79", "0x404154194aee8ac4"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [34.83067383797652, 34.82972030775657, 34.83007865117315, 34.830068370378555],
+            "f64_bits": ["0x40416a538533e040", "0x40416a344669521d", "0x40416a400469f2c0", "0x40416a3fae2c1c26"]
+          },
+          "laser0_act_minor_digest": { "i64": [2894835807941911588] },
+          "laser0_cmd_area_digest": { "i64": [7622555623786371861] },
+          "laser0_cmd_major_digest": { "i64": [1308673006068478453] },
+          "laser0_cmd_major_head": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [-6411509667789363787] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [2684] },
+          "lasers_present": { "i64": [0] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_a_commanded_z_that_is_missing_has_no_tracking_error",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 8,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.4015000000000001, -0.40099999999999947, -0.40050000000000063, -0.4, -0.3994999999999994,
+              -0.4, -0.4, -0.4
+            ],
+            "f64_bits": [
+              "0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd9a1cac083127a", "0xbfd999999999999a",
+              "0xbfd9916872b020ba", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4],
+            "f64_bits": [
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_a_difference_that_overflows_has_no_tracking_error",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [1e+308, 1.0, 2.0],
+        "actual_z_bits": ["0x7fe1ccf385ebc8a0", "0x3ff0000000000000", "0x4000000000000000"],
+        "commanded_z": [-1e+308, 1.0, 1.0],
+        "commanded_z_bits": ["0xffe1ccf385ebc8a0", "0x3ff0000000000000", "0x3ff0000000000000"],
+        "focus_shift_mm": 0.0,
+        "focus_shift_mm_bits": "0x0000000000000000",
+        "n": 3,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [0.0, 0.0, 1.0],
+            "f64_bits": ["0x0000000000000000", "0x0000000000000000", "0x3ff0000000000000"]
+          },
+          "commanded": {
+            "f64": [-0.0, -0.0, -0.0],
+            "f64_bits": ["0x8000000000000000", "0x8000000000000000", "0x8000000000000000"]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_a_negative_focus_shift_gives_a_positive_commanded_defocus",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [],
+        "actual_z_bits": [],
+        "commanded_z": [],
+        "commanded_z_bits": [],
+        "focus_shift_mm": -0.75,
+        "focus_shift_mm_bits": "0xbfe8000000000000",
+        "n": 3,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [0.75, 0.75, 0.75],
+            "f64_bits": ["0x3fe8000000000000", "0x3fe8000000000000", "0x3fe8000000000000"]
+          },
+          "commanded": {
+            "f64": [0.75, 0.75, 0.75],
+            "f64_bits": ["0x3fe8000000000000", "0x3fe8000000000000", "0x3fe8000000000000"]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_a_pair_that_is_not_finite_has_no_tracking_error",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, "NaN", -9.497, -9.4955, -9.494, "-inf", -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0x7ff8000000000000", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xfff0000000000000", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, "inf", -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0x7ff0000000000000", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 8,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.4015000000000001, -0.40099999999999947, -0.4, -0.4, -0.4, -0.3990000000000006, -0.4,
+              -0.39799999999999935
+            ],
+            "f64_bits": [
+              "0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd989374bc6a7fa", "0xbfd999999999999a", "0xbfd978d4fdf3b63a"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4],
+            "f64_bits": [
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_actual_is_the_tracking_error_minus_the_focus_shift",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 8,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.4015000000000001, -0.40099999999999947, -0.40050000000000063, -0.4, -0.3994999999999994,
+              -0.3990000000000006, -0.39849999999999997, -0.39799999999999935
+            ],
+            "f64_bits": [
+              "0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd9a1cac083127a", "0xbfd999999999999a",
+              "0xbfd9916872b020ba", "0xbfd989374bc6a7fa", "0xbfd9810624dd2f1a", "0xbfd978d4fdf3b63a"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4],
+            "f64_bits": [
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_an_actual_z_that_is_missing_has_no_tracking_error",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 8,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.4015000000000001, -0.40099999999999947, -0.40050000000000063, -0.4, -0.3994999999999994,
+              -0.4, -0.4, -0.4
+            ],
+            "f64_bits": [
+              "0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd9a1cac083127a", "0xbfd999999999999a",
+              "0xbfd9916872b020ba", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4],
+            "f64_bits": [
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_commanded_is_minus_the_focus_shift_at_every_sample",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [],
+        "actual_z_bits": [],
+        "commanded_z": [],
+        "commanded_z_bits": [],
+        "focus_shift_mm": 1.5,
+        "focus_shift_mm_bits": "0x3ff8000000000000",
+        "n": 5,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [-1.5, -1.5, -1.5, -1.5, -1.5],
+            "f64_bits": [
+              "0xbff8000000000000", "0xbff8000000000000", "0xbff8000000000000", "0xbff8000000000000",
+              "0xbff8000000000000"
+            ]
+          },
+          "commanded": {
+            "f64": [-1.5, -1.5, -1.5, -1.5, -1.5],
+            "f64_bits": [
+              "0xbff8000000000000", "0xbff8000000000000", "0xbff8000000000000", "0xbff8000000000000",
+              "0xbff8000000000000"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_the_count_decides_the_length_when_the_slices_are_longer",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 3,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [-0.4015000000000001, -0.40099999999999947, -0.40050000000000063],
+            "f64_bits": ["0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd9a1cac083127a"]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4],
+            "f64_bits": ["0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a"]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_the_count_decides_the_length_when_the_slices_are_shorter",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 10,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.4015000000000001, -0.40099999999999947, -0.40050000000000063, -0.4, -0.3994999999999994,
+              -0.3990000000000006, -0.39849999999999997, -0.39799999999999935, -0.4, -0.4
+            ],
+            "f64_bits": [
+              "0xbfd9b22d0e56041a", "0xbfd9a9fbe76c8b3a", "0xbfd9a1cac083127a", "0xbfd999999999999a",
+              "0xbfd9916872b020ba", "0xbfd989374bc6a7fa", "0xbfd9810624dd2f1a", "0xbfd978d4fdf3b63a",
+              "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4, -0.4],
+            "f64_bits": [
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a", "0xbfd999999999999a",
+              "0xbfd999999999999a", "0xbfd999999999999a"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_with_no_focus_shift_actual_is_the_tracking_error",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.0,
+        "focus_shift_mm_bits": "0x0000000000000000",
+        "n": 8,
+        "operation": "defocus"
+      },
+      "expected": {
+        "columns": {
+          "actual": {
+            "f64": [
+              -0.0015000000000000568, -0.0009999999999994458, -0.0005000000000006111, 0.0,
+              0.0005000000000006111, 0.0009999999999994458, 0.0015000000000000568, 0.002000000000000668
+            ],
+            "f64_bits": [
+              "0xbf589374bc6a8000", "0xbf50624dd2f1a000", "0xbf40624dd2f1c000", "0x0000000000000000",
+              "0x3f40624dd2f1c000", "0x3f50624dd2f1a000", "0x3f589374bc6a8000", "0x3f60624dd2f1b000"
+            ]
+          },
+          "commanded": {
+            "f64": [-0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0, -0.0],
+            "f64_bits": [
+              "0x8000000000000000", "0x8000000000000000", "0x8000000000000000", "0x8000000000000000",
+              "0x8000000000000000", "0x8000000000000000", "0x8000000000000000", "0x8000000000000000"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "case": "pure_defocus_zero_samples_is_empty",
+      "kind": "pure",
+      "inputs": {
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "focus_shift_mm": 0.4,
+        "focus_shift_mm_bits": "0x3fd999999999999a",
+        "n": 0,
+        "operation": "defocus"
+      },
+      "expected": { "columns": { "actual": { "f64": [], "f64_bits": [] }, "commanded": { "f64": [], "f64_bits": [] } } }
+    },
+    {
+      "case": "pure_kernel_a_focus_shift_grows_both_spots_by_the_same_defocus",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "actual_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "beam": {
+          "focus_shift_mm": 1.0,
+          "focus_shift_mm_bits": "0x3ff0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3916.5188414752756, 3916.5188414752756, 3916.5188414752756, 3916.5188414752756,
+              3916.5188414752756, 3916.5188414752756, 3916.5188414752756, 3916.5188414752756
+            ],
+            "f64_bits": [
+              "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c",
+              "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174,
+              34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174
+            ],
+            "f64_bits": [
+              "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9",
+              "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634,
+              35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634
+            ],
+            "f64_bits": [
+              "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0",
+              "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3916.5188414752756, 3916.5188414752756, 3916.5188414752756, 3916.5188414752756,
+              3916.5188414752756, 3916.5188414752756, 3916.5188414752756, 3916.5188414752756
+            ],
+            "f64_bits": [
+              "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c",
+              "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [
+              34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174,
+              34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174
+            ],
+            "f64_bits": [
+              "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9",
+              "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [
+              35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634,
+              35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634
+            ],
+            "f64_bits": [
+              "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0",
+              "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_a_large_defocus_grows_the_spot_almost_linearly",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 3,
+        "actual_z": [0.0, 0.0, 0.0],
+        "actual_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "beam": {
+          "focus_shift_mm": 100.0,
+          "focus_shift_mm_bits": "0x4059000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 3,
+        "commanded_z": [0.0, 0.0, 0.0],
+        "commanded_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [3920043.708432604, 3920043.708432604, 3920043.708432604],
+            "f64_bits": ["0x414de855daadeb69", "0x414de855daadeb69", "0x414de855daadeb69"]
+          },
+          "actual_major_radii_um": {
+            "f64": [1100.4948886750908, 1100.4948886750908, 1100.4948886750908],
+            "f64_bits": ["0x409131fac418cab4", "0x409131fac418cab4", "0x409131fac418cab4"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [1133.8432186349419, 1133.8432186349419, 1133.8432186349419],
+            "f64_bits": ["0x4091b75f74b4b1d0", "0x4091b75f74b4b1d0", "0x4091b75f74b4b1d0"]
+          },
+          "commanded_areas_um2": {
+            "f64": [3920043.708432604, 3920043.708432604, 3920043.708432604],
+            "f64_bits": ["0x414de855daadeb69", "0x414de855daadeb69", "0x414de855daadeb69"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [1100.4948886750908, 1100.4948886750908, 1100.4948886750908],
+            "f64_bits": ["0x409131fac418cab4", "0x409131fac418cab4", "0x409131fac418cab4"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [1133.8432186349419, 1133.8432186349419, 1133.8432186349419],
+            "f64_bits": ["0x4091b75f74b4b1d0", "0x4091b75f74b4b1d0", "0x4091b75f74b4b1d0"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_a_negative_rayleigh_length_is_used_as_it_is_and_the_defocus_is_squared",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497],
+        "actual_z_bits": ["0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958"],
+        "beam": {
+          "focus_shift_mm": 1.0,
+          "focus_shift_mm_bits": "0x3ff0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": -3.0,
+          "rayleigh_major_mm_bits": "0xc008000000000000",
+          "rayleigh_minor_mm": -3.0,
+          "rayleigh_minor_mm_bits": "0xc008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497],
+        "commanded_z_bits": ["0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [3917.6946783444564, 3917.302536895453, 3916.9105912723944, 3916.5188414752756],
+            "f64_bits": ["0x40ae9b63ace1455c", "0x40ae9a9ae61daf9c", "0x40ae99d23904edea", "0x40ae9909a597003c"]
+          },
+          "actual_major_radii_um": {
+            "f64": [34.790275541449795, 34.78853433244924, 34.78679390587756, 34.785054261852174],
+            "f64_bits": ["0x40416527bfbaad83", "0x404164eeb168d243", "0x404164b5a9a737d6", "0x4041647ca8761ec9"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [35.84452631543312, 35.84273234252346, 35.84093917575264, 35.839146815241634],
+            "f64_bits": ["0x4041ec197034b2c5", "0x4041ebdea74535ba", "0x4041eba3e518e432", "0x4041eb6929b000b0"]
+          },
+          "commanded_areas_um2": {
+            "f64": [3916.5188414752756, 3916.5188414752756, 3916.5188414752756, 3916.5188414752756],
+            "f64_bits": ["0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c", "0x40ae9909a597003c"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [34.785054261852174, 34.785054261852174, 34.785054261852174, 34.785054261852174],
+            "f64_bits": ["0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9", "0x4041647ca8761ec9"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634],
+            "f64_bits": ["0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_a_rayleigh_length_below_the_machine_epsilon_keeps_the_waist_radius",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497],
+        "actual_z_bits": ["0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958"],
+        "beam": {
+          "focus_shift_mm": 1.0,
+          "focus_shift_mm_bits": "0x3ff0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 1e-17,
+          "rayleigh_major_mm_bits": "0x3c670ef54646d497",
+          "rayleigh_minor_mm": -1e-17,
+          "rayleigh_minor_mm_bits": "0xbc670ef54646d497",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497],
+        "commanded_z_bits": ["0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748],
+            "f64_bits": ["0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"]
+          },
+          "actual_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0],
+            "f64_bits": ["0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0],
+            "f64_bits": ["0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"]
+          },
+          "commanded_areas_um2": {
+            "f64": [3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748],
+            "f64_bits": ["0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0],
+            "f64_bits": ["0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0],
+            "f64_bits": ["0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_a_z_pair_that_is_not_finite_gives_a_finite_spot",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5015, -9.5, "NaN", -9.497, -9.4955, -9.494, "-inf", -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0x7ff8000000000000", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xfff0000000000000", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, "inf", -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0x7ff0000000000000", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3524.8678385444873, 3524.867348979633, 3524.866957327748, 3524.866957327748, 3524.866957327748,
+              3524.867348979633, 3524.866957327748, 3524.868523935285
+            ],
+            "f64_bits": [
+              "0x40ab89bc55556d90", "0x40ab89bc152a5b7c", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369", "0x40ab89bc152a5b7c", "0x40ab89bbe1d4b369", "0x40ab89bcaf2b53af"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.00000412499974, 33.000001833333286, 33.0, 33.0, 33.0, 33.000001833333286, 33.0,
+              33.00000733333252
+            ],
+            "f64_bits": [
+              "0x40408000229a5e97", "0x404080000f610da2", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000", "0x404080000f610da2", "0x4040800000000000", "0x404080003d843630"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.00000424999973, 34.00000188888884, 34.0, 34.0, 34.0, 34.00000188888884, 34.0,
+              34.00000755555472
+            ],
+            "f64_bits": [
+              "0x4041000023a6ce10", "0x404100000fd85b9f", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000", "0x404100000fd85b9f", "0x4041000000000000", "0x404100003f616e22"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748,
+              3524.866957327748, 3524.866957327748, 3524.866957327748
+            ],
+            "f64_bits": [
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0],
+            "f64_bits": [
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0],
+            "f64_bits": [
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_a_zero_rayleigh_length_keeps_the_waist_radius",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497],
+        "actual_z_bits": ["0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958"],
+        "beam": {
+          "focus_shift_mm": 1.0,
+          "focus_shift_mm_bits": "0x3ff0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 0.0,
+          "rayleigh_major_mm_bits": "0x0000000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497],
+        "commanded_z_bits": ["0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [3716.0937179510333, 3715.9077321912805, 3715.7218300060026, 3715.536011407742],
+            "f64_bits": ["0x40ad082ffbcc9d79", "0x40ad07d0c2461627", "0x40ad077193b3da1b", "0x40ad071270165512"]
+          },
+          "actual_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0],
+            "f64_bits": ["0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [35.84452631543312, 35.84273234252346, 35.84093917575264, 35.839146815241634],
+            "f64_bits": ["0x4041ec197034b2c5", "0x4041ebdea74535ba", "0x4041eba3e518e432", "0x4041eb6929b000b0"]
+          },
+          "commanded_areas_um2": {
+            "f64": [3715.536011407742, 3715.536011407742, 3715.536011407742, 3715.536011407742],
+            "f64_bits": ["0x40ad071270165512", "0x40ad071270165512", "0x40ad071270165512", "0x40ad071270165512"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0],
+            "f64_bits": ["0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [35.839146815241634, 35.839146815241634, 35.839146815241634, 35.839146815241634],
+            "f64_bits": ["0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0", "0x4041eb6929b000b0"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_an_elliptical_beam_has_a_rayleigh_length_for_each_axis",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497],
+        "actual_z_bits": ["0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958"],
+        "beam": {
+          "focus_shift_mm": 1.0,
+          "focus_shift_mm_bits": "0x3ff0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 2.0,
+          "rayleigh_major_mm_bits": "0x4000000000000000",
+          "rayleigh_minor_mm": 5.0,
+          "rayleigh_minor_mm_bits": "0x4014000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497],
+        "commanded_z_bits": ["0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [4020.405195003418, 4019.9254771747082, 4019.445972659944, 4018.9666814890707],
+            "f64_bits": ["0x40af68cf75b8305e", "0x40af67d9d824ed22", "0x40af66e456874abd", "0x40af65eef0e04a6a"]
+          },
+          "actual_major_radii_um": {
+            "f64": [36.906196804364704, 36.902503604091685, 36.89881187873805, 36.89512162874653],
+            "f64_bits": ["0x404273fe41c33e39", "0x404273853cf40c47", "0x4042730c448437d7", "0x404272935874b44d"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [34.67533451951113, 34.67466692327412, 34.67399964757455, 34.67333269243094],
+            "f64_bits": ["0x404156715c8d9481", "0x4041565b7c5993e0", "0x404156459ed5ec92", "0x4041562fc402a8c5"]
+          },
+          "commanded_areas_um2": {
+            "f64": [4018.9666814890707, 4018.9666814890707, 4018.9666814890707, 4018.9666814890707],
+            "f64_bits": ["0x40af65eef0e04a6a", "0x40af65eef0e04a6a", "0x40af65eef0e04a6a", "0x40af65eef0e04a6a"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [36.89512162874653, 36.89512162874653, 36.89512162874653, 36.89512162874653],
+            "f64_bits": ["0x404272935874b44d", "0x404272935874b44d", "0x404272935874b44d", "0x404272935874b44d"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.67333269243094, 34.67333269243094, 34.67333269243094, 34.67333269243094],
+            "f64_bits": ["0x4041562fc402a8c5", "0x4041562fc402a8c5", "0x4041562fc402a8c5", "0x4041562fc402a8c5"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_in_focus_gives_the_waist_radii_and_the_ellipse_area",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "actual_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748,
+              3524.866957327748, 3524.866957327748, 3524.866957327748
+            ],
+            "f64_bits": [
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0],
+            "f64_bits": [
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0],
+            "f64_bits": [
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748,
+              3524.866957327748, 3524.866957327748, 3524.866957327748
+            ],
+            "f64_bits": [
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0],
+            "f64_bits": [
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0],
+            "f64_bits": [
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_non_finite_ends_of_a_layer_give_a_finite_spot",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": ["NaN", -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0x7ff8000000000000", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.2,
+          "focus_shift_mm_bits": "0x3fc999999999999a",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, "NaN"],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0x7ff8000000000000"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3540.5330326936496, 3540.690085099192, 3540.6114609834494, 3540.5330326936496,
+              3540.454800229791, 3540.376763591875, 3540.2989227799007, 3540.5330326936496
+            ],
+            "f64_bits": [
+              "0x40aba910e9a945d9", "0x40aba96152d588f9", "0x40aba9391169fd64", "0x40aba910e9a945d9",
+              "0x40aba8e8db936255", "0x40aba8c0e72852da", "0x40aba8990c681768", "0x40aba910e9a945d9"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.0732520324204, 33.07398556267448, 33.073618342267906, 33.0732520324204, 33.07288663316222,
+              33.072522144523546, 33.07215856653448, 33.0732520324204
+            ],
+            "f64_bits": [
+              "0x404089605295ce3a", "0x404089785be20812", "0x4040896c536a3694", "0x404089605295ce3a",
+              "0x404089545964dfa7", "0x4040894867d77b72", "0x4040893c7dedb228", "0x404089605295ce3a"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.0754717909786, 34.07622754942219, 34.075849201124505, 34.0754717909786, 34.07509531901562,
+              34.07471978526668, 34.0743451897628, 34.0754717909786
+            ],
+            "f64_bits": [
+              "0x404109a90f450306", "0x404109c1d307e949", "0x404109b56d3720f5", "0x404109a90f450306",
+              "0x4041099cb931a09c", "0x404109906afd0ad2", "0x4041098424a752b5", "0x404109a90f450306"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3540.5330326936496, 3540.5330326936496, 3540.5330326936496, 3540.5330326936496,
+              3540.5330326936496, 3540.5330326936496, 3540.5330326936496, 3540.5330326936496
+            ],
+            "f64_bits": [
+              "0x40aba910e9a945d9", "0x40aba910e9a945d9", "0x40aba910e9a945d9", "0x40aba910e9a945d9",
+              "0x40aba910e9a945d9", "0x40aba910e9a945d9", "0x40aba910e9a945d9", "0x40aba910e9a945d9"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [
+              33.0732520324204, 33.0732520324204, 33.0732520324204, 33.0732520324204, 33.0732520324204,
+              33.0732520324204, 33.0732520324204, 33.0732520324204
+            ],
+            "f64_bits": [
+              "0x404089605295ce3a", "0x404089605295ce3a", "0x404089605295ce3a", "0x404089605295ce3a",
+              "0x404089605295ce3a", "0x404089605295ce3a", "0x404089605295ce3a", "0x404089605295ce3a"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [
+              34.0754717909786, 34.0754717909786, 34.0754717909786, 34.0754717909786, 34.0754717909786,
+              34.0754717909786, 34.0754717909786, 34.0754717909786
+            ],
+            "f64_bits": [
+              "0x404109a90f450306", "0x404109a90f450306", "0x404109a90f450306", "0x404109a90f450306",
+              "0x404109a90f450306", "0x404109a90f450306", "0x404109a90f450306", "0x404109a90f450306"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_commanded_and_the_actual_counts_may_differ",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 5,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3524.8678385444873, 3524.867348979633, 3524.8670552407198, 3524.866957327748,
+              3524.8670552407198, 3524.867348979633, 3524.8678385444873, 3524.868523935285
+            ],
+            "f64_bits": [
+              "0x40ab89bc55556d90", "0x40ab89bc152a5b7c", "0x40ab89bbeeaa1d6f", "0x40ab89bbe1d4b369",
+              "0x40ab89bbeeaa1d6f", "0x40ab89bc152a5b7c", "0x40ab89bc55556d90", "0x40ab89bcaf2b53af"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.00000412499974, 33.000001833333286, 33.00000045833333, 33.0, 33.00000045833333,
+              33.000001833333286, 33.00000412499974, 33.00000733333252
+            ],
+            "f64_bits": [
+              "0x40408000229a5e97", "0x404080000f610da2", "0x4040800003d8436a", "0x4040800000000000",
+              "0x4040800003d8436a", "0x404080000f610da2", "0x40408000229a5e97", "0x404080003d843630"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.00000424999973, 34.00000188888884, 34.000000472222226, 34.0, 34.000000472222226,
+              34.00000188888884, 34.00000424999973, 34.00000755555472
+            ],
+            "f64_bits": [
+              "0x4041000023a6ce10", "0x404100000fd85b9f", "0x4041000003f616ea", "0x4041000000000000",
+              "0x4041000003f616ea", "0x404100000fd85b9f", "0x4041000023a6ce10", "0x404100003f616e22"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748],
+            "f64_bits": [
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0, 33.0],
+            "f64_bits": [
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0, 34.0],
+            "f64_bits": [
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_commanded_z_values_are_not_read_by_the_commanded_spot",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.5,
+          "focus_shift_mm_bits": "0x3fe0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": ["NaN", "NaN", "NaN", "NaN", "NaN", "NaN", "NaN", "NaN"],
+        "commanded_z_bits": [
+          "0x7ff8000000000000", "0x7ff8000000000000", "0x7ff8000000000000", "0x7ff8000000000000",
+          "0x7ff8000000000000", "0x7ff8000000000000", "0x7ff8000000000000", "0x7ff8000000000000"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629,
+              3622.779928364629, 3622.779928364629, 3622.779928364629
+            ],
+            "f64_bits": [
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c",
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205,
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205
+            ],
+            "f64_bits": [
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767",
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991,
+              34.46898767168991, 34.46898767168991, 34.46898767168991
+            ],
+            "f64_bits": [
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153",
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629,
+              3622.779928364629, 3622.779928364629, 3622.779928364629
+            ],
+            "f64_bits": [
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c",
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205,
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205
+            ],
+            "f64_bits": [
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767",
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [
+              34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991,
+              34.46898767168991, 34.46898767168991, 34.46898767168991
+            ],
+            "f64_bits": [
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153",
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_counts_decide_the_length_not_the_slices",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 10,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.3,
+          "focus_shift_mm_bits": "0x3fd3333333333333",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 3,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3560.4689948134983, 3560.351009683397, 3560.2332203792403, 3560.115626901025,
+              3559.998229248752, 3559.8810274224206, 3559.764021422033, 3559.6472112475844,
+              3560.115626901025, 3560.115626901025
+            ],
+            "f64_bits": [
+              "0x40abd0f0201693f0", "0x40abd0b3b78a8d8a", "0x40abd07768a95b32", "0x40abd03b3372fce1",
+              "0x40abcfff17e7729a", "0x40abcfc31606bc5a", "0x40abcf872dd0da26", "0x40abcf4b5f45cbf5",
+              "0x40abd03b3372fce1", "0x40abd03b3372fce1"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.16623542475088, 33.16568589672163, 33.165137271689375, 33.16458954969894,
+              33.164042730795046, 33.163496815022384, 33.16295180242555, 33.16240769304906,
+              33.16458954969894, 33.16458954969894
+            ],
+            "f64_bits": [
+              "0x4040954733d05ef0", "0x404095353209e9f6", "0x4040952337d6a0d6", "0x4040951145369c33",
+              "0x404094ff5a29f4a4", "0x404094ed76b0c2ba", "0x404094db9acb1efa", "0x404094c9c67921dc",
+              "0x4040951145369c33", "0x4040951145369c33"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.171272861864544, 34.17070668147076, 34.17014143143754, 34.16957711181102,
+              34.169013722637324, 34.16845126396246, 34.16788973583239, 34.16732913829298, 34.16957711181102,
+              34.16957711181102
+            ],
+            "f64_bits": [
+              "0x404115ec44e63345", "0x404115d9b76f1014", "0x404115c731c5dc04", "0x404115b4b3eab072",
+              "0x404115a23ddda6b9", "0x4041158fcf9ed825", "0x4041157d692e5dfa", "0x4041156b0a8c516f",
+              "0x404115b4b3eab072", "0x404115b4b3eab072"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [3560.115626901025, 3560.115626901025, 3560.115626901025],
+            "f64_bits": ["0x40abd03b3372fce1", "0x40abd03b3372fce1", "0x40abd03b3372fce1"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.16458954969894, 33.16458954969894, 33.16458954969894],
+            "f64_bits": ["0x4040951145369c33", "0x4040951145369c33", "0x4040951145369c33"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.16957711181102, 34.16957711181102, 34.16957711181102],
+            "f64_bits": ["0x404115b4b3eab072", "0x404115b4b3eab072", "0x404115b4b3eab072"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_major_axis_angle_is_carried_through_as_it_is",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 3,
+        "actual_z": [-9.5015, -9.5, -9.4985],
+        "actual_z_bits": ["0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac"],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 37.5,
+          "major_axis_angle_deg_bits": "0x4042c00000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 3,
+        "commanded_z": [-9.5, -9.499, -9.498],
+        "commanded_z_bits": ["0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [3524.8678385444873, 3524.867348979633, 3524.8670552407198],
+            "f64_bits": ["0x40ab89bc55556d90", "0x40ab89bc152a5b7c", "0x40ab89bbeeaa1d6f"]
+          },
+          "actual_major_radii_um": {
+            "f64": [33.00000412499974, 33.000001833333286, 33.00000045833333],
+            "f64_bits": ["0x40408000229a5e97", "0x404080000f610da2", "0x4040800003d8436a"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [34.00000424999973, 34.00000188888884, 34.000000472222226],
+            "f64_bits": ["0x4041000023a6ce10", "0x404100000fd85b9f", "0x4041000003f616ea"]
+          },
+          "commanded_areas_um2": {
+            "f64": [3524.866957327748, 3524.866957327748, 3524.866957327748],
+            "f64_bits": ["0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0],
+            "f64_bits": ["0x4040800000000000", "0x4040800000000000", "0x4040800000000000"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0],
+            "f64_bits": ["0x4041000000000000", "0x4041000000000000", "0x4041000000000000"]
+          },
+          "major_axis_angle_deg": { "f64": [37.5], "f64_bits": ["0x4042c00000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_sign_of_the_defocus_is_invisible_negative_shift",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [0.0, 0.0, 0.0, 0.0],
+        "actual_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "beam": {
+          "focus_shift_mm": -1.25,
+          "focus_shift_mm_bits": "0xbff4000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [0.0, 0.0, 0.0, 0.0],
+        "commanded_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [4136.82302630826, 4136.82302630826, 4136.82302630826, 4136.82302630826],
+            "f64_bits": ["0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9"]
+          },
+          "actual_major_radii_um": {
+            "f64": [35.75, 35.75, 35.75, 35.75],
+            "f64_bits": ["0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [36.83333333333333, 36.83333333333333, 36.83333333333333, 36.83333333333333],
+            "f64_bits": ["0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa"]
+          },
+          "commanded_areas_um2": {
+            "f64": [4136.82302630826, 4136.82302630826, 4136.82302630826, 4136.82302630826],
+            "f64_bits": ["0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [35.75, 35.75, 35.75, 35.75],
+            "f64_bits": ["0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [36.83333333333333, 36.83333333333333, 36.83333333333333, 36.83333333333333],
+            "f64_bits": ["0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_sign_of_the_defocus_is_invisible_positive_shift",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 4,
+        "actual_z": [0.0, 0.0, 0.0, 0.0],
+        "actual_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "beam": {
+          "focus_shift_mm": 1.25,
+          "focus_shift_mm_bits": "0x3ff4000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 4,
+        "commanded_z": [0.0, 0.0, 0.0, 0.0],
+        "commanded_z_bits": ["0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000"],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [4136.82302630826, 4136.82302630826, 4136.82302630826, 4136.82302630826],
+            "f64_bits": ["0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9"]
+          },
+          "actual_major_radii_um": {
+            "f64": [35.75, 35.75, 35.75, 35.75],
+            "f64_bits": ["0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000"]
+          },
+          "actual_minor_radii_um": {
+            "f64": [36.83333333333333, 36.83333333333333, 36.83333333333333, 36.83333333333333],
+            "f64_bits": ["0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa"]
+          },
+          "commanded_areas_um2": {
+            "f64": [4136.82302630826, 4136.82302630826, 4136.82302630826, 4136.82302630826],
+            "f64_bits": ["0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9", "0x40b028d2b1da25b9"]
+          },
+          "commanded_major_radii_um": {
+            "f64": [35.75, 35.75, 35.75, 35.75],
+            "f64_bits": ["0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000", "0x4041e00000000000"]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [36.83333333333333, 36.83333333333333, 36.83333333333333, 36.83333333333333],
+            "f64_bits": ["0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa", "0x40426aaaaaaaaaaa"]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_tracking_error_and_the_focus_shift_add",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.5,
+          "focus_shift_mm_bits": "0x3fe0000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3623.3682874075903, 3623.1719719006605, 3622.9758522196753, 3622.779928364629,
+              3622.5842003355274, 3622.3886681323665, 3622.193331755148, 3621.998191203871
+            ],
+            "f64_bits": [
+              "0x40ac4ebc902ac642", "0x40ac4e580cb37256", "0x40ac4df3a2e6f278", "0x40ac4d8f52c5469c",
+              "0x40ac4d2b1c4e6ece", "0x40ac4cc6ff826b06", "0x40ac4c62fc613b47", "0x40ac4bff12eadf90"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.45791045851489, 33.4570040649189, 33.45609855093687, 33.455193916640205, 33.454290162100285,
+              33.4533872873884, 33.452485292575794, 33.45158417773364
+            ],
+            "f64_bits": [
+              "0x4040ba9ccf55e8ae", "0x4040ba7f1bf47b9d", "0x4040ba616ff40370", "0x4040ba43cb54a767",
+              "0x4040ba262e168ec1", "0x4040ba089839e0af", "0x4040b9eb09bec45b", "0x4040b9cd82a560e7"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.47178653301534, 34.47085267294675, 34.46991971914708, 34.46898767168991, 34.46805653064878,
+              34.46712629609714, 34.4661969681084, 34.46526854675588
+            ],
+            "f64_bits": [
+              "0x40413c638048ff3f", "0x40413c44e67fc52e", "0x40413c265450bdb9", "0x40413c07c9bc1153",
+              "0x40413be946c1e86a", "0x40413bcacb626b5f", "0x40413bac579dc28d", "0x40413b8deb741644"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629, 3622.779928364629,
+              3622.779928364629, 3622.779928364629, 3622.779928364629
+            ],
+            "f64_bits": [
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c",
+              "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c", "0x40ac4d8f52c5469c"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205,
+              33.455193916640205, 33.455193916640205, 33.455193916640205, 33.455193916640205
+            ],
+            "f64_bits": [
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767",
+              "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767", "0x4040ba43cb54a767"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [
+              34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991, 34.46898767168991,
+              34.46898767168991, 34.46898767168991, 34.46898767168991
+            ],
+            "f64_bits": [
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153",
+              "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153", "0x40413c07c9bc1153"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_the_tracking_error_changes_the_actual_spot_only",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 8,
+        "actual_z": [-9.5015, -9.5, -9.4985, -9.497, -9.4955, -9.494, -9.4925, -9.491],
+        "actual_z_bits": [
+          "0xc02300c49ba5e354", "0xc023000000000000", "0xc022ff3b645a1cac", "0xc022fe76c8b43958",
+          "0xc022fdb22d0e5604", "0xc022fced916872b0", "0xc022fc28f5c28f5c", "0xc022fb645a1cac08"
+        ],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 8,
+        "commanded_z": [-9.5, -9.499, -9.498, -9.497, -9.496, -9.495, -9.494, -9.493],
+        "commanded_z_bits": [
+          "0xc023000000000000", "0xc022ff7ced916873", "0xc022fef9db22d0e5", "0xc022fe76c8b43958",
+          "0xc022fdf3b645a1cb", "0xc022fd70a3d70a3d", "0xc022fced916872b0", "0xc022fc6a7ef9db23"
+        ],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": {
+            "f64": [
+              3524.8678385444873, 3524.867348979633, 3524.8670552407198, 3524.866957327748,
+              3524.8670552407198, 3524.867348979633, 3524.8678385444873, 3524.868523935285
+            ],
+            "f64_bits": [
+              "0x40ab89bc55556d90", "0x40ab89bc152a5b7c", "0x40ab89bbeeaa1d6f", "0x40ab89bbe1d4b369",
+              "0x40ab89bbeeaa1d6f", "0x40ab89bc152a5b7c", "0x40ab89bc55556d90", "0x40ab89bcaf2b53af"
+            ]
+          },
+          "actual_major_radii_um": {
+            "f64": [
+              33.00000412499974, 33.000001833333286, 33.00000045833333, 33.0, 33.00000045833333,
+              33.000001833333286, 33.00000412499974, 33.00000733333252
+            ],
+            "f64_bits": [
+              "0x40408000229a5e97", "0x404080000f610da2", "0x4040800003d8436a", "0x4040800000000000",
+              "0x4040800003d8436a", "0x404080000f610da2", "0x40408000229a5e97", "0x404080003d843630"
+            ]
+          },
+          "actual_minor_radii_um": {
+            "f64": [
+              34.00000424999973, 34.00000188888884, 34.000000472222226, 34.0, 34.000000472222226,
+              34.00000188888884, 34.00000424999973, 34.00000755555472
+            ],
+            "f64_bits": [
+              "0x4041000023a6ce10", "0x404100000fd85b9f", "0x4041000003f616ea", "0x4041000000000000",
+              "0x4041000003f616ea", "0x404100000fd85b9f", "0x4041000023a6ce10", "0x404100003f616e22"
+            ]
+          },
+          "commanded_areas_um2": {
+            "f64": [
+              3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748, 3524.866957327748,
+              3524.866957327748, 3524.866957327748, 3524.866957327748
+            ],
+            "f64_bits": [
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369",
+              "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369", "0x40ab89bbe1d4b369"
+            ]
+          },
+          "commanded_major_radii_um": {
+            "f64": [33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0, 33.0],
+            "f64_bits": [
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000",
+              "0x4040800000000000", "0x4040800000000000", "0x4040800000000000", "0x4040800000000000"
+            ]
+          },
+          "commanded_minor_radii_um": {
+            "f64": [34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0, 34.0],
+            "f64_bits": [
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000",
+              "0x4041000000000000", "0x4041000000000000", "0x4041000000000000", "0x4041000000000000"
+            ]
+          },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    },
+    {
+      "case": "pure_kernel_zero_samples_is_empty",
+      "kind": "pure",
+      "inputs": {
+        "actual_samples": 0,
+        "actual_z": [],
+        "actual_z_bits": [],
+        "beam": {
+          "focus_shift_mm": 0.0,
+          "focus_shift_mm_bits": "0x0000000000000000",
+          "major_axis_angle_deg": 0.0,
+          "major_axis_angle_deg_bits": "0x0000000000000000",
+          "rayleigh_major_mm": 3.0,
+          "rayleigh_major_mm_bits": "0x4008000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "waist_radius_major_um": 33.0,
+          "waist_radius_major_um_bits": "0x4040800000000000",
+          "waist_radius_minor_um": 34.0,
+          "waist_radius_minor_um_bits": "0x4041000000000000"
+        },
+        "commanded_samples": 0,
+        "commanded_z": [],
+        "commanded_z_bits": [],
+        "operation": "kernel"
+      },
+      "expected": {
+        "columns": {
+          "actual_areas_um2": { "f64": [], "f64_bits": [] },
+          "actual_major_radii_um": { "f64": [], "f64_bits": [] },
+          "actual_minor_radii_um": { "f64": [], "f64_bits": [] },
+          "commanded_areas_um2": { "f64": [], "f64_bits": [] },
+          "commanded_major_radii_um": { "f64": [], "f64_bits": [] },
+          "commanded_minor_radii_um": { "f64": [], "f64_bits": [] },
+          "major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] }
+        }
+      }
+    }
+  ]
+}
