@@ -1,0 +1,1307 @@
+{
+  "chunk": "z_conversion",
+  "produced_by": { "date": "2026-11-16", "vision_commit": "ba5a040da5c3a7d5fe8f3a2e5bfd2f33d39176ab" },
+  "cases": [
+    {
+      "case": "file_special_layers_last_layer_default",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 6,
+        "miniature": "special_layers_v17.h5",
+        "override": {},
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-4438657492952421150] },
+          "laser0_act_z_head": {
+            "f64": [-6.637998712538445, -6.637998712538445, -6.637925756383663, -6.637925756383663],
+            "f64_bits": ["0xc01a8d4f88d4f88d", "0xc01a8d4f88d4f88d", "0xc01a8d3c68d3c68d", "0xc01a8d3c68d3c68d"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-5.982049924898076, -5.981904012588513, -5.981976968743295, -5.982195837207639],
+            "f64_bits": ["0xc017ed9e7ed9e7ee", "0xc017ed783ed783ed", "0xc017ed8b5ed8b5ee", "0xc017edc4bedc4bee"]
+          },
+          "laser0_cmd_z_digest": { "i64": [8433550489899293012] },
+          "laser0_cmd_z_head": {
+            "f64": [-6.637852800228882, -6.637852800228882, -6.637852800228882, -6.637852800228882],
+            "f64_bits": ["0xc01a8d2948d2948d", "0xc01a8d2948d2948d", "0xc01a8d2948d2948d", "0xc01a8d2948d2948d"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-5.950313997568128, -5.950022172949002, -5.949803304484658, -5.949584436020313],
+            "f64_bits": ["0xc017cd1f1cd1f1cd", "0xc017ccd29ccd29cd", "0xc017cc993cc993cd", "0xc017cc5fdcc5fdcc"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "layer_id": { "text": ["Layer_2008"] }
+        }
+      }
+    },
+    {
+      "case": "file_v16_default",
+      "kind": "file",
+      "inputs": { "layer_position": 0, "miniature": "v16.h5", "override": {}, "rows": "all", "stride": 1 },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [1275406517352032519] },
+          "laser0_act_z_head": {
+            "f64": [-0.11872970459909878, -0.11874687075316501, -0.11876594425768304, -0.11878501776220109],
+            "f64_bits": ["0xbfbe6511e6511e65", "0xbfbe6631e6631e66", "0xbfbe6771e6771e67", "0xbfbe68b1e68b1e69"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-0.13118470304937654, -0.13118279569892474, -0.13118184202369884, -0.13118184202369884],
+            "f64_bits": ["0xbfc0caa90caa90cb", "0xbfc0ca990ca990cb", "0xbfc0ca910ca910cb", "0xbfc0ca910ca910cb"]
+          },
+          "laser0_cmd_z_digest": { "i64": [8093888751821352867] },
+          "laser0_cmd_z_head": {
+            "f64": [-0.12230312567055289, -0.12232315285029684, -0.12234318003004077, -0.1223632072097847],
+            "f64_bits": ["0xbfbf4f41f4f41f4f", "0xbfbf5091f5091f51", "0xbfbf51e1f51e1f52", "0xbfbf5331f5331f53"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-0.13104928116729847, -0.13104832749207257, -0.13104642014162077, -0.13104546646639487],
+            "f64_bits": ["0xbfc0c6390c6390c6", "0xbfc0c6310c6310c6", "0xbfc0c6210c6210c6", "0xbfc0c6190c6190c6"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_images_default",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_2026_08_18_images.h5",
+        "override": {},
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-1745580257746103974] },
+          "laser0_act_z_head": {
+            "f64": [-8.300377655389457, -8.300377655389457, -8.30052356769902, -8.300596523853802],
+            "f64_bits": ["0xc02099cb199cb19a", "0xc02099cb199cb19a", "0xc02099de399de39a", "0xc02099e7c99e7c9a"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-8.998932837422215, -8.998859881267434, -8.99871396895787, -8.998568056648308],
+            "f64_bits": ["0xc021ff741ff741ff", "0xc021ff6a8ff6a8ff", "0xc021ff576ff576ff", "0xc021ff444ff444ff"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-1370354287789698162] },
+          "laser0_cmd_z_head": {
+            "f64": [-8.300304699234676, -8.300304699234676, -8.300304699234676, -8.300304699234676],
+            "f64_bits": ["0xc02099c1899c189a", "0xc02099c1899c189a", "0xc02099c1899c189a", "0xc02099c1899c189a"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-8.994409555825763, -8.9942636435162, -8.994117731206638, -8.993971818897075],
+            "f64_bits": ["0xc021fd233fd233fd", "0xc021fd101fd101fd", "0xc021fcfcffcfcffd", "0xc021fce9dfce9dfd"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_march_default",
+      "kind": "file",
+      "inputs": { "layer_position": 0, "miniature": "v17_march.h5", "override": {}, "rows": "all", "stride": 1 },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [5658014260376053748] },
+          "laser0_act_z_head": {
+            "f64": [-8.299939918460769, -8.299794006151204, -8.299866962305988, -8.299866962305988],
+            "f64_bits": ["0xc0209991b9991b9a", "0xc020997e9997e999", "0xc02099882998829a", "0xc02099882998829a"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-7.946832129318361, -7.946686217008798, -7.946613260854017, -7.946540304699235],
+            "f64_bits": ["0xc01fc98e5c98e5ca", "0xc01fc9681c9681ca", "0xc01fc954fc954fca", "0xc01fc941dc941dca"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-6777385796592856730] },
+          "laser0_cmd_z_head": {
+            "f64": [-8.300304699234676, -8.300304699234676, -8.300304699234676, -8.300304699234676],
+            "f64_bits": ["0xc02099c1899c189a", "0xc02099c1899c189a", "0xc02099c1899c189a", "0xc02099c1899c189a"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-7.890655890136614, -7.890291109362707, -7.8899263285888, -7.889488591660109],
+            "f64_bits": ["0xc01f900819008190", "0xc01f8fa878fa8790", "0xc01f8f48d8f48d90", "0xc01f8ed618ed618e"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_z_digest": { "i64": [-5342506387711069065] },
+          "laser1_act_z_head": {
+            "f64": [-9.199927043845218, -9.199124526142622, -9.198249052285245, -9.19751949073743],
+            "f64_bits": ["0xc022665cd665cd66", "0xc02265f3a65f3a66", "0xc0226580e6580e66", "0xc022652146521465"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [-4.567575995994564, -4.5675030398397825, -4.56735712753022, -4.567211215220657],
+            "f64_bits": ["0xc0124532a4532a45", "0xc012451f8451f845", "0xc01244f9444f9445", "0xc01244d3044d3045"]
+          },
+          "laser1_cmd_z_digest": { "i64": [-6262788769082466370] },
+          "laser1_cmd_z_head": {
+            "f64": [-9.027166869322652, -9.02614548315571, -9.025197053143552, -9.02417566697661],
+            "f64_bits": ["0xc0220de8d0de8d0e", "0xc0220d62f0d62f0d", "0xc0220ce6a0ce6a0d", "0xc0220c60c0c60c0c"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-4.583553393891711, -4.583553393891711, -4.583626350046492, -4.583626350046492],
+            "f64_bits": ["0xc012558f0558f056", "0xc012558f0558f056", "0xc01255a2255a2256", "0xc01255a2255a2256"]
+          },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_mock_default",
+      "kind": "file",
+      "inputs": { "layer_position": 0, "miniature": "v17_mock.h5", "override": {}, "rows": "all", "stride": 1 },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-3370996473984996981] },
+          "laser0_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser0_cmd_z_digest": { "i64": [8356754046707912421] },
+          "laser0_cmd_z_head": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_z_digest": { "i64": [-3370996473984996981] },
+          "laser1_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser1_cmd_z_digest": { "i64": [8356754046707912421] },
+          "laser1_cmd_z_head": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_mock_invalid_override_resolution_makes_the_laser_drop_out",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": { "commanded_bit_res_z": 0 },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": { "columns": { "lasers_present": { "i64": [] }, "layer_id": { "text": ["Layer_1"] } } }
+    },
+    {
+      "case": "file_v17_mock_override_commanded_resolution_16",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": { "commanded_bit_res_z": 16 },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-3370996473984996981] },
+          "laser0_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-7338048344350105275] },
+          "laser0_cmd_z_head": {
+            "f64": [-252.43463035019454, -252.43463035019454, -252.43463035019454, -252.43463035019454],
+            "f64_bits": ["0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-252.43463035019454, -252.43463035019454, -252.43463035019454, -252.43463035019454],
+            "f64_bits": ["0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_z_digest": { "i64": [-3370996473984996981] },
+          "laser1_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser1_cmd_z_digest": { "i64": [-7338048344350105275] },
+          "laser1_cmd_z_head": {
+            "f64": [-252.43463035019454, -252.43463035019454, -252.43463035019454, -252.43463035019454],
+            "f64_bits": ["0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-252.43463035019454, -252.43463035019454, -252.43463035019454, -252.43463035019454],
+            "f64_bits": ["0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8", "0xc06f8de87de87de8"]
+          },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_mock_override_field_size_z_100",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_mock.h5",
+        "override": { "field_size_z": 100.0 },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-3109907424916399752] },
+          "laser0_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [1.000572205135541, 1.000572205135541, 1.000572205135541, 1.000572205135541],
+            "f64_bits": ["0x3ff0025800258002", "0x3ff0025800258002", "0x3ff0025800258002", "0x3ff0025800258002"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-3160766347215023947] },
+          "laser0_cmd_z_head": {
+            "f64": [-19.705147462031807, -19.705147462031807, -19.705147462031807, -19.705147462031807],
+            "f64_bits": ["0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-19.705147462031807, -19.705147462031807, -19.705147462031807, -19.705147462031807],
+            "f64_bits": ["0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_z_digest": { "i64": [-3109907424916399752] },
+          "laser1_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [1.000572205135541, 1.000572205135541, 1.000572205135541, 1.000572205135541],
+            "f64_bits": ["0x3ff0025800258002", "0x3ff0025800258002", "0x3ff0025800258002", "0x3ff0025800258002"]
+          },
+          "laser1_cmd_z_digest": { "i64": [-3160766347215023947] },
+          "laser1_cmd_z_head": {
+            "f64": [-19.705147462031807, -19.705147462031807, -19.705147462031807, -19.705147462031807],
+            "f64_bits": ["0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-19.705147462031807, -19.705147462031807, -19.705147462031807, -19.705147462031807],
+            "f64_bits": ["0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5", "0xc033b4848b4848b5"]
+          },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_mock_stride_3_laser_on_rows_converts_only_the_kept_rows",
+      "kind": "file",
+      "inputs": { "layer_position": 0, "miniature": "v17_mock.h5", "override": {}, "rows": "on", "stride": 3 },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [5239402217356626429] },
+          "laser0_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-7121818825358007003] },
+          "laser0_cmd_z_head": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser0_n": { "i64": [8000] },
+          "laser1_act_z_digest": { "i64": [5239402217356626429] },
+          "laser1_act_z_head": {
+            "f64": [1.0, 1.0, 1.0, 1.0],
+            "f64_bits": ["0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000", "0x3ff0000000000000"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [1.000437736928689, 1.000437736928689, 1.000437736928689, 1.000437736928689],
+            "f64_bits": ["0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002", "0x3ff001cb001cb002"]
+          },
+          "laser1_cmd_z_digest": { "i64": [-7121818825358007003] },
+          "laser1_cmd_z_head": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-14.839437808454331, -14.839437808454331, -14.839437808454331, -14.839437808454331],
+            "f64_bits": ["0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae", "0xc02dadcacadcacae"]
+          },
+          "laser1_n": { "i64": [8000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_oct15_default_with_the_z_offset_of_minus_1",
+      "kind": "file",
+      "inputs": { "layer_position": 0, "miniature": "v17_oct15.h5", "override": {}, "rows": "all", "stride": 1 },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-1757439979572733960] },
+          "laser0_act_z_head": {
+            "f64": [-9.060507832057793, -9.060434875903011, -9.060434875903011, -9.060726700522137],
+            "f64_bits": ["0xc0221efae1efae1f", "0xc0221ef151ef151f", "0xc0221ef151ef151f", "0xc0221f1791f1791f"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-8.795676990200986, -8.795604034046205, -8.795604034046205, -8.795604034046205],
+            "f64_bits": ["0xc0219762f9762f97", "0xc021975969759697", "0xc021975969759697", "0xc021975969759697"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-5136286752028776588] },
+          "laser0_cmd_z_head": {
+            "f64": [-9.0608726128317, -9.0608726128317, -9.0608726128317, -9.0608726128317],
+            "f64_bits": ["0xc0221f2ab1f2ab1f", "0xc0221f2ab1f2ab1f", "0xc0221f2ab1f2ab1f", "0xc0221f2ab1f2ab1f"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-8.78159645232816, -8.781523496173378, -8.781523496173378, -8.781523496173378],
+            "f64_bits": ["0xc021902d6902d690", "0xc0219023d9023d90", "0xc0219023d9023d90", "0xc0219023d9023d90"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_oct15_override_both_resolutions_18",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_oct15.h5",
+        "override": { "actual_bit_res_z": 18, "commanded_bit_res_z": 18 },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [8707724828771735759] },
+          "laser0_act_z_head": {
+            "f64": [-39.242146462045525, -39.241854636591476, -39.241854636591476, -39.243021938407665],
+            "f64_bits": ["0xc0439efea7bfa9f0", "0xc0439ef517bd45ef", "0xc0439ef517bd45ef", "0xc0439f1b57c6d5f2"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-38.18282006385827, -38.18252823840423, -38.18252823840423, -38.18252823840423],
+            "f64_bits": ["0xc0431766a5d9a976", "0xc043175d15d74576", "0xc043175d15d74576", "0xc043175d15d74576"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-1381477648320187271] },
+          "laser0_cmd_z_head": {
+            "f64": [-39.243605589315756, -39.243605589315756, -39.243605589315756, -39.243605589315756],
+            "f64_bits": ["0xc0439f2e77cb9df3", "0xc0439f2e77cb9df3", "0xc0439f2e77cb9df3", "0xc0439f2e77cb9df3"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-38.12649775122738, -38.126205925773334, -38.126205925773334, -38.126205925773334],
+            "f64_bits": ["0xc0431031140c4503", "0xc04310278409e102", "0xc04310278409e102", "0xc04310278409e102"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "file_v17_triggered_default",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_triggered_2026_10_19.h5",
+        "override": {},
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_z_digest": { "i64": [-8953832930029620382] },
+          "laser0_act_z_head": {
+            "f64": [-9.27543666404406, -9.27543666404406, -9.275509620198841, -9.275509620198841],
+            "f64_bits": ["0xc0228d0608d0608d", "0xc0228d0608d0608d", "0xc0228d0f98d0f98d", "0xc0228d0f98d0f98d"]
+          },
+          "laser0_act_z_tail": {
+            "f64": [-9.24705671983406, -9.247129675988843, -9.246910807524497, -9.246837851369715],
+            "f64_bits": ["0xc0227e7e37e7e37e", "0xc0227e87c7e87c7f", "0xc0227e6b17e6b17e", "0xc0227e6187e6187e"]
+          },
+          "laser0_cmd_z_digest": { "i64": [-85768956258608317] },
+          "laser0_cmd_z_head": {
+            "f64": [-9.275363707889278, -9.275363707889278, -9.275363707889278, -9.275363707889278],
+            "f64_bits": ["0xc0228cfc78cfc78d", "0xc0228cfc78cfc78d", "0xc0228cfc78cfc78d", "0xc0228cfc78cfc78d"]
+          },
+          "laser0_cmd_z_tail": {
+            "f64": [-9.252820256061797, -9.252820256061797, -9.252893212216579, -9.252893212216579],
+            "f64_bits": ["0xc0228171a8171a81", "0xc0228171a8171a81", "0xc022817b3817b381", "0xc022817b3817b381"]
+          },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_z_digest": { "i64": [3847301357034795647] },
+          "laser1_act_z_head": {
+            "f64": [-9.181542092840283, -9.181542092840283, -9.181469136685502, -9.181688005149846],
+            "f64_bits": ["0xc0225cf315cf315d", "0xc0225cf315cf315d", "0xc0225ce985ce985d", "0xc0225d0635d0635d"]
+          },
+          "laser1_act_z_tail": {
+            "f64": [-9.27149703168586, -9.27149703168586, -9.271642943995422, -9.271642943995422],
+            "f64_bits": ["0xc0228b01a8b01a8b", "0xc0228b01a8b01a8b", "0xc0228b14c8b14c8b", "0xc0228b14c8b14c8b"]
+          },
+          "laser1_cmd_z_digest": { "i64": [1161682919152134236] },
+          "laser1_cmd_z_head": {
+            "f64": [-9.181542092840283, -9.181542092840283, -9.181542092840283, -9.181542092840283],
+            "f64_bits": ["0xc0225cf315cf315d", "0xc0225cf315cf315d", "0xc0225cf315cf315d", "0xc0225cf315cf315d"]
+          },
+          "laser1_cmd_z_tail": {
+            "f64": [-9.269162434732852, -9.269162434732852, -9.26908947857807, -9.26908947857807],
+            "f64_bits": ["0xc02289cfa89cfa8a", "0xc02289cfa89cfa8a", "0xc02289c6189c618a", "0xc02289c6189c618a"]
+          },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "layer_id": { "text": ["Layer_1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_dataset_as_wide_as_the_calibration_keeps_it",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": 20,
+        "dataset_width_commanded": 20,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_narrower_dataset_sets_the_resolution",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": 16,
+        "dataset_width_commanded": 16,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [16] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.006103608758678569, 1600.018310826276, 3200.042725261311, 3200.0488288700694,
+              6400.09155413138, -0.006103608758678569, -3200.0488288700694
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f79001900190019", "0x40990012c012c013", "0x40a90015e015e016",
+              "0x40a9001900190019", "0x40b9001770177017", "0xbf79001900190019", "0xc0a9001900190019"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [16] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.006103608758678569, 1600.018310826276, 3200.042725261311, 3200.0488288700694,
+              6400.09155413138, -0.006103608758678569, -3200.0488288700694
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f79001900190019", "0x40990012c012c013", "0x40a90015e015e016",
+              "0x40a9001900190019", "0x40b9001770177017", "0xbf79001900190019", "0xc0a9001900190019"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_negative_resolution_makes_the_laser_unavailable",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "actual_bit_res_z": -4 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [-4] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": ["actual Z bit resolution -4 is outside 1..=32"] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_negative_z_field_size_is_not_refused_and_mirrors_the_millimetres",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "field_size_z": -400.0 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              -0.0, -0.00038147009036072765, -99.99971389743223, -199.99980926495482, -200.00019073504518,
+              -400.0, 0.00038147009036072765, 200.00019073504518
+            ],
+            "f64_bits": [
+              "0x8000000000000000", "0xbf39000190001900", "0xc058fffb4fffb500", "0xc068fffe6fffe700",
+              "0xc069000190001900", "0xc079000000000000", "0x3f39000190001900", "0x4069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              -0.0, -0.00038147009036072765, -99.99971389743223, -199.99980926495482, -200.00019073504518,
+              -400.0, 0.00038147009036072765, 200.00019073504518
+            ],
+            "f64_bits": [
+              "0x8000000000000000", "0xbf39000190001900", "0xc058fffb4fffb500", "0xc068fffe6fffe700",
+              "0xc069000190001900", "0xc079000000000000", "0x3f39000190001900", "0x4069000190001900"
+            ]
+          },
+          "field_size_z": { "f64": [-400.0], "f64_bits": ["0xc079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_non_finite_z_field_size_is_refused_by_the_pipeline",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "field_size_z": "NaN" },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": ["NaN"], "f64_bits": ["0x7ff8000000000000"] },
+          "laser_unavailable": {
+            "text": ["coordinate conversion failed: invalid parameter: field_size_z must be finite, got NaN"]
+          },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_non_finite_z_offset_is_refused_by_the_pipeline",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "offset_z": "NaN" },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": ["coordinate conversion failed: invalid parameter: offset_z must be finite, got NaN"] },
+          "offset_z": { "f64": ["NaN"], "f64_bits": ["0x7ff8000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_wider_dataset_does_not_raise_the_resolution",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": 32,
+        "dataset_width_commanded": 32,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_a_z_field_size_of_zero_is_not_refused_and_every_code_gives_zero",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "field_size_z": 0.0 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, -0.0],
+            "f64_bits": [
+              "0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000",
+              "0x0000000000000000", "0x0000000000000000", "0x8000000000000000", "0x8000000000000000"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0, -0.0],
+            "f64_bits": [
+              "0x0000000000000000", "0x0000000000000000", "0x0000000000000000", "0x0000000000000000",
+              "0x0000000000000000", "0x0000000000000000", "0x8000000000000000", "0x8000000000000000"
+            ]
+          },
+          "field_size_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_both_resolutions_invalid_names_the_commanded_one_first",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "actual_bit_res_z": 99, "commanded_bit_res_z": 0 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [99] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [0] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": ["commanded Z bit resolution 0 is outside 1..=32"] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_commanded_and_actual_have_different_codes_and_resolutions",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [5, 105, 205, 305],
+        "bits_commanded": [0, 100, 200],
+        "calibration": { "actual_bit_res_z": 16, "commanded_bit_res_z": 20 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [16] },
+          "actual_z_mm": {
+            "f64": [0.030518043793392843, 0.6408789196612498, 1.2512397955291066, 1.8616006713969635],
+            "f64_bits": ["0x3f9f401f401f401f", "0x3fe4821482148215", "0x3ff4051405140514", "0x3ffdc91dc91dc91e"]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [0.0, 0.038147009036072765, 0.07629401807214553],
+            "f64_bits": ["0x0000000000000000", "0x3fa3880138801388", "0x3fb3880138801388"]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_defaults_resolution_20_field_400_offset_0",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_no_codes",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [],
+        "bits_commanded": [],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_only_the_commanded_dataset_is_narrower",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": 18,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [18] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.0015258847270382958, 400.0, 800.001525884727, 800.003051769454, 1600.004577654181,
+              -0.0015258847270382958, -800.003051769454
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f59000640019000", "0x4079000000000000", "0x408900032000c800",
+              "0x4089000640019000", "0x40990004b0012c00", "0xbf59000640019000", "0xc089000640019000"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_resolution_0_makes_the_whole_laser_unavailable",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "commanded_bit_res_z": 0 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [0] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": ["commanded Z bit resolution 0 is outside 1..=32"] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_resolution_1_is_the_smallest_valid",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 2],
+        "bits_commanded": [0, 1, 2],
+        "calibration": { "actual_bit_res_z": 1, "commanded_bit_res_z": 1 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [1] },
+          "actual_z_mm": {
+            "f64": [0.0, 400.0, 800.0],
+            "f64_bits": ["0x0000000000000000", "0x4079000000000000", "0x4089000000000000"]
+          },
+          "commanded_bit_res_z": { "i64": [1] },
+          "commanded_z_mm": {
+            "f64": [0.0, 400.0, 800.0],
+            "f64_bits": ["0x0000000000000000", "0x4079000000000000", "0x4089000000000000"]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_resolution_32_is_the_largest_valid",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1],
+        "bits_commanded": [0, 1, 2147483647, -2147483648],
+        "calibration": { "actual_bit_res_z": 32, "commanded_bit_res_z": 32 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [32] },
+          "actual_z_mm": { "f64": [0.0, 9.31322574832319e-8], "f64_bits": ["0x0000000000000000", "0x3e79000000190000"] },
+          "commanded_bit_res_z": { "i64": [32] },
+          "commanded_z_mm": {
+            "f64": [0.0, 9.31322574832319e-8, 199.99999995343387, -200.00000004656613],
+            "f64_bits": ["0x0000000000000000", "0x3e79000000190000", "0x4068ffffffe70000", "0xc069000000190000"]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_resolution_33_makes_the_laser_unavailable",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "commanded_bit_res_z": 33 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [], "f64_bits": [] },
+          "commanded_bit_res_z": { "i64": [33] },
+          "commanded_z_mm": { "f64": [], "f64_bits": [] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": ["commanded Z bit resolution 33 is outside 1..=32"] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_extreme_codes_of_an_i32",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [-2147483648, 2147483647],
+        "bits_commanded": [-2147483648, 2147483647],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [-819200.781250745, 819200.780869275],
+            "f64_bits": ["0xc129000190001900", "0x412900018fce18fd"]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [-819200.781250745, 819200.780869275],
+            "f64_bits": ["0xc129000190001900", "0x412900018fce18fd"]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_override_replaces_both_resolutions",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": { "actual_bit_res_z": 18, "commanded_bit_res_z": 16 }
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [18] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.0015258847270382958, 400.0, 800.001525884727, 800.003051769454, 1600.004577654181,
+              -0.0015258847270382958, -800.003051769454
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f59000640019000", "0x4079000000000000", "0x408900032000c800",
+              "0x4089000640019000", "0x40990004b0012c00", "0xbf59000640019000", "0xc089000640019000"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [16] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.006103608758678569, 1600.018310826276, 3200.042725261311, 3200.0488288700694,
+              6400.09155413138, -0.006103608758678569, -3200.0488288700694
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f79001900190019", "0x40990012c012c013", "0x40a90015e015e016",
+              "0x40a9001900190019", "0x40b9001770177017", "0xbf79001900190019", "0xc0a9001900190019"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_override_replaces_the_field_size",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": { "field_size_z": 100.0 }
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00009536752259018191, 24.999928474358057, 49.999952316238705, 50.000047683761295, 100.0,
+              -0.00009536752259018191, -50.000047683761295
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f19000190001900", "0x4038fffb4fffb500", "0x4048fffe6fffe700",
+              "0x4049000190001900", "0x4059000000000000", "0xbf19000190001900", "0xc049000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.00009536752259018191, 24.999928474358057, 49.999952316238705, 50.000047683761295, 100.0,
+              -0.00009536752259018191, -50.000047683761295
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f19000190001900", "0x4038fffb4fffb500", "0x4048fffe6fffe700",
+              "0x4049000190001900", "0x4059000000000000", "0xbf19000190001900", "0xc049000190001900"
+            ]
+          },
+          "field_size_z": { "f64": [100.0], "f64_bits": ["0x4059000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_override_resolution_is_then_narrowed_by_the_dataset",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": {},
+        "dataset_width_actual": 20,
+        "dataset_width_commanded": 16,
+        "override": { "actual_bit_res_z": 24, "commanded_bit_res_z": 24 }
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              0.0, 0.00038147009036072765, 99.99971389743223, 199.99980926495482, 200.00019073504518, 400.0,
+              -0.00038147009036072765, -200.00019073504518
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f39000190001900", "0x4058fffb4fffb500", "0x4068fffe6fffe700",
+              "0x4069000190001900", "0x4079000000000000", "0xbf39000190001900", "0xc069000190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [16] },
+          "commanded_z_mm": {
+            "f64": [
+              0.0, 0.006103608758678569, 1600.018310826276, 3200.042725261311, 3200.0488288700694,
+              6400.09155413138, -0.006103608758678569, -3200.0488288700694
+            ],
+            "f64_bits": [
+              "0x0000000000000000", "0x3f79001900190019", "0x40990012c012c013", "0x40a90015e015e016",
+              "0x40a9001900190019", "0x40b9001770177017", "0xbf79001900190019", "0xc0a9001900190019"
+            ]
+          },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_real_oct15_values_field_76_5_offset_minus_1",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "actual_bit_res_z": 20, "commanded_bit_res_z": 20, "field_size_z": 76.5, "offset_z": -1.0 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              1.0, 1.0000729561547814, 20.124945282883914, 39.24996352192261, 39.25003647807739, 77.5,
+              0.9999270438452185, -37.25003647807739
+            ],
+            "f64_bits": [
+              "0x3ff0000000000000", "0x3ff0004c8004c800", "0x40341ffc69ffc6a0", "0x40439ffecdffece0",
+              "0x4043a00132001320", "0x4053600000000000", "0x3fefff66fff66fff", "0xc042a00132001320"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              1.0, 1.0000729561547814, 20.124945282883914, 39.24996352192261, 39.25003647807739, 77.5,
+              0.9999270438452185, -37.25003647807739
+            ],
+            "f64_bits": [
+              "0x3ff0000000000000", "0x3ff0004c8004c800", "0x40341ffc69ffc6a0", "0x40439ffecdffece0",
+              "0x4043a00132001320", "0x4053600000000000", "0x3fefff66fff66fff", "0xc042a00132001320"
+            ]
+          },
+          "field_size_z": { "f64": [76.5], "f64_bits": ["0x4053200000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [-1.0], "f64_bits": ["0xbff0000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_sample_period_passes_through_unchanged",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0],
+        "bits_commanded": [0],
+        "calibration": { "sample_period_secs": 0.00002 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": {}
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "field_size_z": { "f64": [400.0], "f64_bits": ["0x4079000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "sample_period_secs": { "f64": [0.00002], "f64_bits": ["0x3ef4f8b588e368f1"] }
+        }
+      }
+    },
+    {
+      "case": "pure_the_z_offset_has_no_override_and_stays_the_files",
+      "kind": "pure",
+      "inputs": {
+        "bits_actual": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "bits_commanded": [0, 1, 262143, 524287, 524288, 1048575, -1, -524288],
+        "calibration": { "offset_z": 2.5 },
+        "dataset_width_actual": null,
+        "dataset_width_commanded": null,
+        "override": { "field_size_z": 50.0 }
+      },
+      "expected": {
+        "columns": {
+          "actual_bit_res_z": { "i64": [20] },
+          "actual_z_mm": {
+            "f64": [
+              -2.5, -2.499952316238705, 9.999964237179029, 22.499976158119352, 22.500023841880648, 47.5,
+              -2.500047683761295, -27.500023841880648
+            ],
+            "f64_bits": [
+              "0xc004000000000000", "0xc003ffe6fffe7000", "0x4023fffb4fffb500", "0x40367ffe6fffe700",
+              "0x4036800190001900", "0x4047c00000000000", "0xc004001900019000", "0xc03b800190001900"
+            ]
+          },
+          "commanded_bit_res_z": { "i64": [20] },
+          "commanded_z_mm": {
+            "f64": [
+              -2.5, -2.499952316238705, 9.999964237179029, 22.499976158119352, 22.500023841880648, 47.5,
+              -2.500047683761295, -27.500023841880648
+            ],
+            "f64_bits": [
+              "0xc004000000000000", "0xc003ffe6fffe7000", "0x4023fffb4fffb500", "0x40367ffe6fffe700",
+              "0x4036800190001900", "0x4047c00000000000", "0xc004001900019000", "0xc03b800190001900"
+            ]
+          },
+          "field_size_z": { "f64": [50.0], "f64_bits": ["0x4049000000000000"] },
+          "laser_unavailable": { "text": [] },
+          "offset_z": { "f64": [2.5], "f64_bits": ["0x4004000000000000"] },
+          "sample_period_secs": { "f64": [0.00001], "f64_bits": ["0x3ee4f8b588e368f1"] }
+        }
+      }
+    }
+  ]
+}
