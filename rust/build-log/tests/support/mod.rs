@@ -361,7 +361,8 @@ fn names(kinds: &[Kind]) -> String {
         .join(" or ")
 }
 
-/// One-way layering: an edge between two workspace crates exists only if the matrix allows it, as that kind, and optional where it says so.
+/// One-way layering: an edge between two workspace crates exists only if the matrix allows it, as that kind, and optional where it says so. **A rule that says `optional` asks it of the normal
+/// edge**: a dev dependency is for tests and is never optional, so the same pair may be allowed as a dev dependency too (the facade's tests use the processing layer, IP-27 phase 27D).
 pub fn layering_violations(ws: &Workspace, allowed: &Allowed) -> Vec<String> {
     let members: BTreeSet<&str> = ws.members.iter().map(|p| p.name.as_str()).collect();
     let mut found = Vec::new();
@@ -386,7 +387,7 @@ pub fn layering_violations(ws: &Workspace, allowed: &Allowed) -> Vec<String> {
                     "{edge}: allowed only as a {} dependency",
                     names(&rule.kinds)
                 )),
-                Some(rule) if rule.optional && !dep.optional => {
+                Some(rule) if rule.optional && !dep.optional && dep.kind == Kind::Normal => {
                     found.push(format!("{edge}: must be optional, behind a feature"))
                 }
                 Some(_) => {}

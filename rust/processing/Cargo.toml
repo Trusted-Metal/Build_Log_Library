@@ -4,13 +4,17 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 publish = false
-description = "The Processing layer of the Build Log Library: derived computation over Model data. Skeleton: the stages arrive with IP-16."
+description = "The Processing layer of the Build Log Library: derived computation over Model data (the Z calibration and conversion so far; more stages arrive with their phases)."
 
 [dependencies]
 build-log-model = { workspace = true }
 
 [dev-dependencies]
 build-log-testkit = { workspace = true }
+# holds the pure cases of the stage packages' vectors to what Vision recorded (IP-27 phase 27D); allowed by the architecture rules as a dev dependency
+build-log-conformance = { workspace = true }
+# reads the inputs of a vector case
+serde_json = "1"
 
 [lints]
 workspace = true

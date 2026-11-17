@@ -18,7 +18,7 @@
     { "from": "build-log", "to": "build-log-model", "kinds": ["normal"] },
     { "from": "build-log", "to": "build-log-archive", "kinds": ["normal"], "optional": true },
     { "from": "build-log", "to": "build-log-io", "kinds": ["normal"], "optional": true },
-    { "from": "build-log", "to": "build-log-processing", "kinds": ["normal"], "optional": true },
+    { "from": "build-log", "to": "build-log-processing", "kinds": ["normal", "dev"], "optional": true },
     { "from": "build-log", "to": "build-log-testkit", "kinds": ["dev"] },
     { "from": "build-log", "to": "build-log-conformance", "kinds": ["dev"] },
 

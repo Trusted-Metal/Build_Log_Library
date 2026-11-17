@@ -33,6 +33,10 @@ build-log-processing = { workspace = true, optional = true }
 
 [dev-dependencies]
 build-log-testkit = { workspace = true }
+# the tests that run the vectors on the miniatures need the IO layer (the facade's default) and the processing layer together (IP-27 phase 27D); the normal dependency stays optional
+build-log-processing = { workspace = true }
+# holds the cases of the vectors to what Vision recorded (allowed by the architecture rules as a dev dependency)
+build-log-conformance = { workspace = true }
 # the architecture guards read `cargo metadata`
 serde_json = "1"
 
