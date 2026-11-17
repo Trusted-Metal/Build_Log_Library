@@ -30,6 +30,7 @@ mod overview;
 mod params;
 mod provenance;
 mod quality;
+mod selection;
 mod time;
 mod units;
 mod validation;
@@ -69,6 +70,9 @@ pub use params::{
 };
 pub use provenance::{JoinStatus, NotReadCause, Origin, Origins, Provenance};
 pub use quality::{Outcome, QualityRecord};
+pub use selection::{
+    select_rows, LaserRows, NativeIndex, ReadSelection, SelectedColumn, StateRows,
+};
 pub use time::{
     check_segments, index_range, Accuracy, Instant, Segment, StartMeaning, TimeAnchor, TimeAxis,
     TimeAxisSummary, TimeValue, TimeWindow,

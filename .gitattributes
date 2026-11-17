@@ -11,3 +11,6 @@
 
 # The hashes of the committed miniatures are read by `sha256sum -c`, which takes a CR at the end of a line as part of the file name: keep this file LF on every platform.
 testdata/SHA256SUMS text eol=lf
+
+# The vectors of the stage packages (IP-27) are text that is held to a hash, so they are kept LF on every platform, like the sums file beside them.
+testdata/vectors/* text eol=lf

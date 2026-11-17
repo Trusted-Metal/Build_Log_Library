@@ -12,8 +12,8 @@ use build_log_archive::FileArchive;
 use build_log_model::{
     AvailabilityReport, BuildMeta, BuildOverview, BuildSource, CacheStats, ChannelDescriptor,
     ColumnData, ColumnRequest, ColumnSource, Error, ErrorKind, EventColumns, EventRequest,
-    GridData, GridRequest, ImageData, ImageRequest, LaserKey, LayerDetail, LayerId, ReadContext,
-    Revision, ValidationReport,
+    GridData, GridRequest, ImageData, ImageRequest, LaserKey, LaserRows, LayerDetail, LayerId,
+    ReadContext, ReadSelection, Revision, SelectedColumn, ValidationReport,
 };
 
 /// A source that fails once the file under it has changed. It delegates **every** method of `ColumnSource` and `BuildSource`, the defaulted ones too (a default would answer from the wrapper and not from the source it wraps, and be slower or
@@ -137,5 +137,36 @@ impl BuildSource for GuardedSource {
     fn layer_meta(&self, layer: LayerId) -> Result<Arc<LayerDetail>, Error> {
         self.guard()?;
         self.inner.layer_meta(layer)
+    }
+
+    fn read_selected(
+        &self,
+        request: &ColumnRequest,
+        selection: &ReadSelection,
+        context: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.guard()?;
+        self.inner.read_selected(request, selection, context)
+    }
+
+    fn laser_rows(
+        &self,
+        layer: LayerId,
+        laser: &LaserKey,
+        selection: &ReadSelection,
+        context: &ReadContext,
+    ) -> Result<LaserRows, Error> {
+        self.guard()?;
+        self.inner.laser_rows(layer, laser, selection, context)
+    }
+
+    fn read_rows(
+        &self,
+        request: &ColumnRequest,
+        rows: &LaserRows,
+        context: &ReadContext,
+    ) -> Result<SelectedColumn, Error> {
+        self.guard()?;
+        self.inner.read_rows(request, rows, context)
     }
 }

@@ -32,6 +32,10 @@ Beside every `.h5` is a `.sidecar.json`: what it was cut from (name and hash), t
 
 `primitives.json` holds how each kind of value in the miniatures is stored: for every distinct encoding of an attribute (class, width, signedness, byte order, text form and padding, scalar or array) an instance with its value and how many the miniatures hold, for every distinct kind of dataset its layout, chunks, filters and first values, and the `File_Version` of each file. The same independent script writes it, it is never edited by hand, and it says nothing about what a value means.
 
+## The vectors
+
+`vectors/` holds the vectors of the stage packages (IP-27, decisions D27-14 and D27-15): for each chunk of Vision's code that the library takes over, one JSON file of cases, each with its inputs and **the outputs that Vision's own code returned for them**. They are generated in Vision, never written by hand, and copied here with their hash in `vectors/SHA256SUMS` (a Rust test in the test kit, `the_vectors_match_their_checksums`, makes the check in CI; `.gitattributes` keeps them LF). A case on a file names one of the miniatures above, a layer by its position and the inputs; it stores counts, FNV-1a digests of the columns and the first and last values, never the arrays. The library's own tests compare their results with the vectors bit for bit (`rust/io/tests/read_selection_vectors.rs` for `read_selection.json`: 15 cases on pure inputs and 20 on miniatures, made at Vision commit `ba5a040`, 2026-11-16). **Do not edit a vector here:** a change is a new file generated in Vision, a reviewed diff, and a new line in `vectors/SHA256SUMS`.
+
 ## Rules
 
 1. **Do not edit, regenerate or replace a file.** HDF5 does not write the same bytes twice, so a rebuilt miniature has another hash. A change needs the repository owner's approval and a new line in `SHA256SUMS`.
