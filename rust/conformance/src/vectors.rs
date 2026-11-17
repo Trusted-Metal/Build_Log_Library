@@ -130,6 +130,42 @@ pub fn opt_f64(value: &Value) -> Option<f64> {
     }
 }
 
+/// The number that a vector writes as the hex text of its bits (`0x3ee4f8b588e368f1`).
+pub fn f64_from_bits_text(text: &str) -> f64 {
+    let digits = text
+        .strip_prefix("0x")
+        .unwrap_or_else(|| panic!("the bits of a number start with 0x, not {text:?}"));
+    f64::from_bits(u64::from_str_radix(digits, 16).expect("hex bits"))
+}
+
+/// A number input of a case **read from its exact bits**. A case that has a float input carries `<key>_bits` (hex text) beside the decimal text that a person reads, because a decimal
+/// that goes through JSON can come back a unit in the last place off with the default parser, and a stage's result can depend on the last place (Vision's note to the recipe, IP-27 phase
+/// 27E). A case without the bits is read from the number itself (`NaN`, `inf` and `-inf` as words).
+pub fn exact_f64(inputs: &Value, key: &str) -> f64 {
+    match inputs.get(format!("{key}_bits")) {
+        Some(bits) => f64_from_bits_text(bits.as_str().expect("the bits are hex text")),
+        None => opt_f64(&inputs[key]).unwrap_or_else(|| panic!("the input {key} is a number")),
+    }
+}
+
+/// A list of number inputs of a case, read from its exact bits when it has them (see [`exact_f64`]).
+pub fn exact_f64s(inputs: &Value, key: &str) -> Vec<f64> {
+    match inputs.get(format!("{key}_bits")) {
+        Some(bits) => bits
+            .as_array()
+            .expect("the bits are a list of hex text")
+            .iter()
+            .map(|b| f64_from_bits_text(b.as_str().expect("hex text")))
+            .collect(),
+        None => inputs[key]
+            .as_array()
+            .unwrap_or_else(|| panic!("the input {key} is a list of numbers"))
+            .iter()
+            .map(|n| opt_f64(n).unwrap_or_else(|| panic!("a number of {key}")))
+            .collect(),
+    }
+}
+
 /// A whole number of a vector's inputs; `None` for a value that is absent or `null`.
 pub fn opt_i64(value: &Value) -> Option<i64> {
     match value {
@@ -232,6 +268,26 @@ mod tests {
         assert_eq!(opt_f64(&Value::Null), None);
         assert_eq!(opt_i64(&serde_json::json!(-4)), Some(-4));
         assert_eq!(opt_i64(&Value::Null), None);
+    }
+
+    #[test]
+    fn a_float_input_is_read_from_its_exact_bits_when_the_case_has_them() {
+        // the decimal 1e-5 and the number Vision's code held (one unit in the last place below it) are different numbers
+        let held = f64::from_bits(0x3ee4_f8b5_88e3_68f0);
+        assert_ne!(held, 1e-5);
+        let case = serde_json::json!({
+            "period": 1e-5, "period_bits": "0x3ee4f8b588e368f0",
+            "values": [1e-5, "NaN"], "values_bits": ["0x3ee4f8b588e368f0", "0x7ff8000000000000"],
+            "plain": 2.5, "words": ["inf", -1.5]
+        });
+        assert_eq!(exact_f64(&case, "period").to_bits(), held.to_bits());
+        let values = exact_f64s(&case, "values");
+        assert_eq!(values[0].to_bits(), held.to_bits());
+        assert!(values[1].is_nan());
+        // without the bits, the number itself, and the words for what JSON has no number for
+        assert_eq!(exact_f64(&case, "plain"), 2.5);
+        assert_eq!(exact_f64s(&case, "words"), vec![f64::INFINITY, -1.5]);
+        assert_eq!(f64_from_bits_text("0x3ff0000000000000"), 1.0);
     }
 
     #[test]
