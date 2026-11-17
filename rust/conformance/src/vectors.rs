@@ -148,6 +148,15 @@ pub fn exact_f64(inputs: &Value, key: &str) -> f64 {
     }
 }
 
+/// An optional number input of a case: `null` or absent is `None`; otherwise as [`exact_f64`] (an override that is not set, or one that is set to `NaN`, which is the word `NaN` in the text and
+/// its bits beside it).
+pub fn exact_opt_f64(inputs: &Value, key: &str) -> Option<f64> {
+    match inputs.get(key) {
+        None | Some(Value::Null) => None,
+        Some(_) => Some(exact_f64(inputs, key)),
+    }
+}
+
 /// A list of number inputs of a case, read from its exact bits when it has them (see [`exact_f64`]).
 pub fn exact_f64s(inputs: &Value, key: &str) -> Vec<f64> {
     match inputs.get(format!("{key}_bits")) {
@@ -284,6 +293,13 @@ mod tests {
         let values = exact_f64s(&case, "values");
         assert_eq!(values[0].to_bits(), held.to_bits());
         assert!(values[1].is_nan());
+        // an optional input: not set is `None`, and a NaN that is set is `Some`
+        let optional =
+            serde_json::json!({ "a": null, "b": "NaN", "b_bits": "0x7ff8000000000000", "c": 2.5 });
+        assert_eq!(exact_opt_f64(&optional, "a"), None);
+        assert_eq!(exact_opt_f64(&optional, "missing"), None);
+        assert!(exact_opt_f64(&optional, "b").is_some_and(f64::is_nan));
+        assert_eq!(exact_opt_f64(&optional, "c"), Some(2.5));
         // without the bits, the number itself, and the words for what JSON has no number for
         assert_eq!(exact_f64(&case, "plain"), 2.5);
         assert_eq!(exact_f64s(&case, "words"), vec![f64::INFINITY, -1.5]);
