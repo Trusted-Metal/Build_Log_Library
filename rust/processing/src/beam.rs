@@ -47,6 +47,7 @@ use crate::beam_units::{
     AngleUnit, LengthUnit,
 };
 use crate::calibration::Resolved;
+use crate::spot_size::BeamShape;
 
 /// The relative disagreement between a stored Rayleigh length and the one implied by the waist, M² and wavelength, above which it is a finding.
 const RAYLEIGH_MISMATCH_TOLERANCE: f64 = 0.2;
@@ -621,6 +622,18 @@ impl ResolvedBeam {
     /// The thermal-lensing test as recorded.
     pub fn thermal_test(&self) -> ThermalTest {
         self.thermal_test
+    }
+
+    /// The numbers of the beam that the spot-size kernel reads: the radii, the Rayleigh lengths, the focus shift and the axis angle.
+    pub fn shape(&self) -> BeamShape {
+        BeamShape {
+            waist_radius_major_um: self.waist_radius_major_um.value(),
+            waist_radius_minor_um: self.waist_radius_minor_um.value(),
+            rayleigh_major_mm: self.rayleigh_major_mm.value(),
+            rayleigh_minor_mm: self.rayleigh_minor_mm.value(),
+            focus_shift_mm: self.focus_shift_mm,
+            axis_angle_deg: self.axis_angle_deg,
+        }
     }
 
     /// What was found, in the order it was made: the waist, the major axis' Rayleigh length, the minor axis'.
