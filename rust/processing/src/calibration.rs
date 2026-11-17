@@ -42,7 +42,7 @@ pub struct Resolved<T> {
 }
 
 impl<T: Copy> Resolved<T> {
-    fn new(value: T, origin: Option<Origin>) -> Self {
+    pub(crate) fn new(value: T, origin: Option<Origin>) -> Self {
         Resolved { value, origin }
     }
 

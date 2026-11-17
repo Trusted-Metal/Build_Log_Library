@@ -13,15 +13,33 @@
 //! * [`z_conversion`]: **the linear conversion of Z from bits to millimetres**, in Vision's order of operations, built from explicit numbers, with the reason when a series cannot be converted.
 //!   Only Z is built.
 //!
+//! * [`stage`]: **the names of the stages** that a laser's data goes through (raw, physical, shifted, corrected), so that a result can say which it is at (decision D27-21).
+//! * [`timing_offsets`]: **the scanner card's timing offsets of a laser** in seconds and in the shifter's convention (IP-27 phase 27F): what the format means (a bare number is native steps,
+//!   a text may carry a unit, the sign depends on the galvo protocol) is applied here, and **what the file does not say is reported and answered by the caller's explicit
+//!   [`TimingFallbacks`]**.
+//! * [`time_shift`]: **the time shift** of a position series by its offset, with the timestamps it needs: Vision's algorithm, to the last bit, behind a stage that shifts only positions.
+//!
 //! **The library reports and the caller decides what a report means** (decision D27-18): an absent value is reported as absent, and Vision supplies its own defaults, applies its own rules and
-//! decides what a refused series means for a laser. The rest of the stages (the time shift, spot size, decimation and corrections) arrive with their own phases.
+//! decides what a refused series means for a laser. The rest of the stages (spot size, decimation and corrections) arrive with their own phases.
 
 #![forbid(unsafe_code)]
 
 pub mod calibration;
+pub mod stage;
+pub mod time_shift;
+pub mod timing_offsets;
 pub mod z_conversion;
 
 pub use calibration::{resolve_z_calibration, Resolved, StoredWidths, ZCalibration};
+pub use stage::Stage;
+pub use time_shift::{
+    shift_channel, shift_series, timestamps, ShiftRefusal, ShiftedSeries, SHIFT_FIT_N,
+};
+pub use timing_offsets::{
+    apply_override, card_convention, parse_offset_text, resolve_timing, CardConvention,
+    OffsetReading, ParsedOffset, RecordedOffset, RecordedTiming, ResolvedOffset, TimingFallbacks,
+    TimingResolution, UnknownUnitAs,
+};
 pub use z_conversion::{
     bits_to_mm, ZConverter, ZRefusal, ZSeries, MAX_BIT_RESOLUTION, MIN_BIT_RESOLUTION,
 };
