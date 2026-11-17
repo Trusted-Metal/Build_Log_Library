@@ -26,6 +26,7 @@ mod identity;
 mod image_regions;
 mod json;
 mod meta;
+mod overrides;
 mod overview;
 mod params;
 mod provenance;
@@ -62,6 +63,7 @@ pub use grids::{CorrectionGrid, GridData, GridInterpretation, GridRequest, GridR
 pub use identity::{Availability, ByLayer, ChannelKey, LaserKey, LayerId, Presence};
 pub use image_regions::{ImageData, ImageRegion, ImageRequest};
 pub use meta::{BuildIdentity, BuildMeta, LaserLayerMeta, LaserMeta, LayerMeta};
+pub use overrides::{SpotSizeOverride, TimingOverride, ZCalibrationOverride};
 pub use overview::{BuildOverview, LaserInLayer, LaserOverview, LayerDetail};
 pub use params::{
     Equation, EquationKind, GalvoParameters, GalvoProtocol, LaserParameters, LightSourceParameters,
