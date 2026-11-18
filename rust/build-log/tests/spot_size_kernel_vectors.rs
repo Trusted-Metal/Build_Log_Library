@@ -16,33 +16,15 @@ mod vision_beam;
 
 use build_log::{ReadSelection, TimingOverride, ZCalibrationOverride};
 use build_log_conformance::vectors::{
-    bits, differences, digest_f64, expected_columns, head_and_tail, load_vectors, whole, words,
-    Columns,
+    differences, expected_columns, load_vectors, whole, words, Columns,
 };
-use build_log_processing::{
-    resolve_beam_of, spot_size_from_z, SpotSeries, SPOT_SIZE_ALGORITHM_VERSION,
-};
+use build_log_processing::{resolve_beam_of, spot_size_from_z, SPOT_SIZE_ALGORITHM_VERSION};
 use serde_json::Value;
 
-use vision_adapter::{kept_layer, rows_of, shift_laser, ShiftedLaser};
+use vision_adapter::{kept_layer, put_spot, rows_of, shift_laser, ShiftedLaser};
 use vision_beam::{error_text, override_of, vision_assumptions};
 
 const CHUNK: &str = "spot_size_kernel";
-
-/// The six series of a laser's spot, by the names the vectors give them.
-fn named<'a>(
-    commanded: &'a SpotSeries,
-    actual: &'a SpotSeries,
-) -> [(&'static str, &'a Vec<f64>); 6] {
-    [
-        ("cmd_major", &commanded.major_radii_um),
-        ("cmd_minor", &commanded.minor_radii_um),
-        ("cmd_area", &commanded.areas_um2),
-        ("act_major", &actual.major_radii_um),
-        ("act_minor", &actual.minor_radii_um),
-        ("act_area", &actual.areas_um2),
-    ]
-}
 
 fn run_file(inputs: &Value) -> Columns {
     let stride = inputs["stride"].as_u64().expect("stride");
@@ -84,26 +66,13 @@ fn run_file(inputs: &Value) -> Columns {
         };
         let spot = spot_size_from_z(&beam, &commanded, &actual);
         assert_eq!(spot.algorithm_version(), SPOT_SIZE_ALGORITHM_VERSION);
-        out.insert(format!("{p}_has_spot_size"), whole(&[1]));
-        out.insert(
-            format!("{p}_n"),
-            whole(&[spot.commanded().major_radii_um.len() as i64]),
+        put_spot(
+            &mut out,
+            laser.index,
+            spot.commanded(),
+            spot.actual(),
+            spot.axis_angle_deg(),
         );
-        out.insert(
-            format!("{p}_major_axis_angle_deg"),
-            bits(&[spot.axis_angle_deg()]),
-        );
-        let series = named(spot.commanded(), spot.actual());
-        for (name, values) in series {
-            out.insert(format!("{p}_{name}_digest"), whole(&[digest_f64(values)]));
-        }
-        for (name, values) in series {
-            if matches!(name, "cmd_major" | "act_major" | "act_area") {
-                let (head, tail) = head_and_tail(values);
-                out.insert(format!("{p}_{name}_head"), bits(&head));
-                out.insert(format!("{p}_{name}_tail"), bits(&tail));
-            }
-        }
     }
     out.insert("lasers_present".into(), whole(&present));
     let warnings: Vec<&str> = warnings.iter().map(String::as_str).collect();

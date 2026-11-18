@@ -15,7 +15,10 @@ use build_log::{
     LayerId, NativeIndex, Precision, Quantity, ReadContext, ReadSelection, StateRows,
     ZCalibrationOverride,
 };
-use build_log_processing::{resolve_z_calibration, Resolved, StoredWidths, ZConverter, ZSeries};
+use build_log_conformance::vectors::{bits, digest_f64, head_and_tail, whole, Columns};
+use build_log_processing::{
+    resolve_z_calibration, Resolved, SpotSeries, StoredWidths, ZConverter, ZSeries,
+};
 
 use build_log::{Shared, TimingOverride};
 use build_log_processing::{
@@ -215,6 +218,52 @@ pub fn kept_layer(
     KeptLayer {
         layer_id: format!("Layer_{layer}"),
         lasers,
+    }
+}
+
+// ---------------------------------------------------------------- the columns the kernel vectors record for a laser's spot (IP-27 phases 27I and 27J)
+
+/// The six series of a laser's spot, by the names the vectors give them.
+fn named_series<'a>(
+    commanded: &'a SpotSeries,
+    actual: &'a SpotSeries,
+) -> [(&'static str, &'a Vec<f64>); 6] {
+    [
+        ("cmd_major", &commanded.major_radii_um),
+        ("cmd_minor", &commanded.minor_radii_um),
+        ("cmd_area", &commanded.areas_um2),
+        ("act_major", &actual.major_radii_um),
+        ("act_minor", &actual.minor_radii_um),
+        ("act_area", &actual.areas_um2),
+    ]
+}
+
+/// What the kernel vectors record for a laser that has a spot size: that it has one, the count, the angle, a digest of each series and the head and tail of three of them. Both the test that
+/// takes a layer through the library piece by piece and the one that asks the accessor build the columns here, so the two are compared with the same vectors by the same words.
+pub fn put_spot(
+    out: &mut Columns,
+    laser_index: usize,
+    commanded: &SpotSeries,
+    actual: &SpotSeries,
+    axis_angle_deg: f64,
+) {
+    let p = format!("laser{laser_index}");
+    out.insert(format!("{p}_has_spot_size"), whole(&[1]));
+    out.insert(
+        format!("{p}_n"),
+        whole(&[commanded.major_radii_um.len() as i64]),
+    );
+    out.insert(format!("{p}_major_axis_angle_deg"), bits(&[axis_angle_deg]));
+    let series = named_series(commanded, actual);
+    for (name, values) in series {
+        out.insert(format!("{p}_{name}_digest"), whole(&[digest_f64(values)]));
+    }
+    for (name, values) in series {
+        if matches!(name, "cmd_major" | "act_major" | "act_area") {
+            let (head, tail) = head_and_tail(values);
+            out.insert(format!("{p}_{name}_head"), bits(&head));
+            out.insert(format!("{p}_{name}_tail"), bits(&tail));
+        }
     }
 }
 
