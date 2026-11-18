@@ -20,7 +20,7 @@
 //!
 //! # What is here, and what is not
 //!
-//! * [`compute_spot_size`] is Vision's `compute_spot_size` with its CPU backend: a [`BeamShape`] and a [`SpotSizeRequest`] in, the commanded and the actual [`SpotSeries`] and the angle out.
+//! * [`compute_spot_size`] is Vision's `compute_spot_size` with its CPU backend: a [`BeamShape`] and a [`SpotKernelInput`] in, the commanded and the actual [`SpotSeries`] and the angle out.
 //! * [`spot_size_from_z`] composes it with a [`ResolvedBeam`] and the **converted and shifted** Z slices ([`crate::z_conversion`], [`crate::time_shift`]) and returns a [`SpotSize`] that says the
 //!   algorithm version and the beam, with each value's origin and the findings.
 //! * **The GPU `f32` backend is not here:** it is not an oracle (D26-7), and what a user sees today. Whether the library's CPU kernel replaces it is decided at phase 27L (Q27-3).
@@ -75,7 +75,7 @@ impl SpotSeries {
 
 /// The Z of one laser, as the kernel reads it: the counts of the two series and the Z in millimetres of each (converted and shifted).
 #[derive(Debug, Clone, Copy)]
-pub struct SpotSizeRequest<'a> {
+pub struct SpotKernelInput<'a> {
     /// How many commanded samples (the length of the commanded series).
     pub commanded_samples: usize,
     /// How many actual samples (the length of the actual series).
@@ -155,7 +155,7 @@ pub fn propagate(defocus_mm: &[f64], beam: &BeamShape) -> SpotSeries {
 /// The commanded and the actual spot of one laser: the defocus of each ([`commanded_defocus`], [`actual_defocus`]) and the kernel on it ([`propagate`]). **Vision's `compute_spot_size` with its CPU
 /// backend, to the last bit.**
 #[must_use]
-pub fn compute_spot_size(beam: &BeamShape, request: &SpotSizeRequest<'_>) -> SpotSizeResult {
+pub fn compute_spot_size(beam: &BeamShape, request: &SpotKernelInput<'_>) -> SpotSizeResult {
     let commanded = commanded_defocus(request.commanded_samples, beam.focus_shift_mm);
     let actual = actual_defocus(
         request.actual_samples,
@@ -213,7 +213,7 @@ pub fn spot_size_from_z(
     commanded_z_mm: &[f64],
     actual_z_mm: &[f64],
 ) -> SpotSize {
-    let request = SpotSizeRequest {
+    let request = SpotKernelInput {
         commanded_samples: commanded_z_mm.len(),
         actual_samples: actual_z_mm.len(),
         commanded_z_mm,
@@ -324,7 +324,7 @@ mod tests {
         assert!(propagate(&[], &beam).is_empty());
         let empty = compute_spot_size(
             &beam,
-            &SpotSizeRequest {
+            &SpotKernelInput {
                 commanded_samples: 0,
                 actual_samples: 0,
                 commanded_z_mm: &[],
@@ -336,7 +336,7 @@ mod tests {
         let (commanded, actual) = z();
         let result = compute_spot_size(
             &beam,
-            &SpotSizeRequest {
+            &SpotKernelInput {
                 commanded_samples: 3,
                 actual_samples: 10,
                 commanded_z_mm: &commanded,
@@ -362,7 +362,7 @@ mod tests {
         };
         let result = compute_spot_size(
             &beam,
-            &SpotSizeRequest {
+            &SpotKernelInput {
                 commanded_samples: 8,
                 actual_samples: 8,
                 commanded_z_mm: &commanded,
@@ -400,7 +400,7 @@ mod tests {
         let request = |commanded: &[f64]| {
             compute_spot_size(
                 &beam,
-                &SpotSizeRequest {
+                &SpotKernelInput {
                     commanded_samples: 8,
                     actual_samples: 8,
                     commanded_z_mm: commanded,
@@ -444,7 +444,7 @@ mod tests {
         let spot = spot_size_from_z(&beam, &commanded, &actual);
         let by_hand = compute_spot_size(
             &beam.shape(),
-            &SpotSizeRequest {
+            &SpotKernelInput {
                 commanded_samples: 8,
                 actual_samples: 8,
                 commanded_z_mm: &commanded,

@@ -265,6 +265,7 @@ pub struct RecordedTiming {
     protocol_x: Option<GalvoProtocol>,
     protocol_y: Option<GalvoProtocol>,
     native_period_s: Option<f64>,
+    native_period_origin: Option<Origin>,
 }
 
 impl Default for RecordedTiming {
@@ -282,6 +283,7 @@ impl RecordedTiming {
             protocol_x: None,
             protocol_y: None,
             native_period_s: None,
+            native_period_origin: None,
         }
     }
 
@@ -310,6 +312,7 @@ impl RecordedTiming {
             protocol_x: p.galvo_x.protocol.clone(),
             protocol_y: p.galvo_y.protocol.clone(),
             native_period_s: None,
+            native_period_origin: None,
         }
     }
 
@@ -336,6 +339,12 @@ impl RecordedTiming {
     /// The **native** sample period, in seconds: the period of the stored samples, whatever stride the layer was read with. Whatever is not above 0 is reported as unusable.
     pub fn with_native_period_s(mut self, seconds: f64) -> Self {
         self.native_period_s = Some(seconds);
+        self
+    }
+
+    /// Where the native period came from, when it is not simply the file's: the caller's reading of a period whose unit the file does not state ([`Origin::CallerSupplied`]).
+    pub fn with_native_period_origin(mut self, origin: Origin) -> Self {
+        self.native_period_origin = Some(origin);
         self
     }
 }
@@ -498,7 +507,9 @@ pub fn resolve_timing(
     fallbacks: &TimingFallbacks,
 ) -> TimingResolution {
     let native_period = match recorded.native_period_s {
-        Some(period) if period > 0.0 => Resolved::new(period, None),
+        Some(period) if period > 0.0 => {
+            Resolved::new(period, recorded.native_period_origin.clone())
+        }
         _ => caller_supplied(fallbacks.sample_period_s),
     };
     let convention = card_convention(recorded.protocol_x.as_ref(), recorded.protocol_y.as_ref());

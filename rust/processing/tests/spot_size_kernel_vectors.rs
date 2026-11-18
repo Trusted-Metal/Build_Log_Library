@@ -14,7 +14,7 @@ use build_log_conformance::vectors::{
     bits, differences, exact_f64, exact_f64s, expected_columns, load_vectors, Columns,
 };
 use build_log_processing::{
-    actual_defocus, commanded_defocus, compute_spot_size, BeamShape, SpotSeries, SpotSizeRequest,
+    actual_defocus, commanded_defocus, compute_spot_size, BeamShape, SpotKernelInput, SpotSeries,
 };
 use serde_json::Value;
 
@@ -69,7 +69,7 @@ fn kernel(inputs: &Value) -> Columns {
     let actual_z = exact_f64s(inputs, "actual_z");
     let result = compute_spot_size(
         &shape,
-        &SpotSizeRequest {
+        &SpotKernelInput {
             commanded_samples: count(inputs, "commanded_samples"),
             actual_samples: count(inputs, "actual_samples"),
             commanded_z_mm: &commanded_z,

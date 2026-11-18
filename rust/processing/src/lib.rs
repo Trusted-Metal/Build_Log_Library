@@ -20,7 +20,9 @@
 //!   states none (IP-27 phase 27H).
 //! * [`beam`]: **the beam model of a laser** resolved from its stored values and the user's overrides, with the origin of each value and structured findings; what the file does not say is answered by the
 //!   caller's explicit [`BeamAssumptions`] (IP-27 phase 27H, decision D27-23).
-//! * [`spot_size`]: **the spot size** of a laser at every sample: the defocus and the Gaussian-beam kernel, Vision's CPU path to the last bit, with the version of the algorithm (IP-27 phase 27I).
+//! * [`spot_size`](mod@spot_size): **the spot size** of a laser at every sample: the defocus and the Gaussian-beam kernel, Vision's CPU path to the last bit, with the version of the algorithm (IP-27 phase 27I).
+//! * [`spot_size_access`]: **the spot size of a laser from a file**, through any `BuildSource`: the request, the caller's explicit bundle of answers, and the two accessors (IP-27 phase 27J,
+//!   decision D27-24).
 //! * [`time_shift`]: **the time shift** of a position series by its offset, with the timestamps it needs: Vision's algorithm, to the last bit, behind a stage that shifts only positions.
 //!
 //! **The library reports and the caller decides what a report means** (decision D27-18): an absent value is reported as absent, and Vision supplies its own defaults, applies its own rules and
@@ -32,6 +34,7 @@ pub mod beam;
 pub mod beam_units;
 pub mod calibration;
 pub mod spot_size;
+pub mod spot_size_access;
 pub mod stage;
 pub mod time_shift;
 pub mod timing_offsets;
@@ -48,7 +51,11 @@ pub use beam_units::{
 pub use calibration::{resolve_z_calibration, Resolved, StoredWidths, ZCalibration};
 pub use spot_size::{
     actual_defocus, commanded_defocus, compute_spot_size, propagate, spot_size_from_z, BeamShape,
-    SpotSeries, SpotSize, SpotSizeRequest, SpotSizeResult, SPOT_SIZE_ALGORITHM_VERSION,
+    SpotKernelInput, SpotSeries, SpotSize, SpotSizeResult, SPOT_SIZE_ALGORITHM_VERSION,
+};
+pub use spot_size_access::{
+    spot_size, spot_size_beam, LaserSpotSize, SpotSizeAssumptions, SpotSizeFinding,
+    SpotSizeRequest, SpotSizeUnavailable, UnitlessPeriod, ZAssumptions, ZUsed,
 };
 pub use stage::Stage;
 pub use time_shift::{
