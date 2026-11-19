@@ -1,6 +1,10 @@
 {
   "chunk": "spot_size_kernel",
-  "produced_by": { "date": "2026-11-17", "vision_commit": "f4bb83c2674997d841fd251c45139f4e7d9db392" },
+  "produced_by": {
+    "date": "2026-11-18",
+    "uncommitted_changes_in_crates": true,
+    "vision_commit": "8c7dcc5542488283a1e1af5bd75d60c4419c4032"
+  },
   "cases": [
     {
       "case": "file_layer_v16_has_no_beam_so_no_spot_size_and_a_warning",
@@ -631,6 +635,198 @@
           "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
           "laser0_n": { "i64": [2684] },
           "lasers_present": { "i64": [0] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_triggered_a_given_beam_and_a_large_defocus_square_exactly",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_triggered_2026_10_19.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": 4.0,
+          "rayleigh_major_mm_bits": "0x4010000000000000",
+          "rayleigh_minor_mm": 3.0,
+          "rayleigh_minor_mm_bits": "0x4008000000000000",
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": 60.0,
+          "waist_major_um_bits": "0x404e000000000000",
+          "waist_minor_um": 50.0,
+          "waist_minor_um_bits": "0x4049000000000000",
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [2491077134604011760] },
+          "laser0_act_area_head": {
+            "f64": [2899.2605674336087, 2899.2124125310593, 2899.3087244417047, 2899.3568835553438],
+            "f64_bits": ["0x40a6a68569183b81", "0x40a6a66cc155d452", "0x40a6a69e11214932", "0x40a6a6b6b970fd5d"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [2896.7716571071214, 2896.779079327204, 2896.738454996408, 2896.6978321710194],
+            "f64_bits": ["0x40a6a18b16a3eda0", "0x40a6a18ee37c4ea9", "0x40a6a17a16c5f648", "0x40a6a1654a422140"]
+          },
+          "laser0_act_major_digest": { "i64": [6761498599090349375] },
+          "laser0_act_major_head": {
+            "f64": [32.41089571814789, 32.4106886357012, 32.41110280850895, 32.41130990678421],
+            "f64_bits": ["0x404034983b1bc17d", "0x4040349171f99677", "0x4040349f044eeb7b", "0x404034a5cd93145a"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [32.400191064162534, 32.400222991215436, 32.40004824328201, 32.3998735010123],
+            "f64_bits": ["0x4040333975f65d61", "0x4040333a81c93055", "0x40403334c7e4dbf7", "0x4040332f0e0cb143"]
+          },
+          "laser0_act_minor_digest": { "i64": [-8828212040410494189] },
+          "laser0_cmd_area_digest": { "i64": [-6403375185108347771] },
+          "laser0_cmd_major_digest": { "i64": [5417682302912565829] },
+          "laser0_cmd_major_head": {
+            "f64": [32.41068863570118, 32.41068863570118, 32.41068863570118, 32.41068863570118],
+            "f64_bits": ["0x4040349171f99674", "0x4040349171f99674", "0x4040349171f99674", "0x4040349171f99674"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [32.41068863570118, 32.41068863570118, 32.41068863570118, 32.41068863570118],
+            "f64_bits": ["0x4040349171f99674", "0x4040349171f99674", "0x4040349171f99674", "0x4040349171f99674"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [4946486831842640453] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_area_digest": { "i64": [-6272551940808943409] },
+          "laser1_act_area_head": {
+            "f64": [2470.980383085355, 2470.980383085355, 2470.980383085355, 2470.9580863873725],
+            "f64_bits": ["0x40a34df5f4c5924d", "0x40a34df5f4c5924d", "0x40a34df5f4c5924d", "0x40a34dea8a4c8904"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [2471.3753853896874, 2471.3978736308295, 2471.398024875561, 2471.3981761203904],
+            "f64_bits": ["0x40a34ec032838835", "0x40a34ecbb617b0b5", "0x40a34ecbc9ea9f0f", "0x40a34ecbddbd8e40"]
+          },
+          "laser1_act_major_digest": { "i64": [5869759443450958691] },
+          "laser1_act_major_head": {
+            "f64": [30.522550350271985, 30.522550350271985, 30.522550350271985, 30.52244954003138],
+            "f64_bits": ["0x403e85c5dc18ee78", "0x403e85c5dc18ee78", "0x403e85c5dc18ee78", "0x403e85bf40c83eba"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [30.5243362330097, 30.524437904222697, 30.52443858801182, 30.52443927180137],
+            "f64_bits": ["0x403e863ae63ce26e", "0x403e86418fff6b55", "0x403e86419b78456c", "0x403e8641a6f11ffc"]
+          },
+          "laser1_act_minor_digest": { "i64": [-293107533219386172] },
+          "laser1_cmd_area_digest": { "i64": [-4194762924129543195] },
+          "laser1_cmd_major_digest": { "i64": [-6117361122518647835] },
+          "laser1_cmd_major_head": {
+            "f64": [30.52244954003139, 30.52244954003139, 30.52244954003139, 30.52244954003139],
+            "f64_bits": ["0x403e85bf40c83ebc", "0x403e85bf40c83ebc", "0x403e85bf40c83ebc", "0x403e85bf40c83ebc"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [30.52244954003139, 30.52244954003139, 30.52244954003139, 30.52244954003139],
+            "f64_bits": ["0x403e85bf40c83ebc", "0x403e85bf40c83ebc", "0x403e85bf40c83ebc", "0x403e85bf40c83ebc"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [4129716595712921317] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
+          "warnings": { "text": [] }
+        }
+      }
+    },
+    {
+      "case": "file_layer_v17_triggered_all_rows",
+      "kind": "file",
+      "inputs": {
+        "layer_position": 0,
+        "miniature": "v17_triggered_2026_10_19.h5",
+        "override": {
+          "m2_major": null,
+          "m2_minor": null,
+          "major_axis_angle_deg": null,
+          "rayleigh_major_mm": null,
+          "rayleigh_minor_mm": null,
+          "scanner_rotation_deg": null,
+          "thermal_shift_mm": null,
+          "waist_major_um": null,
+          "waist_minor_um": null,
+          "waist_offset_z_mm": null
+        },
+        "rows": "all",
+        "stride": 1
+      },
+      "expected": {
+        "columns": {
+          "laser0_act_area_digest": { "i64": [-1052121124359358590] },
+          "laser0_act_area_head": {
+            "f64": [4539.470707797316, 4539.3842547185795, 4539.557164732546, 4539.643625524272],
+            "f64_bits": ["0x40b1bb78804e6372", "0x40b1bb625e8469a2", "0x40b1bb8ea25910c5", "0x40b1bba4c4a4719e"]
+          },
+          "laser0_act_area_tail": {
+            "f64": [4535.002437121219, 4535.015761720284, 4534.94283168739, 4534.869904411537],
+            "f64_bits": ["0x40b1b7009fb81bef", "0x40b1b70408f5c926", "0x40b1b6f15d6adef9", "0x40b1b6deb20e3633"]
+          },
+          "laser0_act_major_digest": { "i64": [72523105601242561] },
+          "laser0_act_major_head": {
+            "f64": [37.63421764004664, 37.633858361117085, 37.63457693157285, 37.63493623569535],
+            "f64_bits": ["0x4042d12e0b2b45f8", "0x4042d1224551a5a3", "0x4042d139d11ff362", "0x4042d145972fadae"]
+          },
+          "laser0_act_major_tail": {
+            "f64": [37.61564404958549, 37.61569945056315, 37.61539622129427, 37.615093001044386],
+            "f64_bits": ["0x4042cecd6c99792d", "0x4042cecf3d562abd", "0x4042cec54daa453b", "0x4042cebb5e11bdf8"]
+          },
+          "laser0_act_minor_digest": { "i64": [8071451483849764245] },
+          "laser0_cmd_area_digest": { "i64": [-944816164073868987] },
+          "laser0_cmd_major_digest": { "i64": [-6256359785493935915] },
+          "laser0_cmd_major_head": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_major_tail": {
+            "f64": [37.633858361117035, 37.633858361117035, 37.633858361117035, 37.633858361117035],
+            "f64_bits": ["0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c", "0x4042d1224551a59c"]
+          },
+          "laser0_cmd_minor_digest": { "i64": [-2831618826201742555] },
+          "laser0_has_spot_size": { "i64": [1] },
+          "laser0_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser0_n": { "i64": [25000] },
+          "laser1_act_area_digest": { "i64": [-4507439810935124087] },
+          "laser1_act_area_head": {
+            "f64": [3844.9158823113294, 3844.9158823113294, 3844.9158823113294, 3844.87746870071],
+            "f64_bits": ["0x40ae09d4ee86bc4a", "0x40ae09d4ee86bc4a", "0x40ae09d4ee86bc4a", "0x40ae09c14393d9a0"]
+          },
+          "laser1_act_area_tail": {
+            "f64": [3845.5964116011096, 3845.6351556761365, 3845.635416249609, 3845.6356768232554],
+            "f64_bits": ["0x40ae0b315cdc8371", "0x40ae0b45331ff1c0", "0x40ae0b45554756d6", "0x40ae0b45776ebd6a"]
+          },
+          "laser1_act_major_digest": { "i64": [-4806122517621911022] },
+          "laser1_act_major_head": {
+            "f64": [34.95794385575623, 34.95794385575623, 34.95794385575623, 34.95777295292743],
+            "f64_bits": ["0x40417a9de77df046", "0x40417a9de77df046", "0x40417a9de77df046", "0x40417a984ddae888"]
+          },
+          "laser1_act_major_tail": {
+            "f64": [34.960971404154236, 34.96114376146633, 34.96114492065343, 34.961146079841264],
+            "f64_bits": ["0x40417b011c689de8", "0x40417b06c23f204c", "0x40417b06cbf87625", "0x40417b06d5b1cc65"]
+          },
+          "laser1_act_minor_digest": { "i64": [-7336244183562333835] },
+          "laser1_cmd_area_digest": { "i64": [3328004392003646165] },
+          "laser1_cmd_major_digest": { "i64": [-8309792442636628427] },
+          "laser1_cmd_major_head": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_major_tail": {
+            "f64": [34.957772952927435, 34.957772952927435, 34.957772952927435, 34.957772952927435],
+            "f64_bits": ["0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889", "0x40417a984ddae889"]
+          },
+          "laser1_cmd_minor_digest": { "i64": [346840707965153893] },
+          "laser1_has_spot_size": { "i64": [1] },
+          "laser1_major_axis_angle_deg": { "f64": [0.0], "f64_bits": ["0x0000000000000000"] },
+          "laser1_n": { "i64": [25000] },
+          "lasers_present": { "i64": [0, 1] },
           "warnings": { "text": [] }
         }
       }

@@ -111,7 +111,7 @@ fn the_cases_on_the_miniatures_pass_bit_for_bit() {
         lines.len(),
         lines.join("\n")
     );
-    assert_eq!(ran, 9, "the file holds 9 cases on miniatures");
+    assert_eq!(ran, 11, "the file holds 11 cases on miniatures");
 }
 
 /// The cases above would pass if the library calculated nothing and the vectors recorded that. They do not: a layer with a beam has a spot, one without has none and a warning, an override of the

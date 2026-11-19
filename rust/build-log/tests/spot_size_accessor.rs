@@ -3,7 +3,7 @@
 //! `spot_size` takes a laser of a layer from the file to its spot in one call: the rows (27C), the Z (27D), the time shift (27F), the beam (27H) and the kernel (27I). The tests here prove that
 //! one call **is** the chain that the earlier phases proved piece by piece:
 //!
-//! * the nine layer cases of Vision's kernel vectors, **through the accessor**, bit for bit, with the same columns and the same warnings;
+//! * the eleven layer cases of Vision's kernel vectors, **through the accessor**, bit for bit, with the same columns and the same warnings;
 //! * a grid of selections (stride 1, 2, 7 and one so large that a laser keeps a single row, each with all, laser-on and laser-off rows) on every miniature, each laser equal to the composition of
 //!   the pieces by hand, and what Vision drops reported as a reason;
 //! * the reasons a laser has no spot size, the beam of another laser, the origins and the stage.
@@ -152,7 +152,7 @@ fn run_file_through_the_accessor(inputs: &Value) -> Columns {
 }
 
 #[test]
-fn the_accessor_reproduces_the_nine_layer_cases_bit_for_bit() {
+fn the_accessor_reproduces_the_eleven_layer_cases_bit_for_bit() {
     let doc = load_vectors(CHUNK).expect("the vectors");
     let mut ran = 0;
     let mut lines = Vec::new();
@@ -172,7 +172,7 @@ fn the_accessor_reproduces_the_nine_layer_cases_bit_for_bit() {
         lines.len(),
         lines.join("\n")
     );
-    assert_eq!(ran, 9, "the file holds 9 cases on miniatures");
+    assert_eq!(ran, 11, "the file holds 11 cases on miniatures");
 }
 
 // ---------------------------------------------------------------- the grid of selections
