@@ -123,9 +123,13 @@ pub fn actual_defocus(
 }
 
 /// The radius at an axial distance `dz` from the waist: `w0 * sqrt(1 + (dz / zR)^2)`, or the waist radius where `|zR| <= f64::EPSILON`.
+///
+/// **The square is a product, not `powi(2)`** (decision D27-28): `powi` is not the correctly rounded square at optimisation level 0 and is `x * x` at level 2, so the numbers would depend on the
+/// build (the test `the_radius_squares_the_ratio_exactly_in_every_build` holds it).
 fn radius(w0: f64, zr: f64, dz: f64) -> f64 {
     if zr.abs() > f64::EPSILON {
-        w0 * (1.0 + (dz / zr).powi(2)).sqrt()
+        let x = dz / zr;
+        w0 * (1.0 + x * x).sqrt()
     } else {
         w0
     }
@@ -458,8 +462,49 @@ mod tests {
         assert_eq!(SPOT_SIZE_ALGORITHM_VERSION, 1);
         // the beam is the one resolved, with its focus shift of 1 mm: the waist grown by sqrt(1 + (1/3)^2)
         assert_eq!(spot.beam(), &beam);
-        let grown = 33.0 * (1.0_f64 + (1.0_f64 / 3.0).powi(2)).sqrt();
+        let third = 1.0_f64 / 3.0;
+        let grown = 33.0 * (1.0_f64 + third * third).sqrt();
         assert!((spot.commanded().major_radii_um[0] - grown).abs() < 1e-12);
+    }
+
+    /// **The kernel squares the ratio `dz / zR` as a product, so its numbers are the same in every build** (IP-27 decision D27-28). `f64::powi(2)` is not the correctly rounded square at
+    /// optimisation level 0 (about 5 in 10,000 numbers, on the toolchain this was found on) and is `x * x` at level 2, so the same code gave different radii in a dev build and in a release
+    /// build, and Vision's dev profile builds its dependencies (this library) at level 2 and its own crates at level 0. These are five defocus values for which the two differ at level 0
+    /// (found by search: 64 of 2,000,000 values of 0.5 to 3 mm, for a waist radius of 25 um and a Rayleigh length of 3 mm); the radii here are those of the exact product, to the bit. The
+    /// library's tests run at level 0, so this fails if the square goes back to `powi(2)`.
+    #[test]
+    fn the_radius_squares_the_ratio_exactly_in_every_build() {
+        let beam = BeamShape {
+            waist_radius_major_um: 25.0,
+            waist_radius_minor_um: 25.0,
+            rayleigh_major_mm: 3.0,
+            rayleigh_minor_mm: 3.0,
+            focus_shift_mm: 0.0,
+            axis_angle_deg: 0.0,
+        };
+        let cases: [(f64, u64); 5] = [
+            (2.195785, 0x403e_fb25_00a0_57a8),
+            (1.792948, 0x403d_1fe3_ae08_ea76),
+            (2.094472, 0x403e_7d70_4e38_ca67),
+            (2.1297, 0x403e_a8b3_a9c4_63e9),
+            (1.704729, 0x403c_c11c_fe6b_d36a),
+        ];
+        let defocus: Vec<f64> = cases.iter().map(|case| case.0).collect();
+        let series = propagate(&defocus, &beam);
+        for (i, (dz, bits)) in cases.iter().enumerate() {
+            assert_eq!(
+                series.major_radii_um[i].to_bits(),
+                *bits,
+                "major radius at {dz} mm: {:?}",
+                series.major_radii_um[i]
+            );
+            assert_eq!(
+                series.minor_radii_um[i].to_bits(),
+                *bits,
+                "minor radius at {dz} mm: {:?}",
+                series.minor_radii_um[i]
+            );
+        }
     }
 
     #[test]
