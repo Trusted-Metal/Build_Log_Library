@@ -470,6 +470,51 @@ fn layering_guard_accepts_the_conformance_crate_and_rejects_other_edges() {
 }
 
 #[test]
+fn an_optional_rule_asks_the_normal_edge_to_be_optional_and_lets_a_dev_edge_of_the_same_pair_be_what_it_is(
+) {
+    // IP-27 phase 27D: the facade's tests use the processing layer next to the IO layer, so the pair is allowed as a normal (optional) and as a dev dependency
+    let both = allowed_from_json(
+        r#"{ "allowed": [ { "from": "build-log", "to": "build-log-processing", "kinds": ["normal", "dev"], "optional": true } ] }"#,
+    )
+    .expect("valid data");
+    let mut ws = healthy();
+    ws.members = vec![
+        package(
+            FACADE,
+            "rust/build-log",
+            vec![
+                dep(PROCESSING, Kind::Normal, true),
+                dep(PROCESSING, Kind::Dev, false),
+            ],
+        ),
+        package(PROCESSING, "rust/processing", vec![]),
+    ];
+    assert_eq!(layering_violations(&ws, &both), Vec::<String>::new());
+    // the normal edge must still be optional
+    ws.members[0].dependencies[0].optional = false;
+    let found = layering_violations(&ws, &both);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert!(
+        found[0].contains("build-log -> build-log-processing (normal): must be optional"),
+        "{found:?}"
+    );
+    // and a dev edge is allowed only where the kinds say so
+    let normal_only = allowed_from_json(
+        r#"{ "allowed": [ { "from": "build-log", "to": "build-log-processing", "kinds": ["normal"], "optional": true } ] }"#,
+    )
+    .expect("valid data");
+    ws.members[0].dependencies[0].optional = true;
+    let found = layering_violations(&ws, &normal_only);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert!(
+        found[0].contains(
+            "build-log -> build-log-processing (dev): allowed only as a normal dependency"
+        ),
+        "{found:?}"
+    );
+}
+
+#[test]
 fn the_allowed_dependency_data_is_read_as_written() {
     let data = r#"{ "allowed": [ { "from": "a", "to": "b", "kinds": ["normal", "dev"], "optional": true } ] }"#;
     let allowed = allowed_from_json(data).expect("valid data");

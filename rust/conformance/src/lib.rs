@@ -21,6 +21,8 @@
 //! * [`check_image_regions`]: the same for the **camera frames**: every way in which a source serves a frame (its dimensions and the **fingerprint of its pixels**, taken row by row) that is not
 //!   what its fingerprint says, and every way in which a rectangle of it is not the same rectangle of the whole frame, so that a rows-and-columns mix-up is found (IP-06 phase 6G).
 //!
+//! * [`vectors`]: the **vectors of the stage packages** (IP-27), read and compared bit for bit: the file of a chunk, its recorded outputs as columns, Vision's digests, and the places where a result differs.
+//!
 //! The assertions say *what the CDM must show*, never how an adapter reads a file, so one adapter per version is held to the same facts.
 
 #![forbid(unsafe_code)]
@@ -36,6 +38,7 @@ mod names;
 mod parameters;
 mod reports;
 mod synthesise;
+pub mod vectors;
 
 pub use check::{check, check_parts, Part};
 pub use columns::{check_columns, column_expectations, ColumnExpectation, Fingerprint};
