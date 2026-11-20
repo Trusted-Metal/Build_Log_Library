@@ -347,6 +347,77 @@ fn first_layer(miniature: &str) -> (build_log::Opened, LayerId, Vec<LaserKey>) {
     (opened, layer, keys)
 }
 
+/// A source that serves everything but `build()`, which on a lazy file **reads every layer the first time**: it panics. The accessors must not call it for a laser that the calibration names.
+struct NoWalk<'a>(&'a dyn build_log::BuildSource);
+
+impl build_log::ColumnSource for NoWalk<'_> {
+    fn read(
+        &self,
+        request: &build_log::ColumnRequest,
+        context: &ReadContext,
+    ) -> Result<build_log::ColumnData, build_log::Error> {
+        self.0.read(request, context)
+    }
+}
+
+impl build_log::BuildSource for NoWalk<'_> {
+    fn build(&self) -> Result<std::sync::Arc<build_log::BuildMeta>, build_log::Error> {
+        panic!("build() reads every layer the first time: the accessors must use the overview and the one layer")
+    }
+    fn revision(&self) -> Result<build_log::Revision, build_log::Error> {
+        self.0.revision()
+    }
+    fn overview(&self) -> Result<std::sync::Arc<build_log::BuildOverview>, build_log::Error> {
+        self.0.overview()
+    }
+    fn layer_meta(
+        &self,
+        layer: LayerId,
+    ) -> Result<std::sync::Arc<build_log::LayerDetail>, build_log::Error> {
+        self.0.layer_meta(layer)
+    }
+}
+
+/// **The accessors do not walk the layers** (finding of a review of Vision's pull request, 2026-11-19): `spot_size` and `spot_size_beam` took a laser's parameters from `build()`, which reads every
+/// layer the first time. On every miniature, for every laser of the first layer, they now give **the same answer, to the last bit, through a source whose `build()` panics** as through the plain one
+/// (the answer is compared as the whole value, series, beam, origins and findings, or as the same reason).
+#[test]
+fn the_accessors_give_the_same_answer_without_ever_walking_the_build() {
+    for miniature in [
+        "v16.h5",
+        "v17_march.h5",
+        "v17_mock.h5",
+        "v17_oct15.h5",
+        "v17_triggered_2026_10_19.h5",
+        "v17_2026_08_18_images.h5",
+        "special_layers_v17.h5",
+    ] {
+        let (opened, layer, keys) = first_layer(miniature);
+        let plain = opened.source();
+        let without = NoWalk(plain);
+        assert!(!keys.is_empty(), "{miniature}");
+        for key in &keys {
+            let direct = spot_size(plain, &request(layer, key), &ReadContext::new());
+            let guarded = spot_size(&without, &request(layer, key), &ReadContext::new());
+            assert_eq!(
+                format!("{direct:?}"),
+                format!("{guarded:?}"),
+                "{miniature} {key:?}: the spot size"
+            );
+            for overrides in [SpotSizeOverride::new(), rescue()] {
+                let direct = spot_size_beam(plain, key, None, &overrides, &vision_assumptions());
+                let guarded =
+                    spot_size_beam(&without, key, None, &overrides, &vision_assumptions());
+                assert_eq!(
+                    format!("{direct:?}"),
+                    format!("{guarded:?}"),
+                    "{miniature} {key:?}: the beam"
+                );
+            }
+        }
+    }
+}
+
 #[test]
 fn a_laser_with_no_beam_says_why_and_the_beam_accessor_says_the_same_without_reading_a_sample() {
     // the miniatures whose files hold no waist: Vision warns for them, and the library says which fact is missing

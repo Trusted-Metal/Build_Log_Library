@@ -15,6 +15,13 @@
 //! Both return `Result<Result<_, Unavailable>, Error>`: the outer `Error` is a real failure (a corrupt file, a failed read, a laser the build does not hold); the inner one is an expected
 //! absence, which a caller shows and goes on from.
 //!
+//! # They do not walk the layers (finding of a review of Vision's pull request, 2026-11-19)
+//!
+//! A lazy source reads a layer when it is asked for, but [`BuildSource::build`] **reads every layer the first time**. The accessors take a laser's parameters from the build's **overview**
+//! (the lasers that the calibration names, which costs no layer) and the laser's channels from the **one layer** that is asked about. **`build()` is called only for a laser that neither names
+//! nor the layer records**, to tell a laser that the file records elsewhere (no parameters) from one that the build does not hold at all (an error): the answer is the same as before,
+//! and the walk is paid only by that rare question.
+//!
 //! # No defaults here (decisions D27-18 and D27-24)
 //!
 //! Everything the file does not say is **the caller's**, in one explicit, immutable and hashable bundle, [`SpotSizeAssumptions`], which is part of the request's hash: the beam's seven answers
@@ -31,10 +38,13 @@
 //!   period for some strides. A quirk of version 1, kept so that the two paths agree to the last bit; the owner decides at 27L.
 //! * **A series of fewer than two samples is not shifted** (Vision's use case skips such a laser); [`SpotSizeFinding::NotShifted`] says so and the stage stays physical.
 
+use std::borrow::Cow;
+
 use build_log_model::{
-    Axis, BuildMeta, BuildSource, ChannelDescriptor, ChannelKind, ColumnRequest, Error, ErrorKind,
-    LaserKey, LaserParameters, LayerId, NativeIndex, Origin, Precision, Quantity, ReadContext,
-    ReadSelection, SelectedColumn, SpotSizeOverride, TimingOverride, ZCalibrationOverride,
+    Axis, BuildOverview, BuildSource, ChannelDescriptor, ChannelKind, ColumnRequest, Error,
+    ErrorKind, LaserKey, LaserParameters, LayerId, NativeIndex, Origin, Precision, Quantity,
+    ReadContext, ReadSelection, SelectedColumn, SpotSizeOverride, TimingOverride,
+    ZCalibrationOverride,
 };
 
 use crate::beam::{resolve_beam_of, BeamAssumptions, BeamUnavailable, ResolvedBeam};
@@ -448,14 +458,32 @@ fn not_present(what: &str) -> Error {
     })
 }
 
-fn parameters_of<'a>(
-    build: &'a BuildMeta,
+/// The parameters of a laser, **from the overview**: the lasers that the build's calibration names, which a lazy source gives without reading a layer.
+///
+/// A laser that the calibration does not name is looked up in the whole build (`build()`, which reads every layer the first time on a lazy source) **only if nothing else says that it exists**:
+/// `recorded` is true when the caller has seen the laser in a layer, and then it has no parameters. Otherwise the build says whether the laser is recorded anywhere (with the parameters it holds,
+/// if any) or not at all, which is an error, as before.
+fn parameters_in<'a>(
+    source: &dyn BuildSource,
+    overview: &'a BuildOverview,
     laser: &LaserKey,
-) -> Result<Option<&'a LaserParameters>, Error> {
+    recorded: bool,
+) -> Result<Option<Cow<'a, LaserParameters>>, Error> {
+    if let Some(named) = overview
+        .lasers
+        .iter()
+        .find(|candidate| &candidate.key == laser)
+    {
+        return Ok(named.parameters.as_ref().map(Cow::Borrowed));
+    }
+    if recorded {
+        return Ok(None);
+    }
+    let build = source.build()?;
     let meta = build
         .laser(laser)
         .ok_or_else(|| not_present("the laser, which the build does not hold"))?;
-    Ok(meta.parameters.as_ref())
+    Ok(meta.parameters.clone().map(Cow::Owned))
 }
 
 /// The channel of a laser that holds the Z of a series.
@@ -581,11 +609,15 @@ pub fn spot_size_beam(
     overrides: &SpotSizeOverride,
     assumptions: &BeamAssumptions,
 ) -> Result<Result<ResolvedBeam, BeamUnavailable>, Error> {
-    let build = source.build()?;
+    let overview = source.overview()?;
     // the laser itself must be there, whichever laser the beam is taken from
-    parameters_of(&build, laser)?;
-    let parameters = parameters_of(&build, beam_from.unwrap_or(laser))?;
-    Ok(resolve_beam_of(parameters, overrides, assumptions))
+    parameters_in(source, &overview, laser, false)?;
+    let parameters = parameters_in(source, &overview, beam_from.unwrap_or(laser), false)?;
+    Ok(resolve_beam_of(
+        parameters.as_deref(),
+        overrides,
+        assumptions,
+    ))
 }
 
 /// The spot size of one laser in one layer. See the module documentation for what it does, what it returns and where it differs from Vision's behaviour.
@@ -601,17 +633,27 @@ pub fn spot_size(
     let assumptions = request.assumptions();
     let layer = request.layer();
     let laser = request.laser();
-    let build = source.build()?;
-    let own = parameters_of(&build, laser)?;
-    let beam_parameters = parameters_of(&build, request.beam_from().unwrap_or(laser))?;
-
-    // the laser is recorded in the layer
+    // the layer, and whether the laser is recorded in it (the one layer is read, and no other)
     let detail = source.layer_meta(layer)?;
-    let Some(found) = detail
+    let found = detail
         .lasers
         .iter()
-        .find(|candidate| &candidate.key == laser)
-    else {
+        .find(|candidate| &candidate.key == laser);
+    // the parameters come from the overview: no layer is walked (see the module documentation)
+    let overview = source.overview()?;
+    let own_parameters = parameters_in(source, &overview, laser, found.is_some())?;
+    let own = own_parameters.as_deref();
+    let beam_laser = request.beam_from().unwrap_or(laser);
+    let beam_laser_parameters = parameters_in(
+        source,
+        &overview,
+        beam_laser,
+        beam_laser == laser && found.is_some(),
+    )?;
+    let beam_parameters = beam_laser_parameters.as_deref();
+
+    // the laser is recorded in the layer
+    let Some(found) = found else {
         return Ok(Err(SpotSizeUnavailable::LaserNotInLayer));
     };
 
