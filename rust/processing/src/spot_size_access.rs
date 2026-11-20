@@ -15,12 +15,15 @@
 //! Both return `Result<Result<_, Unavailable>, Error>`: the outer `Error` is a real failure (a corrupt file, a failed read, a laser the build does not hold); the inner one is an expected
 //! absence, which a caller shows and goes on from.
 //!
-//! # They do not walk the layers (finding of a review of Vision's pull request, 2026-11-19)
+//! # `spot_size` does not walk the layers for a laser that the layer records (findings of two reviews, 2026-11-19 and 2026-11-20)
 //!
-//! A lazy source reads a layer when it is asked for, but [`BuildSource::build`] **reads every layer the first time**. The accessors take a laser's parameters from the build's **overview**
-//! (the lasers that the calibration names, which costs no layer) and the laser's channels from the **one layer** that is asked about. **`build()` is called only for a laser that neither names
-//! nor the layer records**, to tell a laser that the file records elsewhere (no parameters) from one that the build does not hold at all (an error): the answer is the same as before,
-//! and the walk is paid only by that rare question.
+//! A lazy source reads a layer when it is asked for, but [`BuildSource::build`] **reads every layer the first time**. [`spot_size`](fn@spot_size) takes the laser's channels, and whether the laser is
+//! recorded, from the **one layer** that is asked about, and a recorded laser's parameters from the build's **overview** (the lasers that the calibration names, which costs no layer).
+//! **A name in the overview is not proof that the build holds the laser:** the overview lists what the calibration names and the build holds what a layer records, so a laser that only the
+//! calibration names is a laser that the build does not hold (the error is part of the contract). So `build()` is called for **a laser that the layer does not record**, to tell one that the file
+//! records elsewhere from one that it does not hold at all, and for **a recorded laser that the overview names under another name of the same number** (a group `Laser_01` for a calibration of
+//! `Laser_1`: the readers attach a calibration by number), which only the build resolves. Both are rare, and the walk is paid once. [`spot_size_beam`] has **no layer** to prove that the laser exists, so
+//! it always asks the build; a caller that lists the calibration's lasers (a settings panel) resolves their beams from the overview's parameters with [`resolve_beam_of`].
 //!
 //! # No defaults here (decisions D27-18 and D27-24)
 //!
@@ -41,8 +44,8 @@
 use std::borrow::Cow;
 
 use build_log_model::{
-    Axis, BuildOverview, BuildSource, ChannelDescriptor, ChannelKind, ColumnRequest, Error,
-    ErrorKind, LaserKey, LaserParameters, LayerId, NativeIndex, Origin, Precision, Quantity,
+    Axis, BuildMeta, BuildOverview, BuildSource, ChannelDescriptor, ChannelKind, ColumnRequest,
+    Error, ErrorKind, LaserKey, LaserParameters, LayerId, NativeIndex, Origin, Precision, Quantity,
     ReadContext, ReadSelection, SelectedColumn, SpotSizeOverride, TimingOverride,
     ZCalibrationOverride,
 };
@@ -458,32 +461,51 @@ fn not_present(what: &str) -> Error {
     })
 }
 
-/// The parameters of a laser, **from the overview**: the lasers that the build's calibration names, which a lazy source gives without reading a layer.
+/// The parameters of a laser that the build holds, or the error for one that it does not.
+fn parameters_of<'a>(
+    build: &'a BuildMeta,
+    laser: &LaserKey,
+) -> Result<Option<&'a LaserParameters>, Error> {
+    let meta = build
+        .laser(laser)
+        .ok_or_else(|| not_present("the laser, which the build does not hold"))?;
+    Ok(meta.parameters.as_ref())
+}
+
+/// The parameters of a laser: **from the overview when the layer at hand records the laser, from the build otherwise.**
 ///
-/// A laser that the calibration does not name is looked up in the whole build (`build()`, which reads every layer the first time on a lazy source) **only if nothing else says that it exists**:
-/// `recorded` is true when the caller has seen the laser in a layer, and then it has no parameters. Otherwise the build says whether the laser is recorded anywhere (with the parameters it holds,
-/// if any) or not at all, which is an error, as before.
+/// The overview lists the lasers that the build's *calibration* names, which a lazy source gives without reading a layer. Those are not the build's lasers, which are the ones that a layer
+/// records: **a name in the overview is not proof that the build holds the laser**, and the error for a laser it does not hold is part of the accessors' contract.
+///
+/// * `recorded` is true when the caller has seen the laser in a layer, so that it exists and the overview can say whether the calibration gives it parameters: the overview's laser of the same key
+///   has them (or none), and a laser the overview does not name at all has none. **A laser that the overview names under another name of the same number** (the file's group is `Laser_01` and
+///   the calibration says `Laser_1`; the readers attach a calibration by number) is left to the build, which knows.
+/// * Otherwise nothing proves that the build holds the laser, so the build is asked (`build()`, which reads every layer the first time on a lazy source): it says whether the laser is recorded
+///   anywhere, with the parameters it holds, or not at all, which is an error.
 fn parameters_in<'a>(
     source: &dyn BuildSource,
     overview: &'a BuildOverview,
     laser: &LaserKey,
     recorded: bool,
 ) -> Result<Option<Cow<'a, LaserParameters>>, Error> {
-    if let Some(named) = overview
-        .lasers
-        .iter()
-        .find(|candidate| &candidate.key == laser)
-    {
-        return Ok(named.parameters.as_ref().map(Cow::Borrowed));
-    }
     if recorded {
-        return Ok(None);
+        if let Some(named) = overview
+            .lasers
+            .iter()
+            .find(|candidate| &candidate.key == laser)
+        {
+            return Ok(named.parameters.as_ref().map(Cow::Borrowed));
+        }
+        if !overview
+            .lasers
+            .iter()
+            .any(|candidate| candidate.key.number == laser.number)
+        {
+            return Ok(None);
+        }
     }
     let build = source.build()?;
-    let meta = build
-        .laser(laser)
-        .ok_or_else(|| not_present("the laser, which the build does not hold"))?;
-    Ok(meta.parameters.clone().map(Cow::Owned))
+    Ok(parameters_of(&build, laser)?.cloned().map(Cow::Owned))
 }
 
 /// The channel of a laser that holds the Z of a series.
@@ -601,7 +623,10 @@ fn shifted(
 // ---------------------------------------------------------------- the accessors
 
 /// The beam of a laser: **metadata only, no sample is read.** `beam_from` names another laser whose parameters are used instead of the laser's own (the library never picks a train for a laser that
-/// has none). `Ok(Err(..))` is a laser with no beam, with the reason; `Err(..)` is a laser that the build does not hold.
+/// has none). `Ok(Err(..))` is a laser with no beam, with the reason; `Err(..)` is a laser that the build does not hold (**a laser that only the calibration names is not held**).
+///
+/// With no layer to prove that the laser exists, **it asks the build** (`build()`, which reads every layer the first time on a lazy source). A caller that lists the calibration's lasers and has
+/// their parameters in the overview resolves each beam with [`resolve_beam_of`], which reads nothing.
 pub fn spot_size_beam(
     source: &dyn BuildSource,
     laser: &LaserKey,
@@ -609,15 +634,11 @@ pub fn spot_size_beam(
     overrides: &SpotSizeOverride,
     assumptions: &BeamAssumptions,
 ) -> Result<Result<ResolvedBeam, BeamUnavailable>, Error> {
-    let overview = source.overview()?;
+    let build = source.build()?;
     // the laser itself must be there, whichever laser the beam is taken from
-    parameters_in(source, &overview, laser, false)?;
-    let parameters = parameters_in(source, &overview, beam_from.unwrap_or(laser), false)?;
-    Ok(resolve_beam_of(
-        parameters.as_deref(),
-        overrides,
-        assumptions,
-    ))
+    parameters_of(&build, laser)?;
+    let parameters = parameters_of(&build, beam_from.unwrap_or(laser))?;
+    Ok(resolve_beam_of(parameters, overrides, assumptions))
 }
 
 /// The spot size of one laser in one layer. See the module documentation for what it does, what it returns and where it differs from Vision's behaviour.
@@ -639,17 +660,16 @@ pub fn spot_size(
         .lasers
         .iter()
         .find(|candidate| &candidate.key == laser);
-    // the parameters come from the overview: no layer is walked (see the module documentation)
+    // the parameters of a laser that the layer records come from the overview: no layer is walked (see the module documentation)
     let overview = source.overview()?;
     let own_parameters = parameters_in(source, &overview, laser, found.is_some())?;
     let own = own_parameters.as_deref();
     let beam_laser = request.beam_from().unwrap_or(laser);
-    let beam_laser_parameters = parameters_in(
-        source,
-        &overview,
-        beam_laser,
-        beam_laser == laser && found.is_some(),
-    )?;
+    let beam_recorded = detail
+        .lasers
+        .iter()
+        .any(|candidate| &candidate.key == beam_laser);
+    let beam_laser_parameters = parameters_in(source, &overview, beam_laser, beam_recorded)?;
     let beam_parameters = beam_laser_parameters.as_deref();
 
     // the laser is recorded in the layer
