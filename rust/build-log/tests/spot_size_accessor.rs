@@ -347,6 +347,269 @@ fn first_layer(miniature: &str) -> (build_log::Opened, LayerId, Vec<LaserKey>) {
     (opened, layer, keys)
 }
 
+/// A source made of another one, to put the accessors in a corner. It can give **another overview** than the file's (a laser that only the calibration names, or a recorded laser that it does
+/// not), and it can **refuse `build()`**, which on a lazy file reads every layer the first time: a call that must not be made panics. Everything else is the plain source's.
+struct Probe<'a> {
+    inner: &'a dyn build_log::BuildSource,
+    overview: std::sync::Arc<build_log::BuildOverview>,
+    build_allowed: bool,
+}
+
+impl<'a> Probe<'a> {
+    fn of(inner: &'a dyn build_log::BuildSource) -> Self {
+        Probe {
+            overview: inner.overview().expect("the overview"),
+            inner,
+            build_allowed: true,
+        }
+    }
+
+    fn with_overview(mut self, change: impl FnOnce(&mut build_log::BuildOverview)) -> Self {
+        let mut overview = (*self.overview).clone();
+        change(&mut overview);
+        self.overview = std::sync::Arc::new(overview);
+        self
+    }
+
+    fn without_build(mut self) -> Self {
+        self.build_allowed = false;
+        self
+    }
+}
+
+impl build_log::ColumnSource for Probe<'_> {
+    fn read(
+        &self,
+        request: &build_log::ColumnRequest,
+        context: &ReadContext,
+    ) -> Result<build_log::ColumnData, build_log::Error> {
+        self.inner.read(request, context)
+    }
+}
+
+impl build_log::BuildSource for Probe<'_> {
+    fn build(&self) -> Result<std::sync::Arc<build_log::BuildMeta>, build_log::Error> {
+        assert!(
+            self.build_allowed,
+            "build() reads every layer the first time: this call must use the overview and the one layer"
+        );
+        self.inner.build()
+    }
+    fn revision(&self) -> Result<build_log::Revision, build_log::Error> {
+        self.inner.revision()
+    }
+    fn overview(&self) -> Result<std::sync::Arc<build_log::BuildOverview>, build_log::Error> {
+        Ok(std::sync::Arc::clone(&self.overview))
+    }
+    fn layer_meta(
+        &self,
+        layer: LayerId,
+    ) -> Result<std::sync::Arc<build_log::LayerDetail>, build_log::Error> {
+        self.inner.layer_meta(layer)
+    }
+}
+
+/// **`spot_size` does not walk the layers for a laser that the layer records** (finding of a review of Vision's pull request, 2026-11-19; the beam of another laser, 2026-11-20): it took a laser's
+/// parameters from `build()`, which reads every layer the first time. On every miniature, for every laser of the first layer, alone and with the beam of every other laser of the layer, it gives
+/// **the same answer, to the last bit, through a source whose `build()` panics** as through the plain one. (`spot_size_beam` has no layer and still asks the build.)
+#[test]
+fn spot_size_gives_the_same_answer_without_ever_walking_the_build() {
+    for miniature in [
+        "v16.h5",
+        "v17_march.h5",
+        "v17_mock.h5",
+        "v17_oct15.h5",
+        "v17_triggered_2026_10_19.h5",
+        "v17_2026_08_18_images.h5",
+        "special_layers_v17.h5",
+    ] {
+        let (opened, layer, keys) = first_layer(miniature);
+        let plain = opened.source();
+        let without = Probe::of(plain).without_build();
+        assert!(!keys.is_empty(), "{miniature}");
+        for key in &keys {
+            let direct = spot_size(plain, &request(layer, key), &ReadContext::new());
+            let guarded = spot_size(&without, &request(layer, key), &ReadContext::new());
+            assert_eq!(
+                format!("{direct:?}"),
+                format!("{guarded:?}"),
+                "{miniature} {key:?}: the spot size"
+            );
+            for other in keys.iter().filter(|other| *other != key) {
+                let borrowed = request(layer, key).with_beam_from(other.clone());
+                let direct = spot_size(plain, &borrowed, &ReadContext::new());
+                let guarded = spot_size(&without, &borrowed, &ReadContext::new());
+                assert_eq!(
+                    format!("{direct:?}"),
+                    format!("{guarded:?}"),
+                    "{miniature} {key:?} with the beam of {other:?}"
+                );
+            }
+        }
+    }
+}
+
+/// **A recorded laser that the calibration does not name, used for its beam, does not make the call walk the layers** (review of 2026-11-20, finding 3). The layer already proves that the laser is
+/// recorded; it has no parameters; so the beam is "no train" and nothing asks the build.
+#[test]
+fn the_beam_of_a_recorded_laser_with_no_calibration_is_asked_of_the_layer_and_not_of_the_build() {
+    let (opened, layer, keys) = first_layer("v17_triggered_2026_10_19.h5");
+    assert!(
+        keys.len() >= 2,
+        "the miniature has two lasers in its first layer"
+    );
+    let (own, uncalibrated) = (&keys[0], &keys[1]);
+    let source = Probe::of(opened.source())
+        .with_overview(|overview| overview.lasers.retain(|laser| laser.key != *uncalibrated))
+        .without_build();
+    let asked = request(layer, own).with_beam_from(uncalibrated.clone());
+    let got = spot_size(&source, &asked, &ReadContext::new()).expect("no failure, and no walk");
+    assert_eq!(
+        got.err(),
+        Some(SpotSizeUnavailable::Beam(BeamUnavailable::NoTrain))
+    );
+}
+
+/// **A laser that only the calibration names is not in the build** (review of 2026-11-20, finding 1). The overview lists every laser that the calibration names, and the build only the lasers that a
+/// layer records, so a name in the overview is not proof that the build holds the laser. Asked about such a laser, as the laser or as the beam to borrow, both accessors fail **as they do for a laser
+/// that the file does not name at all**.
+#[test]
+fn a_laser_that_only_the_calibration_names_is_a_failure_as_a_stranger_is() {
+    let (opened, layer, keys) = first_layer("v17_triggered_2026_10_19.h5");
+    let plain = opened.source();
+    let source = Probe::of(plain).with_overview(|overview| {
+        let mut extra = overview.lasers[0].clone();
+        extra.key = LaserKey::new("Laser_9", 9);
+        assert!(
+            extra.parameters.is_some(),
+            "it carries the parameters of a real laser"
+        );
+        overview.lasers.push(extra);
+    });
+    let calibrated_only = LaserKey::new("Laser_9", 9);
+    let stranger = LaserKey::new("Laser_99", 99);
+    let none = SpotSizeOverride::new();
+    let assumptions = vision_assumptions();
+
+    // the beam of the laser
+    let got = spot_size_beam(&source, &calibrated_only, None, &none, &assumptions);
+    let expected = spot_size_beam(plain, &stranger, None, &none, &assumptions);
+    assert!(expected.is_err());
+    assert_eq!(format!("{got:?}"), format!("{expected:?}"), "the beam");
+    // the beam to borrow
+    let got = spot_size_beam(
+        &source,
+        &keys[0],
+        Some(&calibrated_only),
+        &none,
+        &assumptions,
+    );
+    let expected = spot_size_beam(plain, &keys[0], Some(&stranger), &none, &assumptions);
+    assert!(expected.is_err());
+    assert_eq!(
+        format!("{got:?}"),
+        format!("{expected:?}"),
+        "the beam to borrow"
+    );
+    // the spot size of the laser, and with the beam of the laser
+    let got = spot_size(
+        &source,
+        &request(layer, &calibrated_only),
+        &ReadContext::new(),
+    );
+    let expected = spot_size(plain, &request(layer, &stranger), &ReadContext::new());
+    assert!(expected.is_err());
+    assert_eq!(format!("{got:?}"), format!("{expected:?}"), "the spot size");
+    let borrowed = request(layer, &keys[0]).with_beam_from(calibrated_only.clone());
+    let got = spot_size(&source, &borrowed, &ReadContext::new());
+    let expected = spot_size(
+        plain,
+        &request(layer, &keys[0]).with_beam_from(stranger.clone()),
+        &ReadContext::new(),
+    );
+    assert!(expected.is_err());
+    assert_eq!(
+        format!("{got:?}"),
+        format!("{expected:?}"),
+        "the spot size with a borrowed beam"
+    );
+    // and the lasers that the layer records are not touched by the extra name
+    for key in &keys {
+        let got = spot_size(&source, &request(layer, key), &ReadContext::new());
+        let expected = spot_size(plain, &request(layer, key), &ReadContext::new());
+        assert_eq!(format!("{got:?}"), format!("{expected:?}"), "{key:?}");
+    }
+}
+
+/// A copy of a miniature in the temporary directory, removed when the value is dropped. Nothing but the copy is ever written to or removed.
+struct ScratchCopy(std::path::PathBuf);
+
+impl Drop for ScratchCopy {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
+    }
+}
+
+/// **A laser that the file names with a zero keeps the calibration of its number** (review of 2026-11-20, finding 2). A group called `Laser_01` is accepted: its key is the name as the file
+/// writes it and its number is 1. The calibration names it `Laser_1`, and the build attaches the calibration **by number**. On a scratch copy of a miniature whose `Laser_1` groups are renamed
+/// `Laser_01`, the spot size is the one of the original, to the last bit (it used to be "no optical train").
+#[test]
+fn a_laser_named_with_a_zero_has_the_calibration_of_its_number() {
+    let name = "v17_triggered_2026_10_19.h5";
+    let copy = ScratchCopy(std::env::temp_dir().join(format!(
+        "build-log-27j-zero-padded-{}-{name}",
+        std::process::id()
+    )));
+    std::fs::copy(miniature_path(name), &copy.0).expect("the miniature is copied");
+    {
+        let file = build_log::hdf5::File::open_rw(&copy.0).expect("the copy opens for writing");
+        let data = file
+            .group("Built_Part/Monitoring_Data")
+            .expect("the monitoring data");
+        let mut renamed = 0;
+        for layer in data.member_names().expect("the layers") {
+            let Ok(group) = data.group(&layer) else {
+                continue;
+            };
+            if group.link_exists("Laser_1") {
+                group
+                    .relink("Laser_1", "Laser_01")
+                    .expect("the group is renamed");
+                renamed += 1;
+            }
+        }
+        assert!(renamed > 0, "some layer has a Laser_1");
+    }
+
+    let (original, layer, keys) = first_layer(name);
+    let key = keys
+        .iter()
+        .find(|key| key.number == 1)
+        .expect("laser 1 in the first layer");
+    assert_eq!(key.key, "Laser_1");
+    let expected = spot_size(original.source(), &request(layer, key), &ReadContext::new());
+    assert!(
+        matches!(expected, Ok(Ok(_))),
+        "the original computes a spot size: {expected:?}"
+    );
+
+    let renamed = open(&copy.0).expect("the copy opens");
+    let layer = renamed.source().layers().expect("the layers")[0];
+    let key = renamed
+        .source()
+        .layer_meta(layer)
+        .expect("the layer")
+        .lasers
+        .iter()
+        .find(|laser| laser.key.number == 1)
+        .expect("laser 1 in the first layer of the copy")
+        .key
+        .clone();
+    assert_eq!(key.key, "Laser_01", "the file's own name is the key");
+    let got = spot_size(renamed.source(), &request(layer, &key), &ReadContext::new());
+    assert_eq!(format!("{got:?}"), format!("{expected:?}"));
+}
+
 #[test]
 fn a_laser_with_no_beam_says_why_and_the_beam_accessor_says_the_same_without_reading_a_sample() {
     // the miniatures whose files hold no waist: Vision warns for them, and the library says which fact is missing
