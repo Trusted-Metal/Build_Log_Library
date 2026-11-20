@@ -5,7 +5,7 @@
 //! its bits, a count and a digest as they are written):
 //!
 //! * a `pure` case is a laser's native state, a stride and the rows to keep. The library says which rows it keeps (their native indices and the state of each), whether the laser
-//!   is unavailable (a filter and no state channel: `NotPresent`) and, as Vision's loader does, whether the laser is skipped (a filter that keeps no row).
+//!   is unavailable (a filter and no state channel: `NotPresent`) and, as Vision's loader does, whether the laser is skipped (a laser with no kept row, with any rows: an empty laser is skipped even with all rows).
 //! * a `file` case names one of the library's miniatures, a layer by its position, a stride, the rows and which streams are wanted. The library reads each channel of each laser
 //!   **twice over**: with `read_selected` for every channel, and with the rows of the laser chosen once (`laser_rows`) and each channel cut with them (`read_rows`, decision D27-17);
 //!   both must give Vision's bits. The test the test makes the one decision that is not the selection's, **which lasers the raw tier reports**: a laser is in the answer when a stream that was
@@ -244,7 +244,9 @@ fn run_pure(inputs: &Value) -> Columns {
     for (value, index) in kept_state.iter().zip(&native) {
         assert_eq!(*value, i64::from(state[*index as usize]));
     }
-    let skipped = selection.rows() != StateRows::All && selected.is_empty();
+    // **A laser with no kept row is skipped, whatever rows were asked for:** Vision's loader skips a laser whose position streams are all empty even with all rows (`EmptyLaserData`). The rule used
+    // to be `rows != All && no row`, which called an empty laser read with all rows "kept" (a finding of a review of Vision's pull request, 2026-11-19, and a fix of the vector).
+    let skipped = selected.is_empty();
     out.insert(
         "laser".into(),
         Col::Text(vec![if skipped { "skipped" } else { "kept" }.into()]),

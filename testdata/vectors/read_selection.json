@@ -1,6 +1,10 @@
 {
   "chunk": "read_selection",
-  "produced_by": { "date": "2026-11-16", "vision_commit": "ba5a040da5c3a7d5fe8f3a2e5bfd2f33d39176ab" },
+  "produced_by": {
+    "date": "2026-11-19",
+    "uncommitted_changes_in_crates": true,
+    "vision_commit": "f8703ecc59ec6e96af15ba823fbdfba57f2d7856"
+  },
   "cases": [
     {
       "case": "file_special_layers_first_layer_full",
@@ -1796,10 +1800,12 @@
         "columns": {
           "kept_len": { "i64": [0] },
           "kept_points_formula": { "i64": [0] },
-          "laser": { "text": ["kept"] },
+          "laser": { "text": ["skipped"] },
           "native_index": { "i64": [] },
           "native_len": { "i64": [0] },
-          "reason": { "text": [""] },
+          "reason": {
+            "text": ["the laser has no row (an empty laser), which Vision's loader skips even with all rows"]
+          },
           "state_kept": { "i64": [] },
           "strided_len": { "i64": [0] }
         }
