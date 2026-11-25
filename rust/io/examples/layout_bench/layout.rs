@@ -123,9 +123,16 @@ pub fn make<T: H5Type>(
     let b = if f.shuffle { b.shuffle() } else { b };
     let b = if f.gzip > 0 { b.deflate(f.gzip) } else { b };
     let b = if f.fletcher32 { b.fletcher32() } else { b };
+    // F31: a chunk cache of about two chunks. libhdf5's default 1 MiB holds written chunks uncompressed until the dataset
+    // closes and then compresses them all at once, which stalls the writer at the end of every layer.
     let cache = CHUNK_CACHE_BYTES.load(std::sync::atomic::Ordering::Relaxed);
-    let b = if cache >= 0 {
-        b.chunk_cache(521, cache as usize, 0.75)
+    let bytes = match cache {
+        -2 => None,
+        -1 => Some(chunk * std::mem::size_of::<T>() * 2),
+        n => Some(n as usize),
+    };
+    let b = if let Some(nbytes) = bytes {
+        b.chunk_cache(521, nbytes, 0.75)
     } else {
         b
     };
@@ -154,6 +161,9 @@ pub struct Core {
     pub filters: Filters,
     pub chunk: usize,
     cur: Vec<Vec<Dataset>>,
+    /// Per laser: samples written to the datasets, and samples received so far in the layer (F31: writes are whole chunks).
+    written: Vec<usize>,
+    avail: Vec<usize>,
     pub layer_us: i64,
     pub laser_samples: usize,
     pub rate_hz: usize,
@@ -180,6 +190,8 @@ impl Core {
             filters,
             chunk,
             cur: Vec::new(),
+            written: vec![0; lasers as usize],
+            avail: vec![0; lasers as usize],
             layer_us: 0,
             laser_samples: 0,
             rate_hz,
@@ -189,6 +201,8 @@ impl Core {
     pub fn begin_layer(&mut self, layer: u32) -> Res<()> {
         self.cur.clear();
         self.laser_samples = 0;
+        self.written = vec![0; self.lasers as usize];
+        self.avail = vec![0; self.lasers as usize];
         for l in 1..=self.lasers {
             let g = ensure_path(
                 &self.file,
@@ -212,18 +226,48 @@ impl Core {
         Ok(())
     }
 
-    /// Samples `a..b` of a laser's layer, all eight channels.
+    /// Samples `a..b` of a laser's layer, all eight channels, as they arrive (a feed batch, for example 500 samples). The
+    /// datasets are written in **whole chunks** (F31): the samples wait here until a chunk is full. In this harness the
+    /// samples are borrowed from the layer's generated data, so "waiting" is only the bookkeeping of what is written; a real
+    /// writer copies them into a buffer, and the spool holds them durably meanwhile.
     pub fn append_laser(&mut self, laser: u32, d: &LaserLayer, a: usize, b: usize) -> Res<()> {
-        let dss = &self.cur[laser as usize - 1];
-        for (i, ds) in dss[..6].iter().enumerate() {
-            append(ds, a, &d.pos[i][a..b])?;
+        let i = laser as usize - 1;
+        debug_assert_eq!(a, self.avail[i], "batches arrive in order");
+        self.avail[i] = b;
+        let ready = (self.avail[i] - self.written[i]) / self.chunk * self.chunk;
+        if ready > 0 {
+            let w = self.written[i];
+            self.write_range(i, d, w, w + ready)?;
+            self.written[i] += ready;
+        }
+        Ok(())
+    }
+
+    fn write_range(&self, i: usize, d: &LaserLayer, a: usize, b: usize) -> Res<()> {
+        let dss = &self.cur[i];
+        for (k, ds) in dss[..6].iter().enumerate() {
+            append(ds, a, &d.pos[k][a..b])?;
         }
         append(&dss[6], a, &d.power[a..b])?;
         append(&dss[7], a, &d.state[a..b])?;
         Ok(())
     }
 
-    pub fn end_layer(&mut self, layer: u32, samples: usize) -> Res<()> {
+    /// Flushes everything libhdf5 holds to the operating system (`H5Fflush`).
+    pub fn flush_file(&self) -> Res<()> {
+        self.file.flush()?;
+        Ok(())
+    }
+
+    /// Ends the layer: writes the partial chunk that remains (a layer that is not a whole number of chunks), then the layer's
+    /// times. `data` is the layer's laser data, one entry per laser.
+    pub fn end_layer(&mut self, layer: u32, samples: usize, data: &[LaserLayer]) -> Res<()> {
+        for i in 0..self.lasers as usize {
+            if self.written[i] < self.avail[i] {
+                self.write_range(i, &data[i], self.written[i], self.avail[i])?;
+                self.written[i] = self.avail[i];
+            }
+        }
         let start = self.layer_us;
         let dur = (samples as i64 * 1_000_000) / self.rate_hz as i64;
         for l in 1..=self.lasers {
@@ -352,6 +396,8 @@ pub struct BuildWide {
     names: Vec<String>,
     chunk: usize,
     s: Vec<SensorWide>,
+    /// Flush the partial chunk of every sensor every this many layers (0 = only full chunks, and the tails at `finish`).
+    pub tail_every: u32,
 }
 
 impl BuildWide {
@@ -373,6 +419,7 @@ impl BuildWide {
             names: sensor_names(sensors),
             chunk: sensor_chunk,
             s,
+            tail_every: 0,
         })
     }
 
@@ -437,14 +484,26 @@ impl Layout for BuildWide {
             s.ts.push(r.ts);
             s.val.push(r.value);
             s.layer.push(layer);
-            while self.s[i].ts.len() >= self.chunk {
-                let c = self.chunk;
-                self.flush(i, c)?;
+            // Keep chunk alignment even after a partial-chunk flush: write up to the next chunk boundary first.
+            loop {
+                let room = self.chunk - self.s[i].rows % self.chunk;
+                if self.s[i].ts.len() < room {
+                    break;
+                }
+                self.flush(i, room)?;
             }
         }
         Ok(())
     }
-    fn end_layer(&mut self, _layer: u32) -> Res<()> {
+    fn end_layer(&mut self, layer: u32) -> Res<()> {
+        // Optional: write the partial chunk of every sensor every `tail_every` layers, so that a crash loses at most that
+        // many layers of OPC UA data instead of everything since the last full chunk.
+        if self.tail_every > 0 && layer % self.tail_every == 0 {
+            for i in 0..self.s.len() {
+                let n = self.s[i].ts.len();
+                self.flush(i, n)?;
+            }
+        }
         Ok(())
     }
     fn finish(&mut self, _layers: u32) -> Res<Vec<(String, f64)>> {

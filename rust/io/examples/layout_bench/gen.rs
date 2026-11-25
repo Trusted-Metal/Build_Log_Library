@@ -6,6 +6,16 @@
 pub struct Rng(pub u64);
 
 impl Rng {
+    /// A generator for one (layer, stream), so that any layer can be regenerated exactly, in any order. The verifier of the
+    /// kill test needs this to know what a crashed file should contain.
+    pub fn seeded(base: u64, layer: u32, stream: u32) -> Rng {
+        let mut r =
+            Rng(base ^ ((layer as u64) << 32) ^ ((stream as u64) << 8) ^ 0x9E37_79B9_7F4A_7C15);
+        for _ in 0..4 {
+            r.next();
+        }
+        r
+    }
     pub fn next(&mut self) -> u64 {
         self.0 ^= self.0 >> 12;
         self.0 ^= self.0 << 25;
@@ -186,13 +196,18 @@ impl OpcState {
     }
 }
 
-/// The records of one layer, sorted by arrival.
+/// The records of one layer, sorted by arrival. The values start from a fixed point for the layer (not from the previous
+/// layer's state), so a layer can be regenerated on its own.
 pub fn opcua_layer(
     rng: &mut Rng,
     st: &mut OpcState,
+    layer: u32,
     layer_start_ns: u64,
     layer_ns: u64,
 ) -> Vec<OpcRec> {
+    for (s, v) in st.value.iter_mut().enumerate() {
+        *v = 20.0 + s as f64 + layer as f64 * 0.001;
+    }
     let mut out = Vec::new();
     for s in 0..st.rate_hz.len() {
         let count =

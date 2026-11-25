@@ -13,8 +13,12 @@
 //! part of the library's API.
 
 mod gen;
+mod killtest;
 mod layout;
 mod read;
+
+/// The base seed of every synthetic build, so that the kill test can regenerate any layer.
+pub const SEED: u64 = 0xC0FFEE;
 
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -73,6 +77,10 @@ fn main() -> Res<()> {
         "calibrate" => calibrate(&args),
         "write" => write(&args),
         "read" => read::run(&args),
+        "kill-test" => killtest::kill_test(&args),
+        "verify" => killtest::verify_cmd(&args),
+        "seal-kill" => killtest::seal_kill(&args),
+        "seal" => killtest::seal_child(&args),
         _ => {
             eprintln!("usage: layout_bench calibrate | write | read   (see the header of layout_bench/main.rs)");
             std::process::exit(2);
@@ -85,7 +93,7 @@ fn triple(s: &str) -> [i32; 3] {
     [v[0], v[1], v[2]]
 }
 
-fn laser_params(a: &Args) -> LaserParams {
+pub(crate) fn laser_params(a: &Args) -> LaserParams {
     let mut p = LaserParams::default();
     if let Some(s) = a.text("cmd-noise") {
         p.cmd_noise = triple(&s);
@@ -195,21 +203,35 @@ fn write(a: &Args) -> Res<()> {
     let rate: usize = a.get("rate-hz", 100_000);
     let layer_s: f64 = a.get("layer-seconds", 10.0);
     let sensors: usize = a.get("sensors", 35);
-    let filters = Filters::parse(&a.text("filters").unwrap_or_else(|| "gzip6f32".into()))?;
+    let filters = Filters::parse(
+        &a.text("filters")
+            .unwrap_or_else(|| "gzip3shufflef32".into()),
+    )?;
     let sensor_chunk: usize = a.get("sensor-chunk", 4096);
     let laser_chunk: usize = a.get("laser-chunk", 10_000);
-    let block: usize = a.get("block", 10_000);
+    // The size of the batches the writer receives (the feed sends 500-sample batches). Datasets are written in whole chunks.
+    let block: usize = a.get("batch", 500);
     let max_layers: u32 = a.get("max-layers", u32::MAX);
     let realtime = a.flag("realtime");
     let bare = a.flag("bare");
     let do_seal = !bare && !a.flag("no-seal");
     let templates: usize = a.get("templates", if realtime { 2 } else { 0 });
     let disorder: f64 = a.get("disorder", 0.002);
+    // `H5Fflush` every this many layers (0: never). A crash can only be survived up to the last flush.
+    let flush_layers: u32 = a.get("flush-layers", 0);
+    // build_wide: write the partial chunk of every sensor every this many layers (0: full chunks and `finish` only).
+    let tail_layers: u32 = a.get("tail-flush-layers", 0);
+    let progress: Option<PathBuf> = a.text("progress").map(PathBuf::from);
     let params = laser_params(a);
+    // F31: by default a chunk cache of two chunks per dataset; `--libhdf5-cache` keeps libhdf5's own 1 MiB for comparison.
     layout::CHUNK_CACHE_BYTES.store(
-        a.get::<i64>("chunk-cache-kb", -1)
-            .saturating_mul(1024)
-            .max(-1),
+        if a.flag("libhdf5-cache") {
+            -2
+        } else {
+            a.get::<i64>("chunk-cache-kb", -1)
+                .saturating_mul(1024)
+                .max(-1)
+        },
         std::sync::atomic::Ordering::Relaxed,
     );
 
@@ -224,23 +246,35 @@ fn write(a: &Args) -> Res<()> {
     };
     let core = Core::new(file, lasers, filters, laser_chunk, rate)?;
     let mut lay: Box<dyn Layout> = match layout_name.as_str() {
-        "build_wide" => Box::new(BuildWide::new(core, sensors, sensor_chunk)?),
+        "build_wide" => {
+            let mut w = BuildWide::new(core, sensors, sensor_chunk)?;
+            w.tail_every = tail_layers;
+            Box::new(w)
+        }
         "per_layer" => Box::new(PerLayer::new(core, sensors, sensor_chunk)?),
         other => return Err(format!("unknown layout '{other}'").into()),
     };
 
-    let mut rng = Rng(0xC0FFEE);
     let mut opc = OpcState::new(sensors, disorder);
     let mut pool: Vec<Vec<LaserLayer>> = Vec::new();
     for t in 0..templates {
         pool.push(
             (1..=lasers)
-                .map(|l| laser_layer(&mut rng, &params, l, t as u32 + 1, n))
+                .map(|l| {
+                    laser_layer(
+                        &mut Rng::seeded(SEED, t as u32 + 1, l),
+                        &params,
+                        l,
+                        t as u32 + 1,
+                        n,
+                    )
+                })
                 .collect(),
         );
     }
 
-    let (mut l_laser, mut l_opc, mut l_begin, mut l_end) = (
+    let (mut l_laser, mut l_opc, mut l_begin, mut l_end, mut l_flush) = (
+        Lat::default(),
         Lat::default(),
         Lat::default(),
         Lat::default(),
@@ -264,12 +298,18 @@ fn write(a: &Args) -> Res<()> {
             &pool[(layer as usize - 1) % templates]
         } else {
             fresh = (1..=lasers)
-                .map(|l| laser_layer(&mut rng, &params, l, layer, n))
+                .map(|l| laser_layer(&mut Rng::seeded(SEED, layer, l), &params, l, layer, n))
                 .collect();
             &fresh
         };
         let start_ns = (layer as u64 - 1) * layer_ns;
-        let recs = opcua_layer(&mut rng, &mut opc, start_ns, layer_ns);
+        let recs = opcua_layer(
+            &mut Rng::seeded(SEED, layer, 99),
+            &mut opc,
+            layer,
+            start_ns,
+            layer_ns,
+        );
         gen_time += tg.elapsed();
 
         timed(&mut l_begin, || lay.core().begin_layer(layer))?;
@@ -297,6 +337,10 @@ fn write(a: &Args) -> Res<()> {
                 w_opc.push(d);
                 raw_bytes += ((next - from) * 20) as u64;
             }
+            if let Some(p) = &progress {
+                // What the writer has been handed so far, for the crash test (a torn write of this file is tolerated).
+                let _ = std::fs::write(p, format!("{layer} {b}"));
+            }
             if realtime {
                 let due = started + Duration::from_nanos(start_ns + (b as u64 + 1) * block_ns);
                 let now = Instant::now();
@@ -314,9 +358,12 @@ fn write(a: &Args) -> Res<()> {
             raw_bytes += ((recs.len() - next) * 20) as u64;
         }
         timed(&mut l_end, || {
-            lay.core().end_layer(layer, n)?;
+            lay.core().end_layer(layer, n, data)?;
             lay.end_layer(layer)
         })?;
+        if flush_layers > 0 && layer % flush_layers == 0 {
+            timed(&mut l_flush, || lay.core().flush_file())?;
+        }
 
         let size = lay.core().file.size();
         if layers % 50 == 0 {
@@ -341,7 +388,7 @@ fn write(a: &Args) -> Res<()> {
     let tf = Instant::now();
     let stages = lay.finish(layers)?;
     let finish_s = tf.elapsed().as_secs_f64();
-    let h5_calls_s: f64 = [&l_laser, &l_opc, &l_begin, &l_end]
+    let h5_calls_s: f64 = [&l_laser, &l_opc, &l_begin, &l_end, &l_flush]
         .iter()
         .map(|l| l.0.iter().map(|&x| x as f64).sum::<f64>() / 1e6)
         .sum();
@@ -368,7 +415,8 @@ fn write(a: &Args) -> Res<()> {
             "raw_mb_s_in_h5_calls": raw_bytes as f64 / 1e6 / h5_calls_s,
             "realtime_factor_headroom": (layers as f64 * layer_s) / h5_calls_s,
             "max_lag_ms": max_lag.as_secs_f64() * 1000.0,
-            "latency": {"laser_block": l_laser.summary(), "opcua_append": l_opc.summary(), "layer_begin": l_begin.summary(), "layer_end": l_end.summary()},
+            "latency": {"laser_block": l_laser.summary(), "opcua_append": l_opc.summary(), "layer_begin": l_begin.summary(), "layer_end": l_end.summary(), "file_flush": l_flush.summary()},
+            "flush_layers": flush_layers, "tail_flush_layers": tail_layers, "batch": block,
             "finish_s": finish_s, "finish_stages": stages.into_iter().map(|(k, v)| json!({k: v})).collect::<Vec<_>>(),
             "seal": seal_json, "trend": trend,
         })
