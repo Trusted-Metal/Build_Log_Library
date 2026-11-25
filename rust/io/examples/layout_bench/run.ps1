@@ -17,12 +17,19 @@ param(
     [switch]$Realtime,
     [int]$RealtimeMinutes = 30,
     # keep a file that an earlier run already wrote (and its write result) and carry on with the read step
-    [switch]$Resume
+    [switch]$Resume,
+    # tile laser layers from a real V17 build (see real.rs) instead of synthetic data
+    [string]$Real = '',
+    # store coordinates delta + zigzag encoded (codec.rs)
+    [switch]$Encode
 )
 
 $ErrorActionPreference = 'Stop'
 $exe = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..\..\target\release\examples\layout_bench.exe')).Path
 New-Item -ItemType Directory -Force $Work, $Results | Out-Null
+$extra = @()
+if ($Real) { $extra += @('--real', $Real) }
+if ($Encode) { $extra += '--encode' }
 
 function Invoke-Measured([string]$Name, [string[]]$ToolArgs) {
     $out = Join-Path $Results "$Name.jsonl"
@@ -54,7 +61,7 @@ foreach ($layout in $Layouts) {
         Invoke-Measured "$layout.realtime" @('write', '--layout', $layout, '--path', $file, '--realtime', '--max-layers', $layers, '--target-gb', 9999, '--filters', $Filters, '--no-seal')
     }
     else {
-        if (-not $skipWrite) { Invoke-Measured "$layout.write" @('write', '--layout', $layout, '--path', $file, '--target-gb', $TargetGb, '--filters', $Filters) }
+        if (-not $skipWrite) { Invoke-Measured "$layout.write" (@('write', '--layout', $layout, '--path', $file, '--target-gb', $TargetGb, '--filters', $Filters) + $extra) }
         Invoke-Measured "$layout.read" @('read', '--path', $file, '--repeat', 3, '--scan')
     }
     Remove-Item $file -Force

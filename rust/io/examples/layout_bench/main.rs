@@ -12,10 +12,12 @@
 //! Output: one JSON object per line on stdout (progress on stderr). The data is **synthetic** (see `gen.rs`). Nothing here is
 //! part of the library's API.
 
+mod codec;
 mod gen;
 mod killtest;
 mod layout;
 mod read;
+mod real;
 
 /// The base seed of every synthetic build, so that the kill test can regenerate any layer.
 pub const SEED: u64 = 0xC0FFEE;
@@ -79,6 +81,7 @@ fn main() -> Res<()> {
         "read" => read::run(&args),
         "kill-test" => killtest::kill_test(&args),
         "verify" => killtest::verify_cmd(&args),
+        "codec-bench" => codec::bench(&args),
         "seal-kill" => killtest::seal_kill(&args),
         "seal" => killtest::seal_child(&args),
         _ => {
@@ -236,15 +239,14 @@ fn write(a: &Args) -> Res<()> {
     );
 
     let n = (rate as f64 * layer_s) as usize / block * block;
-    let layer_ns = (n as u64 * 1_000_000_000) / rate as u64;
-    let block_ns = (block as u64 * 1_000_000_000) / rate as u64;
 
     let file = if bare {
         File::create_excl(&path)?
     } else {
         create_working_file(&path)?
     };
-    let core = Core::new(file, lasers, filters, laser_chunk, rate)?;
+    let mut core = Core::new(file, lasers, filters, laser_chunk, rate)?;
+    core.encode = a.flag("encode");
     let mut lay: Box<dyn Layout> = match layout_name.as_str() {
         "build_wide" => {
             let mut w = BuildWide::new(core, sensors, sensor_chunk)?;
@@ -256,6 +258,25 @@ fn write(a: &Args) -> Res<()> {
     };
 
     let mut opc = OpcState::new(sensors, disorder);
+    // Real layers (plan step 16): tiled from a V17 build; they vary in length, so the loop below takes each layer's own length.
+    let real_pool: Vec<Vec<LaserLayer>> = match a.text("real") {
+        Some(p) => real::load(&p, lasers, a.get("real-layers", 40), 2 * laser_chunk)?,
+        None => Vec::new(),
+    };
+    if !real_pool.is_empty() {
+        let lens: Vec<usize> = real_pool.iter().map(|s| s[0].power.len()).collect();
+        eprintln!(
+            "real pool: {} layers, {} to {} samples (median {}), tiled",
+            lens.len(),
+            lens.iter().min().unwrap(),
+            lens.iter().max().unwrap(),
+            {
+                let mut s = lens.clone();
+                s.sort_unstable();
+                s[s.len() / 2]
+            }
+        );
+    }
     let mut pool: Vec<Vec<LaserLayer>> = Vec::new();
     for t in 0..templates {
         pool.push(
@@ -288,13 +309,16 @@ fn write(a: &Args) -> Res<()> {
     let started = Instant::now();
     let target_bytes = (target_gb * 1e9) as u64;
     let mut layers = 0u32;
+    let mut build_ns = 0u64; // the time of the build so far, by the laser clock
 
     loop {
         layers += 1;
         let layer = layers;
         let tg = Instant::now();
         let fresh: Vec<LaserLayer>;
-        let data: &Vec<LaserLayer> = if templates > 0 {
+        let data: &Vec<LaserLayer> = if !real_pool.is_empty() {
+            &real_pool[(layer as usize - 1) % real_pool.len()]
+        } else if templates > 0 {
             &pool[(layer as usize - 1) % templates]
         } else {
             fresh = (1..=lasers)
@@ -302,7 +326,9 @@ fn write(a: &Args) -> Res<()> {
                 .collect();
             &fresh
         };
-        let start_ns = (layer as u64 - 1) * layer_ns;
+        let n = data[0].power.len(); // this layer's samples (a real layer has its own length)
+        let layer_ns = (n as u64 * 1_000_000_000) / rate as u64;
+        let start_ns = build_ns;
         let recs = opcua_layer(
             &mut Rng::seeded(SEED, layer, 99),
             &mut opc,
@@ -314,17 +340,17 @@ fn write(a: &Args) -> Res<()> {
 
         timed(&mut l_begin, || lay.core().begin_layer(layer))?;
         let mut next = 0usize;
-        for b in 0..(n / block) {
+        for b in 0..n.div_ceil(block) {
+            let (lo, hi) = (b * block, ((b + 1) * block).min(n));
             for l in 1..=lasers {
                 let t = Instant::now();
-                lay.core()
-                    .append_laser(l, &data[l as usize - 1], b * block, (b + 1) * block)?;
+                lay.core().append_laser(l, &data[l as usize - 1], lo, hi)?;
                 let d = t.elapsed();
                 l_laser.push(d);
                 w_laser.push(d);
             }
-            raw_bytes += (lasers as usize * block * 29) as u64;
-            let slice_end = start_ns + (b as u64 + 1) * block_ns;
+            raw_bytes += (lasers as usize * (hi - lo) * 29) as u64;
+            let slice_end = start_ns + (hi as u64 * 1_000_000_000) / rate as u64;
             let from = next;
             while next < recs.len() && recs[next].arrival_ns < slice_end {
                 next += 1;
@@ -342,7 +368,7 @@ fn write(a: &Args) -> Res<()> {
                 let _ = std::fs::write(p, format!("{layer} {b}"));
             }
             if realtime {
-                let due = started + Duration::from_nanos(start_ns + (b as u64 + 1) * block_ns);
+                let due = started + Duration::from_nanos(slice_end);
                 let now = Instant::now();
                 if now < due {
                     std::thread::sleep(due - now);
@@ -361,6 +387,7 @@ fn write(a: &Args) -> Res<()> {
             lay.core().end_layer(layer, n, data)?;
             lay.end_layer(layer)
         })?;
+        build_ns += layer_ns;
         if flush_layers > 0 && layer % flush_layers == 0 {
             timed(&mut l_flush, || lay.core().flush_file())?;
         }
@@ -393,6 +420,7 @@ fn write(a: &Args) -> Res<()> {
         .map(|l| l.0.iter().map(|&x| x as f64).sum::<f64>() / 1e6)
         .sum();
     let file_bytes = lay.core().file.size();
+    let encode_s = lay.core().encode_ns as f64 / 1e9;
     drop(lay);
 
     let mut seal_json = json!(null);
@@ -417,6 +445,7 @@ fn write(a: &Args) -> Res<()> {
             "max_lag_ms": max_lag.as_secs_f64() * 1000.0,
             "latency": {"laser_block": l_laser.summary(), "opcua_append": l_opc.summary(), "layer_begin": l_begin.summary(), "layer_end": l_end.summary(), "file_flush": l_flush.summary()},
             "flush_layers": flush_layers, "tail_flush_layers": tail_layers, "batch": block,
+            "encode": a.flag("encode"), "encode_s": encode_s,
             "finish_s": finish_s, "finish_stages": stages.into_iter().map(|(k, v)| json!({k: v})).collect::<Vec<_>>(),
             "seal": seal_json, "trend": trend,
         })

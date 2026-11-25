@@ -141,6 +141,11 @@ pub fn kill_test(a: &Args) -> Res<()> {
                 "--progress",
             ])
             .arg(&prog)
+            .args(if a.flag("encode") {
+                vec!["--encode"]
+            } else {
+                vec![]
+            })
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .spawn()?;
@@ -364,7 +369,7 @@ fn walk(
                     let ds = g.dataset(name).map_err(short)?;
                     match k {
                         0..=5 => {
-                            let v = ds.read_raw::<i32>().map_err(short)?;
+                            let v = crate::codec::read_i32(&ds).map_err(short)?;
                             if v[..] != expected.pos[k][..v.len().min(n)] || v.len() > n {
                                 return Err("MISMATCH".into());
                             }

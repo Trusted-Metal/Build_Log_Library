@@ -11,6 +11,7 @@ use std::time::Instant;
 use hdf5::types::VarLenUnicode;
 use hdf5::{Dataset, File, Group, H5Type};
 
+use crate::codec;
 use crate::gen::{sensor_names, LaserLayer, OpcRec, LASER_CHANNELS, LASER_EPOCH_US};
 
 pub type Res<T> = Result<T, Box<dyn std::error::Error>>;
@@ -167,6 +168,10 @@ pub struct Core {
     pub layer_us: i64,
     pub laser_samples: usize,
     pub rate_hz: usize,
+    /// Write the six coordinate channels delta + zigzag encoded as `u32` (F33).
+    pub encode: bool,
+    /// Time spent encoding, in nanoseconds (it is part of the laser block latency; reported separately).
+    pub encode_ns: u64,
 }
 
 impl Core {
@@ -195,6 +200,8 @@ impl Core {
             layer_us: 0,
             laser_samples: 0,
             rate_hz,
+            encode: false,
+            encode_ns: 0,
         })
     }
 
@@ -203,6 +210,11 @@ impl Core {
         self.laser_samples = 0;
         self.written = vec![0; self.lasers as usize];
         self.avail = vec![0; self.lasers as usize];
+        // F30 as amended: shuffle only helps the integer coordinates; on real laser power it doubles the size.
+        let plain = Filters {
+            shuffle: false,
+            ..self.filters
+        };
         for l in 1..=self.lasers {
             let g = ensure_path(
                 &self.file,
@@ -210,17 +222,16 @@ impl Core {
             )?;
             let mut dss = Vec::with_capacity(8);
             for name in &LASER_CHANNELS[..6] {
-                dss.push(make::<i32>(&g, name, self.chunk, &self.filters, 0, true)?);
+                if self.encode {
+                    let ds = make::<u32>(&g, name, self.chunk, &self.filters, 0, true)?;
+                    codec::mark_encoded(&ds, self.chunk)?;
+                    dss.push(ds);
+                } else {
+                    dss.push(make::<i32>(&g, name, self.chunk, &self.filters, 0, true)?);
+                }
             }
-            dss.push(make::<f32>(
-                &g,
-                "Power",
-                self.chunk,
-                &self.filters,
-                0,
-                true,
-            )?);
-            dss.push(make::<u8>(&g, "State", self.chunk, &self.filters, 0, true)?);
+            dss.push(make::<f32>(&g, "Power", self.chunk, &plain, 0, true)?);
+            dss.push(make::<u8>(&g, "State", self.chunk, &plain, 0, true)?);
             self.cur.push(dss);
         }
         Ok(())
@@ -243,10 +254,19 @@ impl Core {
         Ok(())
     }
 
-    fn write_range(&self, i: usize, d: &LaserLayer, a: usize, b: usize) -> Res<()> {
-        let dss = &self.cur[i];
+    fn write_range(&mut self, i: usize, d: &LaserLayer, a: usize, b: usize) -> Res<()> {
+        let dss = self.cur[i].clone();
         for (k, ds) in dss[..6].iter().enumerate() {
-            append(ds, a, &d.pos[k][a..b])?;
+            if self.encode {
+                // Whole chunks start at a restart point; the last partial chunk of a layer is written once, at the end.
+                let t = Instant::now();
+                let mut z = Vec::with_capacity(b - a);
+                codec::encode(&d.pos[k][a..b], self.chunk, &mut z)?;
+                self.encode_ns += t.elapsed().as_nanos() as u64;
+                append(ds, a, &z)?;
+            } else {
+                append(ds, a, &d.pos[k][a..b])?;
+            }
         }
         append(&dss[6], a, &d.power[a..b])?;
         append(&dss[7], a, &d.state[a..b])?;

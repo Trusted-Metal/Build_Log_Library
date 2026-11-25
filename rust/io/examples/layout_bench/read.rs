@@ -136,7 +136,7 @@ pub fn run(a: &Args) -> Res<()> {
         let ds = cx.file.dataset(&format!(
             "Build/Lasers/Laser_1/Monitoring_Data/Layer_{mid}/Actual_X"
         ))?;
-        Ok(ds.read_raw::<i32>()?.len() as u64)
+        Ok(crate::codec::read_i32(&ds)?.len() as u64)
     })?;
     println!(
         "{}",
@@ -157,7 +157,7 @@ pub fn run(a: &Args) -> Res<()> {
             let ds = cx.file.dataset(&format!(
                 "Build/Lasers/Laser_1/Monitoring_Data/Layer_{l}/Actual_X"
             ))?;
-            bytes += ds.read_raw::<i32>()?.len() as u64 * 4;
+            bytes += crate::codec::read_i32(&ds)?.len() as u64 * 4;
         }
         let s = t.elapsed().as_secs_f64();
         println!(
@@ -276,7 +276,7 @@ fn one_layer(cx: &Ctx, layer: u32, lasers: u32) -> Res<(u64, u64)> {
             "Build/Lasers/Laser_{l}/Monitoring_Data/Layer_{layer}"
         ))?;
         for name in &LASER_CHANNELS[..6] {
-            laser_rows += g.dataset(name)?.read_raw::<i32>()?.len() as u64;
+            laser_rows += crate::codec::read_i32(&g.dataset(name)?)?.len() as u64;
         }
         laser_rows += g.dataset("Power")?.read_raw::<f32>()?.len() as u64;
         laser_rows += g.dataset("State")?.read_raw::<u8>()?.len() as u64;
